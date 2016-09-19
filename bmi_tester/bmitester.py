@@ -305,8 +305,6 @@ class BmiTester(Tester):
         """Test var grids."""
         grid = self.bmi.get_var_grid(name)
         assert_is_instance(grid, int)
-        assert_greater_equal(grid, 0)
-        assert_less_equal(grid, 2)
         return str(grid)
 
     def test_get_var_rank(self):
