@@ -344,14 +344,17 @@ class BmiTester(Tester):
 
     def test_get_grid_type(self):
         """Test the grid type."""
-        grids = (0, 1, 2)
+        grids = []
+        for name in set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names()):
+            grids.append( self.bmi.get_var_grid(name) )
         self.foreach(grids, self._test_grid_type)
 
     def test_get_grid_shape(self):
         """Test the grid shape."""
-        grids = (0, 1, 2)
+        grids = []
+        for name in set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names()):
+            grids.append( self.bmi.get_var_grid(name) )
         self.foreach(grids, self._test_grid_shape)
-
 
 if __name__ == '__main__':
     tester = BmiTester(Component(), file=_INPUT_FILE)
