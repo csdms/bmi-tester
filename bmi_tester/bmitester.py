@@ -10,7 +10,7 @@ from nose.tools import (assert_is_instance, assert_greater_equal,
                         assert_less_equal, assert_almost_equal,
                         assert_greater, assert_in)
 
-from .termcolors import red, green, yellow, blink
+#from .termcolors import red, green, yellow, blink
 
 # from components import InfilGreenAmpt as Component
 
@@ -27,12 +27,23 @@ _ERROR_MESSAGE = """
 """
 
 
+def red(msg):
+    return msg
+
+def green(msg):
+    return msg
+
+def yellow(msg):
+    return msg
+
+def blink(msg):
+    return msg
+
 _RESULT_TO_STRING = {
     0: green('PASS'),
     1: red('FAIL'),
     2: blink(red('ERROR')),
 }
-
 
 def print_status(msg):
     print(msg + '... ', end='')
@@ -191,7 +202,7 @@ class BmiTester(Tester):
 
     def test_finalize(self):
         """Test component has finalize() method"""
-        raise RuntimeError("finalize() not tested")
+        assert('finalize' in dir(self.bmi))
 
     def test_get_component_name(self):
         """Test component has a name."""
