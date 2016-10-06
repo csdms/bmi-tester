@@ -231,9 +231,16 @@ class BmiTester(Tester):
         """Test get_grid_orig"""
         raise RuntimeError("get_grid_orig() not tested")
 
+    def _test_grid_rank(self, name):
+        """Test var rank."""
+        rank = self.bmi.get_grid_rank(name)
+        assert_is_instance(rank, int)
+        return str(rank)
+
     def test_get_grid_rank(self):
-        """Test rank of grids"""
-        raise RuntimeError("get_grid_rank() not tested")
+        """Test the rank of the grids."""
+        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
+        self.foreach(names, self._test_grid_rank)
 
     def _test_grid_shape(self, grid):
         """Test grid shape."""
@@ -437,19 +444,6 @@ class BmiTester(Tester):
     def test_update_until(self):
         """Test if we can update until a specific time"""
         raise RuntimeError("update_until() not tested")
-
-    # The following are not on the list, but
-    # maybe test_var_rank() should be test_grid_rank() or vice versa
-    def _test_var_rank(self, name):
-        """Test var rank."""
-        rank = self.bmi.get_var_rank(name)
-        assert_is_instance(rank, int)
-        return str(rank)
-
-    def test_get_var_rank(self):
-        """Test the rank of the variables."""
-        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
-        self.foreach(names, self._test_var_rank)
 
 if __name__ == '__main__':
     tester = BmiTester(Component(), file=_INPUT_FILE)
