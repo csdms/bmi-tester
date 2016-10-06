@@ -185,15 +185,113 @@ class BmiTester(Tester):
     def bmi(self):
         return self._bmi
 
+    # Tests are in alphabetical order as per list at:
+    # http://
+    #   bmi-python.readthedocs.io/en/latest/basic_modeling_interface.bmi.html
+
+    def test_finalize(self):
+        """Test component has finalize() method"""
+        raise RuntimeError("finalize() not tested")
+
     def test_get_component_name(self):
         """Test component has a name."""
         name = self.bmi.get_component_name()
         assert_is_instance(name, str)
         return name
 
-    def test_initialize(self):
-        """Test initialization from a file."""
-        self.bmi.initialize(self._file)
+    def test_get_current_time(self):
+        """Test that there is a current time."""
+        start = self.bmi.get_start_time()
+        now = self.bmi.get_current_time()
+        stop = self.bmi.get_end_time()
+
+        assert_is_instance(now, float)
+        assert_less_equal(now, stop)
+        assert_greater_equal(now , start)
+        return str(now)
+
+    def test_get_end_time(self):
+        """Test that there is a stop time."""
+        start = self.bmi.get_start_time()
+        stop = self.bmi.get_end_time()
+
+        assert_is_instance(stop, float)
+        assert_greater_equal(stop, start)
+        return str(stop)
+
+    def test_get_grid_connectivity(self):
+        """Test grid_connectivity """
+        raise RuntimeError("get_grid_connectivity() not tested")
+
+    def test_get_grid_offset(self):
+        """Test grid_offset"""
+        raise RuntimeError("get_grid_offset() not tested")
+
+    def test_get_grid_orig(self):
+        """Test get_grid_orig"""
+        raise RuntimeError("get_grid_orig() not tested")
+
+    def test_get_grid_rank(self):
+        """Test rank of grids"""
+        raise RuntimeError("get_grid_rank() not tested")
+
+    def _test_grid_shape(self, grid):
+        """Test grid shape."""
+        if self.bmi.get_grid_type(grid) == 'uniform_rectilinear':
+            shape = self.bmi.get_grid_shape(grid)
+            assert_is_instance(shape, tuple)
+            ndim = len(shape)
+            assert_greater_equal(ndim, 1)
+            assert_less_equal(ndim, 2)
+            for dim in shape:
+                assert_is_instance(dim, int)
+            return str(shape)
+        return 'no shape'
+
+    def test_get_grid_shape(self):
+        """Test the grid shape."""
+        grids = []
+        for name in set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names()):
+            grids.append( self.bmi.get_var_grid(name) )
+        self.foreach(grids, self._test_grid_shape)
+
+    def test_get_grid_shape(self):
+        """Test shape of grids"""
+        raise RuntimeError("get_grid_shape() not tested")
+
+    def test_get_grid_size(self):
+        """Test size of grids"""
+        raise RuntimeError("get_grid_size() not tested")
+
+    def test_get_grid_spacing(self):
+        """Test spacing of grids"""
+        raise RuntimeError("get_grid_spacing() not tested")
+
+    def _test_grid_type(self, grid):
+        """Test the type of a grid."""
+        type_str = self.bmi.get_grid_type(grid)
+        assert_is_instance(type_str, str)
+        assert_in(type_str, ("scalar", "vector", "uniform_rectilinear"))
+        return type_str
+
+    def test_get_grid_type(self):
+        """Test the grid type."""
+        grids = []
+        for name in set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names()):
+            grids.append( self.bmi.get_var_grid(name) )
+        self.foreach(grids, self._test_grid_type)
+
+    def test_get_grid_x(self):
+        """Test whether can get grid_x"""
+        raise RuntimeError("get_grid_x() not tested")
+
+    def test_get_grid_y(self):
+        """Test whether can get grid_y"""
+        raise RuntimeError("get_grid_y() not tested")
+
+    def test_get_grid_z(self):
+        """Test whether can get grid_z"""
+        raise RuntimeError("get_grid_z() not tested")
 
     def test_get_input_var_names(self):
         """Input var names is a list of strings."""
@@ -210,6 +308,32 @@ class BmiTester(Tester):
         for name in names:
             assert_is_instance(name, str)
         return '{count} output vars'.format(count=len(names))
+
+    def test_get_start_time(self):
+        """Test that there is a start time."""
+        start = self.bmi.get_start_time()
+        time_step = self.bmi.get_time_step()
+
+        assert_is_instance(start, float)
+        assert_almost_equal(start, 0.)
+        return str(start)
+
+    def test_get_time_step(self):
+        """Test that there is a time step."""
+        time_step = self.bmi.get_time_step()
+        assert_is_instance(time_step, float)
+        return str(time_step)
+
+    def test_get_time_units(self):
+        """Test the units of time."""
+        units = self.bmi.get_time_units()
+        assert_in(units, ('s', 'seconds', 'd', 'days', 'y', 'years'))
+        return units
+
+    def test_get_value(self):
+        """get_value() is tested via test_get_input_values() and
+        test_get_output_values()"""
+        pass
 
     def test_get_input_values(self):
         """Input values are numpy arrays."""
@@ -247,52 +371,36 @@ class BmiTester(Tester):
         if n_fails > 0:
             raise AssertionError('There were some problems with output values')
 
-    def test_get_time_step(self):
-        """Test that there is a time step."""
-        time_step = self.bmi.get_time_step()
-        assert_is_instance(time_step, float)
-        return str(time_step)
+    def test_get_value_at_indices(self):
+        """Test if can get value at specific indices"""
+        raise RuntimeError("get_value_at_indices() not tested")
 
-    def test_get_start_time(self):
-        """Test that there is a start time."""
-        start = self.bmi.get_start_time()
-        time_step = self.bmi.get_time_step()
+    def test_get_value_ref(self):
+        """Test if can get reference for value"""
+        raise RuntimeError("get_value_ref() not tested")
 
-        assert_is_instance(start, float)
-        assert_almost_equal(start, 0.)
-        return str(start)
+    def _test_var_grid(self, name):
+        """Test var grids."""
+        grid = self.bmi.get_var_grid(name)
+        assert_is_instance(grid, int)
+        return str(grid)
 
-    def test_get_end_time(self):
-        """Test that there is a stop time."""
-        start = self.bmi.get_start_time()
-        stop = self.bmi.get_end_time()
+    def test_get_var_grid(self):
+        """Test the grid of the variables."""
+        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
+        self.foreach(names, self._test_var_grid)
 
-        assert_is_instance(stop, float)
-        assert_greater_equal(stop, start)
-        return str(stop)
+    def test_get_var_itemsize(self):
+        """Test getting a variable's itemsize"""
+        raise RuntimeError("get_var_itemsize() not tested")
 
-    def test_get_current_time(self):
-        """Test that there is a current time."""
-        start = self.bmi.get_start_time()
-        now = self.bmi.get_current_time()
-        stop = self.bmi.get_end_time()
+    def test_get_var_nbytes(self):
+        """Test getting the variables number of bytes"""
+        raise RuntimeError("get_var_nbytes() not tested")
 
-        assert_is_instance(now, float)
-        assert_less_equal(now, stop)
-        assert_greater_equal(now , start)
-        return str(now)
-
-    def test_get_time_units(self):
-        """Test the units of time."""
-        units = self.bmi.get_time_units()
-        assert_in(units, ('s', 'seconds', 'd', 'days', 'y', 'years'))
-        return units
-
-    def _test_var_rank(self, name):
-        """Test var rank."""
-        rank = self.bmi.get_var_rank(name)
-        assert_is_instance(rank, int)
-        return str(rank)
+    def test_get_var_type(self):
+        """Test if the variable's type can be tested"""
+        raise RuntimeError("get_var_type() not tested")
 
     def _test_var_units(self, name):
         """Test var units."""
@@ -301,60 +409,47 @@ class BmiTester(Tester):
         assert_greater(len(units), 0)
         return units
 
-    def _test_var_grid(self, name):
-        """Test var grids."""
-        grid = self.bmi.get_var_grid(name)
-        assert_is_instance(grid, int)
-        return str(grid)
-
-    def test_get_var_rank(self):
-        """Test the rank of the variables."""
-        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
-        self.foreach(names, self._test_var_rank)
-
     def test_get_var_units(self):
         """Test the units of the variables."""
         names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
         self.foreach(names, self._test_var_units)
 
-    def test_get_var_grid(self):
-        """Test the grid of the variables."""
+    def test_initialize(self):
+        """Test initialization from a file."""
+        self.bmi.initialize(self._file)
+
+    def test_set_value(self):
+        """Test if we can set the value of variables"""
+        raise RuntimeError("set_value() not tested")
+
+    def test_set_value_at_indices(self):
+        """Test if we can set the value of variables at specific indices"""
+        raise RuntimeError("set_value_at_indices() not tested")
+
+    def test_update(self):
+        """Test update method"""
+        raise RuntimeError("update() not tested")
+
+    def test_update_frac(self):
+        """Test if we can update a fractional time step"""
+        raise RuntimeError("update_frac() not tested")
+
+    def test_update_until(self):
+        """Test if we can update until a specific time"""
+        raise RuntimeError("update_until() not tested")
+
+    # The following are not on the list, but
+    # maybe test_var_rank() should be test_grid_rank() or vice versa
+    def _test_var_rank(self, name):
+        """Test var rank."""
+        rank = self.bmi.get_var_rank(name)
+        assert_is_instance(rank, int)
+        return str(rank)
+
+    def test_get_var_rank(self):
+        """Test the rank of the variables."""
         names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
-        self.foreach(names, self._test_var_grid)
-
-    def _test_grid_type(self, grid):
-        """Test the type of a grid."""
-        type_str = self.bmi.get_grid_type(grid)
-        assert_is_instance(type_str, str)
-        assert_in(type_str, ("scalar", "vector", "uniform_rectilinear"))
-        return type_str
-
-    def _test_grid_shape(self, grid):
-        """Test grid shape."""
-        if self.bmi.get_grid_type(grid) == 'uniform_rectilinear':
-            shape = self.bmi.get_grid_shape(grid)
-            assert_is_instance(shape, tuple)
-            ndim = len(shape)
-            assert_greater_equal(ndim, 1)
-            assert_less_equal(ndim, 2)
-            for dim in shape:
-                assert_is_instance(dim, int)
-            return str(shape)
-        return 'no shape'
-
-    def test_get_grid_type(self):
-        """Test the grid type."""
-        grids = []
-        for name in set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names()):
-            grids.append( self.bmi.get_var_grid(name) )
-        self.foreach(grids, self._test_grid_type)
-
-    def test_get_grid_shape(self):
-        """Test the grid shape."""
-        grids = []
-        for name in set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names()):
-            grids.append( self.bmi.get_var_grid(name) )
-        self.foreach(grids, self._test_grid_shape)
+        self.foreach(names, self._test_var_rank)
 
 if __name__ == '__main__':
     tester = BmiTester(Component(), file=_INPUT_FILE)
