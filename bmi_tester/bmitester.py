@@ -219,7 +219,7 @@ class BmiTester(Tester):
         now = self.bmi.get_current_time()
         stop = self.bmi.get_end_time()
 
-        assert_is_instance(now, float)
+        assert(isinstance(now, int) | isinstance(now, float) )
         assert_less_equal(now, stop)
         assert_greater_equal(now , start)
         return str(now)
@@ -229,7 +229,7 @@ class BmiTester(Tester):
         start = self.bmi.get_start_time()
         stop = self.bmi.get_end_time()
 
-        assert_is_instance(stop, float)
+        assert(isinstance(stop, int) | isinstance(stop, float) )
         assert_greater_equal(stop, start)
         return str(stop)
 
