@@ -27,12 +27,26 @@ _ERROR_MESSAGE = """
 """
 
 
+""" Uncomment these color definitions and comment out the termcolor import
+    above to allow colored text in the output
+def red(msg):
+    return msg
+
+def green(msg):
+    return msg
+
+def yellow(msg):
+    return msg
+
+def blink(msg):
+    return msg
+"""
+
 _RESULT_TO_STRING = {
     0: green('PASS'),
     1: red('FAIL'),
     2: blink(red('ERROR')),
 }
-
 
 def print_status(msg):
     print(msg + '... ', end='')
@@ -191,7 +205,7 @@ class BmiTester(Tester):
 
     def test_finalize(self):
         """Test component has finalize() method"""
-        raise RuntimeError("finalize() not tested")
+        assert('finalize' in dir(self.bmi))
 
     def test_get_component_name(self):
         """Test component has a name."""
@@ -205,7 +219,7 @@ class BmiTester(Tester):
         now = self.bmi.get_current_time()
         stop = self.bmi.get_end_time()
 
-        assert_is_instance(now, float)
+        assert(isinstance(now, int) | isinstance(now, float) )
         assert_less_equal(now, stop)
         assert_greater_equal(now , start)
         return str(now)
@@ -215,63 +229,96 @@ class BmiTester(Tester):
         start = self.bmi.get_start_time()
         stop = self.bmi.get_end_time()
 
-        assert_is_instance(stop, float)
+        assert(isinstance(stop, int) | isinstance(stop, float) )
         assert_greater_equal(stop, start)
         return str(stop)
 
-    def test_get_grid_connectivity(self):
-        """Test grid_connectivity """
+    def _test_get_grid_connectivity(self):
+        """Test grid_connectivity.  """
+        """Used for unstructured grids """
         raise RuntimeError("get_grid_connectivity() not tested")
 
-    def test_get_grid_offset(self):
-        """Test grid_offset"""
+    def _test_get_grid_offset(self):
+        """Test grid_offset.  """
+        """Used for unstructured grids """
         raise RuntimeError("get_grid_offset() not tested")
 
-    def test_get_grid_orig(self):
-        """Test get_grid_orig"""
+    def _test_get_grid_orig(self):
+        """Test get_grid_orig.  """
+        """Used for uniform rectangular grids """
         raise RuntimeError("get_grid_orig() not tested")
 
-    def test_get_grid_rank(self):
-        """Test rank of grids"""
-        raise RuntimeError("get_grid_rank() not tested")
+    def _test_grid_rank(self, name):
+        """Test var rank."""
+        # Note: this function could probably be reworked to not
+        #       be a separate function call
+        rank = self.bmi.get_grid_rank(name)
+        assert_is_instance(rank, int)
+        assert_less_equal (rank, 3)
+        return str(rank)
 
-    def _test_grid_shape(self, grid):
+    def test_get_grid_rank(self):
+        """Test the rank of the grids."""
+        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
+        self.foreach(names, self._test_grid_rank)
+
+    def _test_get_grid_shape(self, grid):
         """Test grid shape."""
-        if self.bmi.get_grid_type(grid) == 'uniform_rectilinear':
+        """Note: the shape of the grid determines which BMI functions are
+        used to access the grid's properties"""
+        grid_type = self.bmi.get_grid_type(grid)
+        if grid_type == 'scalar':
+            shape = self.bmi.get_grid_shape(grid)
+            np.testing.assert_equal(shape, ())
+            return 'scalar'
+        elif grid_type == 'uniform_rectilinear':
             shape = self.bmi.get_grid_shape(grid)
             assert_is_instance(shape, tuple)
             ndim = len(shape)
             assert_greater_equal(ndim, 1)
-            assert_less_equal(ndim, 2)
+            assert_less_equal(ndim, 2)  # Does this mean no 3D arrays?
             for dim in shape:
                 assert_is_instance(dim, int)
             return str(shape)
-        return 'no shape'
+        return 'shape of %s not tested' % grid_type
 
     def test_get_grid_shape(self):
         """Test the grid shape."""
+        """Note: the shape of the grid determines which BMI functions are
+        used to access the grid's properties"""
         grids = []
         for name in set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names()):
             grids.append( self.bmi.get_var_grid(name) )
-        self.foreach(grids, self._test_grid_shape)
+        self.foreach(grids, self._test_get_grid_shape)
 
-    def test_get_grid_shape(self):
-        """Test shape of grids"""
-        raise RuntimeError("get_grid_shape() not tested")
+    def _test_get_grid_size(self, grid):
+        """Test grid size."""
+        """Note: the size of the grid determines which BMI functions are
+        used to access the grid's properties"""
+        size = self.bmi.get_grid_size(grid)
+        return str(size)
 
     def test_get_grid_size(self):
-        """Test size of grids"""
-        raise RuntimeError("get_grid_size() not tested")
+        """Test the grid size."""
+        """Note: the size of the grid determines which BMI functions are
+        used to access the grid's properties"""
+        grids = []
+        for name in set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names()):
+            grids.append( self.bmi.get_var_grid(name) )
+        self.foreach(grids, self._test_get_grid_size)
 
-    def test_get_grid_spacing(self):
-        """Test spacing of grids"""
+    def _test_get_grid_spacing(self):
+        """Test spacing of grids.  """
+        """Used in uniform rectilinear grids """
         raise RuntimeError("get_grid_spacing() not tested")
 
     def _test_grid_type(self, grid):
         """Test the type of a grid."""
         type_str = self.bmi.get_grid_type(grid)
         assert_is_instance(type_str, str)
-        assert_in(type_str, ("scalar", "vector", "uniform_rectilinear"))
+        #assert_in(type_str, ("scalar", "vector", "uniform_rectilinear"))
+        assert_in(type_str, ("scalar", "unstructured", "rectilinear",
+                             "structured_quadrilateral", "uniform_rectilinear"))
         return type_str
 
     def test_get_grid_type(self):
@@ -281,16 +328,22 @@ class BmiTester(Tester):
             grids.append( self.bmi.get_var_grid(name) )
         self.foreach(grids, self._test_grid_type)
 
-    def test_get_grid_x(self):
-        """Test whether can get grid_x"""
+    def _test_get_grid_x(self):
+        """Test whether can get grid_x.  """
+        """Used in unstructured, structured
+        rectilinear, and rectilinear grids """
         raise RuntimeError("get_grid_x() not tested")
 
-    def test_get_grid_y(self):
-        """Test whether can get grid_y"""
+    def _test_get_grid_y(self):
+        """Test whether can get grid_y.  """
+        """Used in unstructured, structured
+        rectilinear, and rectilinear grids """
         raise RuntimeError("get_grid_y() not tested")
 
-    def test_get_grid_z(self):
-        """Test whether can get grid_z"""
+    def _test_get_grid_z(self):
+        """Test whether can get grid_z.  """
+        """Used in unstructured, structured
+        rectilinear, and rectilinear grids """
         raise RuntimeError("get_grid_z() not tested")
 
     def test_get_input_var_names(self):
@@ -330,10 +383,9 @@ class BmiTester(Tester):
         assert_in(units, ('s', 'seconds', 'd', 'days', 'y', 'years'))
         return units
 
-    def test_get_value(self):
-        """get_value() is tested via test_get_input_values() and
-        test_get_output_values()"""
-        pass
+    #def test_get_value(self):
+    # get_value() is tested via test_get_input_values() and 
+    #   test_get_output_values()
 
     def test_get_input_values(self):
         """Input values are numpy arrays."""
@@ -371,13 +423,17 @@ class BmiTester(Tester):
         if n_fails > 0:
             raise AssertionError('There were some problems with output values')
 
-    def test_get_value_at_indices(self):
-        """Test if can get value at specific indices"""
-        raise RuntimeError("get_value_at_indices() not tested")
+    #def test_get_value_at_indices(self):
+    # get_value_at_indices is tested with:
+    #    test_get_value_and_set_value_at_indices(self):
 
     def test_get_value_ref(self):
         """Test if can get reference for value"""
-        raise RuntimeError("get_value_ref() not tested")
+        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
+        for name in names:
+            np.array_equal(self.bmi.get_value(name),
+                         np.asarray(self.bmi.get_value_ref(name)))
+        return 'PASS'
 
     def _test_var_grid(self, name):
         """Test var grids."""
@@ -392,15 +448,60 @@ class BmiTester(Tester):
 
     def test_get_var_itemsize(self):
         """Test getting a variable's itemsize"""
-        raise RuntimeError("get_var_itemsize() not tested")
+        n_fails = 0
+        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
+        print()
+        for name in names:
+            def _test():
+                val = self.bmi.get_value(name)
+                itemsize = val.flatten()[0].nbytes
+                np.testing.assert_equal(itemsize, self.bmi.get_var_itemsize(name))
+                return '{itemsize} bytes'.format(itemsize=itemsize)
+            _test.__doc__ = """  Test get_var_itemsize for {name}""".format(name=name)
+            _test.__name__ = 'test_{name}'.format(name=name)
+
+            n_fails += self.run_test_func(_test)
+
+        if n_fails > 0:
+            raise AssertionError('There were some problems with output values')
 
     def test_get_var_nbytes(self):
-        """Test getting the variables number of bytes"""
-        raise RuntimeError("get_var_nbytes() not tested")
+        """Test getting a variable's nbytes"""
+        n_fails = 0
+        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
+        print()
+        for name in names:
+            def _test():
+                val = self.bmi.get_value(name)
+                val_nbytes = val.nbytes
+                np.testing.assert_equal(val_nbytes, self.bmi.get_var_nbytes(name))
+                return '{val_nbytes} bytes'.format(val_nbytes=val_nbytes)
+            _test.__doc__ = """  Test get_val_nbytes for {name}""".format(name=name)
+            _test.__name__ = 'test_{name}'.format(name=name)
+
+            n_fails += self.run_test_func(_test)
+
+        if n_fails > 0:
+            raise AssertionError('There were some problems with output values')
+
 
     def test_get_var_type(self):
-        """Test if the variable's type can be tested"""
-        raise RuntimeError("get_var_type() not tested")
+        """Test getting a variable's itemsize"""
+        n_fails = 0
+        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
+        print()
+        for name in names:
+            def _test():
+                val = self.bmi.get_value(name)
+                valtype = type(val.flatten()[0]).__name__
+                return '{valtype}'.format(valtype=valtype)
+            _test.__doc__ = """  Test get_var_type for {name}""".format(name=name)
+            _test.__name__ = 'test_{name}'.format(name=name)
+
+            n_fails += self.run_test_func(_test)
+
+        if n_fails > 0:
+            raise AssertionError('There were some problems with output values')
 
     def _test_var_units(self, name):
         """Test var units."""
@@ -418,38 +519,114 @@ class BmiTester(Tester):
         """Test initialization from a file."""
         self.bmi.initialize(self._file)
 
-    def test_set_value(self):
-        """Test if we can set the value of variables"""
-        raise RuntimeError("set_value() not tested")
+    def test_get_value_and_set_value(self):
+        """Test if we can get and set the value of (input) variables"""
+        n_fails = 0
+        names = self.bmi.get_input_var_names()
+        print()
+        for name in names:
+            def _test():
+                # Copy the variable array
+                val = self.bmi.get_value(name)
+                valcopy = val.copy()
 
-    def test_set_value_at_indices(self):
-        """Test if we can set the value of variables at specific indices"""
-        raise RuntimeError("set_value_at_indices() not tested")
+                # Set array to all zeros, and verify that it was set to zero
+                valzeros = np.zeros_like(val)
+                self.bmi.set_value(name, valzeros)
+                testzeros = self.bmi.get_value(name)
+                np.testing.assert_equal(valzeros, testzeros)
+
+                # Set the array back to its original values, and verify
+                self.bmi.set_value(name, valcopy)
+                newval = self.bmi.get_value(name)
+                np.testing.assert_equal(val, newval)
+                return 'PASS'
+            _test.__doc__ = """  Test set_ and get_ value for {name}""".format(name=name)
+            _test.__name__ = 'test_{name}'.format(name=name)
+
+            n_fails += self.run_test_func(_test)
+
+        if n_fails > 0:
+            raise AssertionError('There were some problems with input values')
+
+    def test_get_value_and_set_value_at_indices(self):
+        """Test if we can get and set the value of (input) variables at indices"""
+        n_fails = 0
+        names = self.bmi.get_input_var_names()
+        print()
+        for name in names:
+            def _test():
+                # Get the first value of the variable array
+                val = self.bmi.get_value(name)
+                valrank = len(val.shape)
+                if valrank == 0:
+                    return 'Cannot use indices on a scalar'
+                elif valrank == 1:
+                    val_first_value = val[0]
+                elif valrank == 2:
+                    val_first_value = val[0, 0]
+                elif valrank == 3:
+                    val_first_value = val[0, 0, 0]
+
+                # Replace the first value of the array with a new value
+                val_test_value += val_first_value + 1
+                if valrank == 1:
+                    self.bmi.set_value_at_indices(name,
+                                                  [0], val_test_value)
+                    bmi_test_value = \
+                            self.bmi.get_value_at_indices(name, [0])
+                elif valrank == 2:
+                    self.bmi.set_value_at_indices(name,
+                                                  [0, 0], val_test_value)
+                    bmi_test_value = \
+                            self.bmi.get_value_at_indices(name, [0, 0])
+                elif valrank == 3:
+                    self.bmi.set_value_at_indices(name,
+                                                  [0, 0, 0], val_test_value)
+                    bmi_test_value =\
+                            self.bmi.get_value_at_indices(name, [0, 0, 0])
+
+                np.testing.assert_equal(val_test_value, bmi_test_value)
+
+                # Reset the first value of the array to its original value
+                if valrank == 1:
+                    self.bmi.set_value_at_indices(name,
+                                                  [0], val_first_value)
+                elif valrank == 2:
+                    self.bmi.set_value_at_indices(name,
+                                                  [0, 0], val_first_value)
+                elif valrank == 3:
+                    self.bmi.set_value_at_indices(name,
+                                                  [0, 0, 0], val_first_value)
+
+                return 'PASS'
+            _test.__doc__ = """  Test set/get_value_at_indices for {name}""".format(name=name)
+            _test.__name__ = 'test_{name}'.format(name=name)
+
+            n_fails += self.run_test_func(_test)
+
+        if n_fails > 0:
+            raise AssertionError('There were some problems with input values')
+
+
+    #def test_set_value_at_indices(self):
+    # set_value_at_indices is tested with:
+    #    test_set_value_and_set_value_at_indices(self):
 
     def test_update(self):
+        """Test component has update() method"""
         """Test update method"""
-        raise RuntimeError("update() not tested")
+        assert('update' in dir(self.bmi))
 
     def test_update_frac(self):
+        """Test component has update_frac() method"""
         """Test if we can update a fractional time step"""
-        raise RuntimeError("update_frac() not tested")
+        assert('update_frac' in dir(self.bmi))
 
     def test_update_until(self):
+        """Test component has update_until() method"""
         """Test if we can update until a specific time"""
-        raise RuntimeError("update_until() not tested")
-
-    # The following are not on the list, but
-    # maybe test_var_rank() should be test_grid_rank() or vice versa
-    def _test_var_rank(self, name):
-        """Test var rank."""
-        rank = self.bmi.get_var_rank(name)
-        assert_is_instance(rank, int)
-        return str(rank)
-
-    def test_get_var_rank(self):
-        """Test the rank of the variables."""
-        names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
-        self.foreach(names, self._test_var_rank)
+        assert('update_until' in dir(self.bmi))
 
 if __name__ == '__main__':
     tester = BmiTester(Component(), file=_INPUT_FILE)
