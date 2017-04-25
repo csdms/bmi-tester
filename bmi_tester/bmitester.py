@@ -11,6 +11,7 @@ from nose.tools import (assert_is_instance, assert_greater_equal,
                         assert_greater, assert_in)
 
 from .termcolors import red, green, yellow, blink
+import math
 
 # from components import InfilGreenAmpt as Component
 
@@ -383,9 +384,9 @@ class BmiTester(Tester):
         assert_in(units, ('s', 'seconds', 'd', 'days', 'y', 'years'))
         return units
 
-    #def test_get_value(self):
-    # get_value() is tested via test_get_input_values() and 
-    #   test_get_output_values()
+    # get_value() is tested via test_get_input_values() and
+    #    test_get_output_values() and is not tested separately
+    # def test_get_value(self):
 
     def test_get_input_values(self):
         """Input values are numpy arrays."""
@@ -515,9 +516,11 @@ class BmiTester(Tester):
         names = set(self.bmi.get_input_var_names()) | set(self.bmi.get_output_var_names())
         self.foreach(names, self._test_var_units)
 
-    def test_initialize(self):
-        """Test initialization from a file."""
-        self.bmi.initialize(self._file)
+    # initialize is called by __init__() and therefore
+    # does not need a separate test
+    # def test_initialize(self):
+    #     """Test initialization from a file."""
+    #      self.bmi.initialize(self._file)
 
     def test_get_value_and_set_value(self):
         """Test if we can get and set the value of (input) variables"""
@@ -569,7 +572,10 @@ class BmiTester(Tester):
                     val_first_value = val[0, 0, 0]
 
                 # Replace the first value of the array with a new value
-                val_test_value += val_first_value + 1
+                if math.isnan(val_first_value):
+                    val_test_value = 1
+                else:
+                    val_test_value += val_first_value + 1
                 if valrank == 1:
                     self.bmi.set_value_at_indices(name,
                                                   [0], val_test_value)
