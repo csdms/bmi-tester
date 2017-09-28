@@ -13,7 +13,7 @@ def run_tests(bmi_cls, infile=None, mode='fast', verbose=True, doctests=False):
     test = BmiTester(package=package).test
 
     try:
-        package.__dict__['Component'] = load_component(bmi_cls)
+        package.__dict__['Bmi'] = load_component(bmi_cls)
     except ImportError as err:
         raise
 
