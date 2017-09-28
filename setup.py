@@ -14,6 +14,7 @@ setup(name='bmi-tester',
       entry_points={
           'console_scripts': [
               'bmi-tester=bmi_tester.cmd:main',
+              'bmi-nose=bmi_tester.bminose:main',
           ]
       }
 
