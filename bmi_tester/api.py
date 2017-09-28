@@ -16,3 +16,20 @@ def run_test(mod_name, class_name, infile):
     tester.run()
 
     return tester.results
+
+
+def load_component(entry_point):
+    module_name, cls_name = entry_point.split(':')
+
+    component = None
+    try:
+        module = importlib.import_module(module_name)
+    except ImportError:
+        raise
+    else:
+        try:
+            component = module.__dict__[cls_name]
+        except KeyError:
+            raise ImportError(cls_name)
+
+    return component
