@@ -28,21 +28,20 @@ def run_tests(bmi_cls, infile=None, mode='fast', verbose=True, doctests=False):
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('cls', help='Full name of class to test.')
     parser.add_argument('--infile', default='',
                         help='Name of input file for init method.')
-    parser.add_argument('--out', type=str, default=None,
-                        help='Print results to a file.')
     parser.add_argument('-m', '--mode', action='store', dest='mode',
                         default='fast',
                         help='"fast", "full", or something that can be '
-                             'passed to nosetests -A [%default]')
+                             'passed to nosetests -A')
     parser.add_argument('-v', '--verbose', action='count', dest='verbose',
-                        default=1, help='increase verbosity [%default]')
+                        default=1, help='increase verbosity')
     parser.add_argument('--no-doctests', action='store_false', dest='doctests',
                         default=True,
-                        help='Do not run doctests in module [%default]')
+                        help='Do not run doctests in module')
 
     args = parser.parse_args()
 
