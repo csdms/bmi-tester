@@ -5,6 +5,12 @@ from nose import with_setup
 from .utils import setup_func, teardown_func, all_names, all_grids, new_bmi
 
 
+VALID_GRID_TYPES = (
+    "scalar", "unstructured", "rectilinear", "structured_quadrilateral",
+    "uniform_rectilinear", "uniform_rectilinear_grid",
+)
+
+
 @with_setup(setup_func, teardown_func)
 def test_get_grid_rank():
     """Test the rank of the grids."""
@@ -37,9 +43,7 @@ def test_get_grid_type():
     bmi = new_bmi()
     for gid in all_grids(bmi):
         def _check_type_is_valid(gtype):
-            assert_in(gtype, ("scalar", "unstructured", "rectilinear",
-                              "structured_quadrilateral",
-                              "uniform_rectilinear"))
+            assert_in(gtype, VALID_GRID_TYPES)
         _check_type_is_valid.description = "Test grid is known for grid {gid}".format(gid=gid)
 
         def _check_type_is_str(gtype):
