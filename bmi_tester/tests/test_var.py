@@ -27,8 +27,7 @@ def test_get_var_itemsize():
     for name in all_names(bmi):
         def _check_var_itemsize(bmi, _name):
             val = bmi.get_value(_name)
-            itemsize = val.flatten()[0].nbytes
-            np.testing.assert_equal(itemsize, bmi.get_var_itemsize(_name))
+            np.testing.assert_equal(val.itemsize, bmi.get_var_itemsize(_name))
 
         _check_var_itemsize.description = "Test get_var_itemsize for {name}".format(name=name)
 
