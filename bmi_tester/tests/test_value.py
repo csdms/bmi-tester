@@ -1,3 +1,6 @@
+from __future__ import print_function
+import warnings
+
 import numpy as np
 from nose.tools import assert_is_instance, assert_equal
 from nose import with_setup
@@ -12,7 +15,11 @@ def test_get_input_values():
     names = bmi.get_input_var_names()
     for name in names:
         gid = bmi.get_var_grid(name)
-        loc = bmi.get_var_location(name)
+        if hasattr(bmi, 'get_var_location'):
+            loc = bmi.get_var_location(name)
+        else:
+            warnings.warn('get_var_location not implemented (assuming nodes)', FutureWarning)
+            loc = 'node'
         if loc == 'node':
             size = bmi.get_grid_size(gid)
         elif loc == 'edge':
@@ -36,7 +43,11 @@ def test_get_output_values():
     names = bmi.get_output_var_names()
     for name in names:
         gid = bmi.get_var_grid(name)
-        loc = bmi.get_var_location(name)
+        if hasattr(bmi, 'get_var_location'):
+            loc = bmi.get_var_location(name)
+        else:
+            warnings.warn('get_var_location not implemented (assuming nodes)', FutureWarning)
+            loc = 'node'
         if loc == 'node':
             size = bmi.get_grid_size(gid)
         elif loc == 'edge':
