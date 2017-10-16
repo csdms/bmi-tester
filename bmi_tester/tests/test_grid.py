@@ -9,14 +9,14 @@ from .utils import setup_func, teardown_func, all_names, all_grids, new_bmi
 def test_get_grid_rank():
     """Test the rank of the grids."""
     bmi = new_bmi()
-    for name in all_names(bmi):
-        def _check_rank(bmi, name):
-            rank = bmi.get_grid_rank(name)
+    for gid in all_grids(bmi):
+        def _check_rank(bmi, gid):
+            rank = bmi.get_grid_rank(gid)
             assert_is_instance(rank, int)
             assert_less_equal(rank, 3)
-        _check_rank.description = 'Test rank of {name}'.format(name=name)
+        _check_rank.description = 'Test rank of {gid}'.format(gid=gid)
 
-        yield _check_rank, bmi, name
+        yield _check_rank, bmi, gid
 
 
 @with_setup(setup_func, teardown_func)
