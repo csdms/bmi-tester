@@ -11,7 +11,7 @@ from .utils import setup_func, teardown_func, all_grids, all_names, new_bmi
 def test_get_var_grid():
     """Test the grid of the variables."""
     bmi = new_bmi()
-    for name in all_grids(bmi):
+    for name in all_names(bmi):
         gid = bmi.get_var_grid(name)
         def _check_var_grid_is_int(_gid):
             assert_is_instance(_gid, int)
