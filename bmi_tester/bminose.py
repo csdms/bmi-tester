@@ -7,7 +7,8 @@ from .nosetester import BmiTester
 from .api import load_component
 
 
-def run_tests(bmi_cls, infile=None, mode='fast', verbose=True, doctests=False):
+def run_tests(bmi_cls, infile=None, bmi_version=None, mode='fast',
+              verbose=True, doctests=False):
     from . import tests as package
 
     test = BmiTester(package=package).test
@@ -18,6 +19,8 @@ def run_tests(bmi_cls, infile=None, mode='fast', verbose=True, doctests=False):
         raise
 
     package.__dict__['INPUT_FILE'] = infile
+    if bmi_version is not None:
+        package.__dict__['BMI_VERSION_STRING'] = bmi_version
 
     result = test(label=mode, verbose=verbose,
                   doctests=doctests, # coverage=options.coverage,
@@ -33,6 +36,8 @@ def main():
     parser.add_argument('cls', help='Full name of class to test.')
     parser.add_argument('--infile', default='',
                         help='Name of input file for init method.')
+    parser.add_argument('--bmi-version', default='1.1',
+                        help='BMI version to test against')
     parser.add_argument('-m', '--mode', action='store', dest='mode',
                         default='fast',
                         help='"fast", "full", or something that can be '
@@ -46,7 +51,8 @@ def main():
     args = parser.parse_args()
 
     try:
-        result = run_tests(args.cls, infile=args.infile, mode=args.mode,
+        result = run_tests(args.cls, infile=args.infile,
+                           bmi_version=args.bmi_version, mode=args.mode,
                            verbose=args.verbose, doctests=args.doctests)
     except ImportError as err:
         print('error loading {cls}: {msg}'.format(cls=args.cls, msg=str(err),
