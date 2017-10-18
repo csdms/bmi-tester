@@ -1,29 +1,61 @@
 from __future__ import print_function
 import warnings
 
+from distutils.version import StrictVersion
 import numpy as np
-from nose.tools import assert_is_instance, assert_equal
-from nose import with_setup
+from nose.tools import assert_is_instance, assert_equal, assert_true, assert_in
+from nose import with_setup, SkipTest
 
 from .utils import setup_func, teardown_func, all_names, new_bmi
+from . import BMI_VERSION_STRING
+
+
+BMI_VERSION = StrictVersion(BMI_VERSION_STRING)
+
+
+@with_setup(setup_func, teardown_func)
+def test_get_var_location():
+    """Test for get_var_location"""
+    if BMI_VERSION < '1.1':
+        raise SkipTest('get_var_location')
+
+    bmi = new_bmi()
+
+    assert_true(hasattr(bmi, 'get_var_location'))
+
+    for name in all_names(bmi):
+        loc = bmi.get_var_location(name)
+
+        def _check_location_is_str(loc):
+            assert_is_instance(loc, str)
+        _check_location_is_str.description = 'Test location for {name} is string'.format(name=name)
+
+        def _check_location_is_valid(loc):
+            assert_in(loc, ('node', 'edge', 'face'))
+        _check_location_is_valid.description = 'Test location for {name} is valid: {loc}'.format(name=name, loc=repr(loc))
+
+        yield _check_location_is_str, loc
+        yield _check_location_is_valid, loc
 
 
 @with_setup(setup_func, teardown_func)
 def test_get_input_values():
     """Input values are numpy arrays."""
     bmi = new_bmi()
-    names = bmi.get_input_var_names()
-    for name in names:
+    for name in all_names(bmi):
         gid = bmi.get_var_grid(name)
-        if hasattr(bmi, 'get_var_location'):
+        if BMI_VERSION > '1.0':
             loc = bmi.get_var_location(name)
         else:
-            warnings.warn('get_var_location not implemented (assuming nodes)', FutureWarning)
             loc = 'node'
+            warnings.warn('get_var_location not implemented (assuming nodes)', FutureWarning)
+
         if loc == 'node':
             size = bmi.get_grid_size(gid)
         elif loc == 'edge':
             size = bmi.get_grid_number_of_edges(gid)
+        else:
+            size = None
 
         def _check_is_ndarray(arr):
             assert_is_instance(arr, np.ndarray)
@@ -43,15 +75,19 @@ def test_get_output_values():
     names = bmi.get_output_var_names()
     for name in names:
         gid = bmi.get_var_grid(name)
-        if hasattr(bmi, 'get_var_location'):
+        if BMI_VERSION > '1.0':
             loc = bmi.get_var_location(name)
         else:
             warnings.warn('get_var_location not implemented (assuming nodes)', FutureWarning)
             loc = 'node'
+
         if loc == 'node':
             size = bmi.get_grid_size(gid)
         elif loc == 'edge':
             size = bmi.get_grid_number_of_edges(gid)
+        else:
+            size = None
+
         def _check_is_ndarray(arr):
             assert_is_instance(arr, np.ndarray)
         _check_is_ndarray.description = 'Test output {name} is ndarray'.format(name=name)
