@@ -2,3 +2,4 @@
 # BMI class
 Bmi = None
 INPUT_FILE = None
+BMI_VERSION_STRING = '1.1'
