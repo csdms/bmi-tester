@@ -1,0 +1,47 @@
+package:
+  name: bmi-tester
+  version: "0.1.0"
+
+source:
+  path: ..
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - numpydoc
+    - nose
+    - numpy
+    - cfunits
+    - standard_names
+
+  run:
+    - python
+    - setuptools
+    - numpydoc
+    - nose
+    - numpy
+    - cfunits
+    - standard_names
+
+test:
+  imports:
+    - bmi_tester
+  commands:
+    - bmi-tester -h
+    - bmi-nose -h
+
+about:
+  home: http://github.com/csdms/bmi-tester
+  license: MIT
+  summary: Test BMI implementation in Python
+  doc_url: http://bmi-tester.readthedocs.io/en/latest/
+  dev_url: http://github.com/csdms/bmi-tester
+
+build:
+  number: 0
+  entry_points:
+    - bmi-tester=bmi_tester.cmd:main
+    - bmi-nose=bmi_tester.bminose:main
+  script: python setup.py install --single-version-externally-managed --record record.txt
+
