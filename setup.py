@@ -15,7 +15,12 @@ setup(name='bmi-tester',
           'console_scripts': [
               'bmi-tester=bmi_tester.cmd:main',
               'bmi-nose=bmi_tester.bminose:main',
-          ]
+              'bmi-test=bmi_tester.bmipytest:main',
+          ],
+          'bmi.plugins': [
+            'bmi_nose=bmi_tester.bminose:configure_parser_nose',
+            'bmi_test=bmi_tester.bmipytest:configure_parser_test',
+        ],
       }
 
 )
