@@ -31,8 +31,9 @@ install:
 - export PATH="$CONDA_PREFIX/bin:$PATH"
 - hash -r
 - conda config --set always_yes yes --set changeps1 no
-- conda install python=$TRAVIS_PYTHON_VERSION
-- conda install -q conda-build anaconda-client coverage sphinx
+- conda create -n _testing python=$TRAVIS_PYTHON_VERSION
+- source activate _testing
+- conda install -q conda-build anaconda-client sphinx pytest pytest-cov coveralls
 script:
 - conda build ./recipe -c csdms-stack -c conda-forge --old-build-string
 after_success:
