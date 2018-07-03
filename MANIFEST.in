@@ -1,0 +1,2 @@
+include versioneer.py
+include bmi_tester/_version.py
