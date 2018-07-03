@@ -20,8 +20,6 @@ def main():
     cls = parts[-1]
 
     try:
-        results = run_test(mod, cls, args.infile)
+        results = run_test(args.cls, None, args.infile)
     except ImportError:
         print('unable to import {mod}'.format(mod=mod))
-    except KeyError:
-        print('could not find {cls} in {mod}'.format(cls=cls, mod=mod))
