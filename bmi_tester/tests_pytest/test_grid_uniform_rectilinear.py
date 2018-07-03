@@ -6,14 +6,14 @@ import numpy as np
 def test_get_grid_shape(new_bmi, gid):
     """Test the grid shape."""
     gtype = new_bmi.get_grid_type(gid)
-    if gtype == 'uniform_rectilinear':
+    if gtype == "uniform_rectilinear":
         ndim = new_bmi.get_grid_rank(gid)
 
         shape = np.empty(ndim, dtype=np.int32)
         try:
             rtn = new_bmi.get_grid_shape(gid, shape)
         except TypeError:
-            warnings.warn('get_grid_shape should take two arguments')
+            warnings.warn("get_grid_shape should take two arguments")
             rtn = new_bmi.get_grid_shape(gid)
             shape[:] = rtn
         else:
@@ -26,7 +26,7 @@ def test_get_grid_shape(new_bmi, gid):
 def test_get_grid_spacing(new_bmi, gid):
     """Test the grid spacing."""
     gtype = new_bmi.get_grid_type(gid)
-    if gtype == 'uniform_rectilinear':
+    if gtype == "uniform_rectilinear":
         ndim = new_bmi.get_grid_rank(gid)
 
         spacing = np.empty(ndim, dtype=float)

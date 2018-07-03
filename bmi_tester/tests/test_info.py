@@ -21,12 +21,15 @@ def test_var_names():
     """Test var names are valid."""
     bmi = new_bmi()
     for name in all_names(bmi):
+
         def _check_is_str(name):
             assert_is_instance(name, str)
+
         def _check_is_valid(name):
             standard_names.StandardName(name)
-        _check_is_str.description = 'Test {name} is str'.format(name=name)
-        _check_is_valid.description = 'Test {name} is a Standard Name'.format(name=name)
+
+        _check_is_str.description = "Test {name} is str".format(name=name)
+        _check_is_valid.description = "Test {name} is a Standard Name".format(name=name)
         yield _check_is_str, name
         yield _check_is_valid, name
 

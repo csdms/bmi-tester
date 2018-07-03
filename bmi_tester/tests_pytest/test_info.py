@@ -22,25 +22,25 @@ def test_var_names(var_name):
     if standard_names.is_valid_name(var_name):
         standard_names.StandardName(var_name)
     else:
-        warnings.warn('not a valid standard name: {name}'.format(name=var_name))
+        warnings.warn("not a valid standard name: {name}".format(name=var_name))
 
 
 def test_input_var_name_count(new_bmi):
-    if hasattr(new_bmi, 'get_input_var_name_count'):
+    if hasattr(new_bmi, "get_input_var_name_count"):
         n_names = new_bmi.get_input_var_name_count()
         assert isinstance(n_names, int)
         assert n_names >= 0
     else:
-        pytest.skip('get_input_var_name_count not implemented')
+        pytest.skip("get_input_var_name_count not implemented")
 
 
 def test_output_var_name_count(new_bmi):
-    if hasattr(new_bmi, 'get_output_var_name_count'):
+    if hasattr(new_bmi, "get_output_var_name_count"):
         n_names = new_bmi.get_output_var_name_count()
         assert isinstance(n_names, int)
         assert n_names >= 0
     else:
-        pytest.skip('get_output_var_name_count not implemented')
+        pytest.skip("get_output_var_name_count not implemented")
 
 
 def test_get_input_var_names(new_bmi):
@@ -48,19 +48,20 @@ def test_get_input_var_names(new_bmi):
     names = new_bmi.get_input_var_names()
     assert isinstance(names, tuple)
 
-    if hasattr(new_bmi, 'get_input_var_name_count'):
+    if hasattr(new_bmi, "get_input_var_name_count"):
         n_names = new_bmi.get_input_var_name_count()
         assert len(names) == n_names
     else:
-        warnings.warn('get_input_var_name_count not implemented')
+        warnings.warn("get_input_var_name_count not implemented")
+
 
 def test_get_output_var_names(new_bmi):
     """Output var names is a list of strings."""
     names = new_bmi.get_output_var_names()
     assert isinstance(names, tuple)
 
-    if hasattr(new_bmi, 'get_output_var_name_count'):
+    if hasattr(new_bmi, "get_output_var_name_count"):
         n_names = new_bmi.get_output_var_name_count()
         assert len(names) == n_names
     else:
-        warnings.warn('get_output_var_name_count not implemented')
+        warnings.warn("get_output_var_name_count not implemented")

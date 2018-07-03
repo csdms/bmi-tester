@@ -14,7 +14,7 @@ def setup_func():
     starting_dir = os.path.abspath(os.getcwd())
     tmp_dir = os.path.abspath(tempfile.mkdtemp())
     os.chdir(tmp_dir)
-    with open('.ROOT_DIR', 'w') as fp:
+    with open(".ROOT_DIR", "w") as fp:
         fp.write(starting_dir)
     # shutil.copy2(os.path.join(starting_dir, INPUT_FILE), tmp_dir)
 
@@ -23,7 +23,7 @@ def teardown_func():
     # del globals()['bmi']
 
     tmp_dir = os.path.abspath(os.getcwd())
-    with open('.ROOT_DIR', 'r') as fp:
+    with open(".ROOT_DIR", "r") as fp:
         starting_dir = fp.read()
 
     os.chdir(starting_dir)
@@ -43,10 +43,10 @@ def all_grids(bmi, gtype=None):
 
 def new_bmi(infile=None):
     try:
-        with open('.ROOT_DIR', 'r') as fp:
+        with open(".ROOT_DIR", "r") as fp:
             root_dir = fp.read()
     except IOError:
-        root_dir = '.'
+        root_dir = "."
 
     bmi = Bmi()
     with cd(root_dir):

@@ -9,7 +9,7 @@ from .utils import setup_func, teardown_func, new_bmi
 @with_setup(setup_func, teardown_func)
 def test_has_initialize():
     """Test component has an initialize method."""
-    assert_true(hasattr(new_bmi(), 'initialize'))
+    assert_true(hasattr(new_bmi(), "initialize"))
 
 
 # @with_setup(setup_func, teardown_func)
@@ -22,4 +22,4 @@ def test_initialize():
 @with_setup(setup_func, teardown_func)
 def test_has_finalize():
     """Test component has a finalize method."""
-    assert_true(hasattr(new_bmi(), 'finalize'))
+    assert_true(hasattr(new_bmi(), "finalize"))

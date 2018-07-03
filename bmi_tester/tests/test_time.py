@@ -1,7 +1,11 @@
 #! /usr/bin/env python
-from nose.tools import (assert_is_instance, assert_greater_equal,
-                        assert_less_equal, assert_almost_equal,
-                        assert_true)
+from nose.tools import (
+    assert_is_instance,
+    assert_greater_equal,
+    assert_less_equal,
+    assert_almost_equal,
+    assert_true,
+)
 from nose import with_setup
 
 import cfunits
@@ -51,7 +55,7 @@ def test_get_current_time():
 
     assert_is_instance(now, (int, float))
     assert_less_equal(now, stop)
-    assert_greater_equal(now , start)
+    assert_greater_equal(now, start)
 
 
 @with_setup(setup_func, teardown_func)

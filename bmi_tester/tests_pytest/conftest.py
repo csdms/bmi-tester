@@ -1,3 +1,4 @@
+from __future__ import print_function
 import os
 
 import pytest
@@ -10,10 +11,10 @@ from .utils import all_grids, all_names, out_names, strictly_input_names
 @pytest.fixture
 def new_bmi(infile=None):
     try:
-        with open('.ROOT_DIR', 'r') as fp:
+        with open(".ROOT_DIR", "r") as fp:
             root_dir = fp.read()
     except IOError:
-        root_dir = '.'
+        root_dir = "."
 
     bmi = Bmi()
     with cd(root_dir):
@@ -23,16 +24,15 @@ def new_bmi(infile=None):
 
 
 def pytest_runtest_setup(item):
-    print 'moving folders', item
-    # os.chdir('/Users/huttone/git/csdms/bmi-tester/_child_run')
+    print("moving folders: {0}".format(item))
 
 
 def pytest_generate_tests(metafunc):
-    if 'gid' in metafunc.fixturenames:
-        metafunc.parametrize('gid', all_grids(new_bmi()))
-    elif 'var_name' in metafunc.fixturenames:
-        metafunc.parametrize('var_name', all_names(new_bmi()))
-    elif 'in_var_name' in metafunc.fixturenames:
-        metafunc.parametrize('in_var_name', strictly_input_names(new_bmi()))
-    elif 'out_var_name' in metafunc.fixturenames:
-        metafunc.parametrize('out_var_name', out_names(new_bmi()))
+    if "gid" in metafunc.fixturenames:
+        metafunc.parametrize("gid", all_grids(new_bmi()))
+    elif "var_name" in metafunc.fixturenames:
+        metafunc.parametrize("var_name", all_names(new_bmi()))
+    elif "in_var_name" in metafunc.fixturenames:
+        metafunc.parametrize("in_var_name", strictly_input_names(new_bmi()))
+    elif "out_var_name" in metafunc.fixturenames:
+        metafunc.parametrize("out_var_name", out_names(new_bmi()))
