@@ -12,7 +12,7 @@ requirements:
     - numpydoc
     - nose
     - numpy
-    - cfunits
+    - cfunits-python
     - standard_names
 
   run:
@@ -21,7 +21,7 @@ requirements:
     - numpydoc
     - nose
     - numpy
-    - cfunits
+    - cfunits-python
     - standard_names
 
 test:

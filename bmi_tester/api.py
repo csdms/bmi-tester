@@ -19,7 +19,7 @@ def run_test(mod_name, class_name, infile):
 
 
 def load_component(entry_point):
-    module_name, cls_name = entry_point.split(':')
+    module_name, cls_name = entry_point.split(":")
 
     component = None
     try:

@@ -1,5 +1,11 @@
-from nose.tools import (assert_is_instance, assert_less_equal, assert_equal,
-                        assert_greater, assert_in)
+from nose.tools import (
+    assert_is_instance,
+    assert_less_equal,
+    assert_equal,
+    assert_greater,
+    assert_in,
+)
+
 # from nose import with_setup
 
 # from .utils import setup_func, teardown_func, all_names, all_grids, new_bmi
@@ -8,6 +14,7 @@ from .utils import all_names, all_grids
 
 VALID_GRID_TYPES = (
     "scalar",
+    "vector",
     "unstructured",
     "unstructured_triangular",
     "rectilinear",
@@ -29,6 +36,7 @@ def test_get_grid_size(new_bmi, gid):
     size = new_bmi.get_grid_size(gid)
     assert isinstance(size, int)
     assert size > 0
+
 
 def test_get_grid_type(new_bmi, gid):
     "Test grid is known for grid {gid}".format(gid=gid)

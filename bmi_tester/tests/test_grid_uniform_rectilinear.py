@@ -11,7 +11,8 @@ def test_get_grid_shape():
     """Note: the shape of the grid determines which BMI functions are
     used to access the grid's properties"""
     bmi = new_bmi()
-    for gid in all_grids(bmi, gtype='uniform_rectilinear'):
+    for gid in all_grids(bmi, gtype="uniform_rectilinear"):
+
         def _check_shape(bmi, gid):
             shape = bmi.get_grid_shape(gid)
             assert_is_instance(shape, tuple)
@@ -19,15 +20,22 @@ def test_get_grid_shape():
             assert_equal(ndim, bmi.get_grid_rank(gid))
             for dim in shape:
                 assert_is_instance(dim, int)
-        _check_shape.description = "Test grid shape for uniform rectilinear grid {gid}".format(gid=gid)
+
+        _check_shape.description = "Test grid shape for uniform rectilinear grid {gid}".format(
+            gid=gid
+        )
         yield _check_shape, bmi, gid
 
-    for gid in all_grids(bmi, gtype='scalar'):
+    for gid in all_grids(bmi, gtype="scalar"):
+
         def _check_shape(bmi, gid):
             shape = bmi.get_grid_shape(gid)
             assert_is_instance(shape, tuple)
             np.testing.assert_equal(shape, ())
-        _check_shape.description = "Test grid shape for scalar grid {gid}".format(gid=gid)
+
+        _check_shape.description = "Test grid shape for scalar grid {gid}".format(
+            gid=gid
+        )
         yield _check_shape, bmi, gid
 
 
@@ -35,7 +43,8 @@ def test_get_grid_shape():
 def test_get_grid_spacing():
     """Test the grid spacing."""
     bmi = new_bmi()
-    for gid in all_grids(bmi, gtype='uniform_rectilinear'):
+    for gid in all_grids(bmi, gtype="uniform_rectilinear"):
+
         def _check_spacing(bmi, gid):
             spacing = bmi.get_grid_spacing(gid)
             assert_is_instance(spacing, tuple)
@@ -44,5 +53,7 @@ def test_get_grid_spacing():
             for dim in spacing:
                 assert_is_instance(dim, (int, float))
 
-        _check_spacing.description = "Test grid spacing for uniform rectilinear grid {gid}".format(gid=gid)
+        _check_spacing.description = "Test grid spacing for uniform rectilinear grid {gid}".format(
+            gid=gid
+        )
         yield _check_spacing, bmi, gid

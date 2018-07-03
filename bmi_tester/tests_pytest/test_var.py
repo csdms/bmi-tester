@@ -27,7 +27,9 @@ def test_get_var_type(new_bmi, var_name):
     try:
         np.empty(1, dtype=dtype)
     except TypeError:
-        raise AssertionError('get_var_type: bad data type name ({dtype})'.format(dytpe=dtype))
+        raise AssertionError(
+            "get_var_type: bad data type name ({dtype})".format(dytpe=dtype)
+        )
 
 
 def test_get_var_units(new_bmi, var_name):
