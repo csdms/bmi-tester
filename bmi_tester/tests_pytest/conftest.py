@@ -7,7 +7,7 @@ from . import Bmi, INPUT_FILE
 from .utils import all_grids, all_names, out_names, strictly_input_names
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def new_bmi(infile=None):
     try:
         with open('.ROOT_DIR', 'r') as fp:
