@@ -16,7 +16,7 @@ def test(package, input_file=None, verbosity=None, bmi_version="1.1"):
 
     if verbosity:
         tests += ["-" + "v" * verbosity]
-    pytest.main(tests)
+    return pytest.main(tests)
 
 
 def configure_parser_test(sub_parsers=None):
@@ -71,7 +71,7 @@ def configure_parser_test(sub_parsers=None):
 
 
 def execute(args):
-    test(
+    return test(
         args.cls,
         input_file=args.infile,
         verbosity=args.verbose,
