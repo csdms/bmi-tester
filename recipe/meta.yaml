@@ -29,8 +29,7 @@ requirements:
 build:
   number: 0
   entry_points:
-    - bmi-tester=bmi_tester.cmd:main
-    - bmi-nose=bmi_tester.bminose:main
+    - bmi-test=bmi_tester.bmipytest:main
   script: python -m pip install --no-deps --ignore-installed .
 
 test:
