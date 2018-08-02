@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-from nose.tools import assert_almost_equal
+from pytest import approx
 
 import cfunits
 
@@ -9,7 +9,7 @@ def test_get_start_time(new_bmi):
     start = new_bmi.get_start_time()
 
     assert isinstance(start, float)
-    assert_almost_equal(start, 0.)
+    assert start == approx(0.)
 
 
 def test_get_time_step(new_bmi):
