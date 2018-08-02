@@ -21,6 +21,11 @@ def load_component(entry_point):
 
 # Both of these variables should be overriden to test a particular
 # BMI class
-Bmi = load_component(os.environ.get("BMITEST_CLASS", None))
+try:
+    class_to_test = os.environ["BMITEST_CLASS"]
+except KeyError:
+    Bmi = None
+else:
+    Bmi = load_component(class_to_test)
 INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE", None)
 BMI_VERSION_STRING = os.environ.get("BMI_VERSION_STRING", "1.1")

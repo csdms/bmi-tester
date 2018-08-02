@@ -1,58 +1,26 @@
-bmi_tester package
-==================
+bmi\_tester package
+===================
 
 Subpackages
 -----------
 
 .. toctree::
 
-    bmi_tester.tests
+    bmi_tester.tests_pytest
 
 Submodules
 ----------
 
-bmi_tester.api module
----------------------
-
-.. automodule:: bmi_tester.api
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-bmi_tester.bmitester module
----------------------------
-
-.. automodule:: bmi_tester.bmitester
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-bmi_tester.cmd module
----------------------
-
-.. automodule:: bmi_tester.cmd
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-bmi_tester.nosetester module
+bmi\_tester.bmipytest module
 ----------------------------
 
-.. automodule:: bmi_tester.nosetester
+.. automodule:: bmi_tester.bmipytest
     :members:
     :undoc-members:
     :show-inheritance:
 
-bmi_tester.redirect module
---------------------------
-
-.. automodule:: bmi_tester.redirect
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-bmi_tester.termcolors module
-----------------------------
+bmi\_tester.termcolors module
+-----------------------------
 
 .. automodule:: bmi_tester.termcolors
     :members:

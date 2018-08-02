@@ -1,14 +1,3 @@
-from nose.tools import (
-    assert_is_instance,
-    assert_less_equal,
-    assert_equal,
-    assert_greater,
-    assert_in,
-)
-
-# from nose import with_setup
-
-# from .utils import setup_func, teardown_func, all_names, all_grids, new_bmi
 from .utils import all_names, all_grids
 
 
@@ -43,3 +32,5 @@ def test_get_grid_type(new_bmi, gid):
     gtype = new_bmi.get_grid_type(gid)
     assert isinstance(gtype, str)
     assert gtype in VALID_GRID_TYPES
+    if gtype == "scalar":
+        assert new_bmi.get_grid_rank(gid) == 0

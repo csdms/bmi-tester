@@ -2,8 +2,6 @@
 import warnings
 
 import pytest
-from nose.tools import assert_is_instance, assert_equal
-from nose import with_setup
 
 import standard_names
 
@@ -18,7 +16,7 @@ def test_get_component_name(new_bmi):
 
 def test_var_names(var_name):
     """Test var names are valid."""
-    assert_is_instance(var_name, str)
+    assert isinstance(var_name, str)
     if standard_names.is_valid_name(var_name):
         standard_names.StandardName(var_name)
     else:
