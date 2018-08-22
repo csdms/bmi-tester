@@ -71,3 +71,26 @@ def new_bmi(infile=None):
         bmi.initialize(infile or INPUT_FILE)
 
     return bmi
+
+
+def get_test_parameters(infile=None):
+    infile = infile or INPUT_FILE
+
+    try:
+        with open(".ROOT_DIR", "r") as fp:
+            root_dir = fp.read()
+    except IOError:
+        root_dir = "."
+
+    bmi = Bmi()
+    with cd(root_dir):
+        bmi.initialize(infile or INPUT_FILE)
+
+    meta = {
+        "gid": all_grids(bmi),
+        "var_name": all_names(bmi),
+        "in_var_name": strictly_input_names(bmi),
+        "out_var_name": out_names(bmi),
+    }
+
+    return meta
