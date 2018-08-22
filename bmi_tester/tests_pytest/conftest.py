@@ -1,30 +1,44 @@
 from __future__ import print_function
 import os
+import sys
+import shutil
 
 import pytest
-from scripting.contexts import cd
+# from scripting.contexts import cd, cp
+from scripting import cd, cp
 
-from . import Bmi, INPUT_FILE
+from . import Bmi, INPUT_FILE, MANIFEST
 from .utils import all_grids, all_names, out_names, strictly_input_names
 
 
-@pytest.fixture
-def new_bmi(infile=None):
-    try:
-        with open(".ROOT_DIR", "r") as fp:
-            root_dir = fp.read()
-    except IOError:
-        root_dir = "."
+@pytest.fixture(scope="session")
+def bmi(tmpdir_factory, infile=None):
+    return Bmi()
 
-    bmi = Bmi()
-    with cd(root_dir):
-        bmi.initialize(infile or INPUT_FILE)
+
+@pytest.fixture(scope="session")
+def new_bmi(tmpdir_factory, infile=None):
+    infile = infile or INPUT_FILE
+    manifest = manifest or MANIFEST
+    with tmpdir_factory.as_cwd() as prev:
+        for file_ in manifest:
+            cp(os.path.join(prev, file_), file_, create_dirs=True)
+
+        bmi = Bmi()
+        with cd(root_dir):
+            bmi.initialize(infile or INPUT_FILE)
 
     return bmi
 
 
-def pytest_runtest_setup(item):
-    print("moving folders: {0}".format(item))
+@pytest.fixture
+def staged_tmpdir(tmpdir, infile=None, manifest=None):
+    infile = infile or INPUT_FILE
+    manifest = manifest or MANIFEST
+    with tmpdir.as_cwd() as prev:
+        for file_ in manifest:
+            cp(os.path.join(prev, file_), file_, create_dirs=True)
+    return tmpdir
 
 
 def pytest_generate_tests(metafunc):
