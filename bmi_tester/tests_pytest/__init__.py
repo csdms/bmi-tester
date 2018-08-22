@@ -28,4 +28,5 @@ except KeyError:
 else:
     Bmi = load_component(class_to_test)
 INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE", None)
+MANIFEST = os.environ.get("BMITEST_MANIFEST", INPUT_FILE or "").splitlines()
 BMI_VERSION_STRING = os.environ.get("BMI_VERSION_STRING", "1.1")
