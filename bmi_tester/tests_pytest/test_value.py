@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from .utils import strictly_input_names
-from . import BMI_VERSION_STRING
+from . import BMI_VERSION_STRING, Bmi, INPUT_FILE
 
 
 BMI_VERSION = StrictVersion(BMI_VERSION_STRING)
@@ -37,7 +37,7 @@ def empty_var_buffer(bmi, var_name):
     return values
 
 
-def test_get_var_location(new_bmi, var_name):
+def test_get_var_location(initialized_bmi, var_name):
     """Test for get_var_location"""
     if BMI_VERSION < "1.1":
         pytest.skip(
@@ -46,43 +46,47 @@ def test_get_var_location(new_bmi, var_name):
             )
         )
 
-    assert hasattr(new_bmi, "get_var_location")
+    assert hasattr(initialized_bmi, "get_var_location")
 
-    loc = new_bmi.get_var_location(var_name)
+    loc = initialized_bmi.get_var_location(var_name)
 
     assert isinstance(loc, str)
     assert loc in ("node", "edge", "face")
 
 
-def test_get_input_values(new_bmi, in_var_name):
+def test_get_input_values(staged_tmpdir, in_var_name):
     """Input values are numpy arrays."""
-    gid = new_bmi.get_var_grid(in_var_name)
+    with staged_tmpdir.as_cwd():
+        bmi = Bmi()
+        bmi.initialize(INPUT_FILE)
 
-    values = empty_var_buffer(new_bmi, in_var_name)
-    values.fill(BAD_VALUE[values.dtype.kind])
-    rtn = new_bmi.set_value(in_var_name, values)
-    if rtn is None:
-        warnings.warn("set_value should return the buffer")
-    else:
-        assert values is rtn
-    if np.isnan(BAD_VALUE[values.dtype.kind]):
-        assert np.all(np.isnan(values))
-    else:
-        assert np.all(values == BAD_VALUE[values.dtype.kind])
+        gid = bmi.get_var_grid(in_var_name)
+
+        values = empty_var_buffer(bmi, in_var_name)
+        values.fill(BAD_VALUE[values.dtype.kind])
+        rtn = bmi.set_value(in_var_name, values)
+        if rtn is None:
+            warnings.warn("set_value should return the buffer")
+        else:
+            assert values is rtn
+        if np.isnan(BAD_VALUE[values.dtype.kind]):
+            assert np.all(np.isnan(values))
+        else:
+            assert np.all(values == BAD_VALUE[values.dtype.kind])
 
 
-def test_get_output_values(new_bmi, out_var_name):
+def test_get_output_values(initialized_bmi, out_var_name):
     """Output values are numpy arrays."""
-    gid = new_bmi.get_var_grid(out_var_name)
+    gid = initialized_bmi.get_var_grid(out_var_name)
 
-    values = empty_var_buffer(new_bmi, out_var_name)
+    values = empty_var_buffer(initialized_bmi, out_var_name)
     values.fill(BAD_VALUE[values.dtype.kind])
     initial = values.copy()
     try:
-        rtn = new_bmi.get_value(out_var_name, values)
+        rtn = initialized_bmi.get_value(out_var_name, values)
     except TypeError:
         warnings.warn("get_value should take two arguments")
-        rtn = new_bmi.get_value(out_var_name)
+        rtn = initialized_bmi.get_value(out_var_name)
         values[:] = rtn
     else:
         assert values is rtn

@@ -17,7 +17,7 @@ def bmi(tmpdir_factory, infile=None):
 
 
 @pytest.fixture(scope="session")
-def new_bmi(tmpdir_factory, infile=None):
+def initialized_bmi(tmpdir_factory, infile=None, manifest=None):
     infile = infile or INPUT_FILE
     manifest = manifest or MANIFEST
     with tmpdir_factory.as_cwd() as prev:
