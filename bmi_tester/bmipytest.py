@@ -1,4 +1,6 @@
 #! /usr/bin/env python
+from __future__ import print_function
+
 import os
 import sys
 import textwrap
@@ -8,16 +10,31 @@ import pkg_resources
 import pytest
 
 
-def test(package, input_file=None, manifest=None, verbosity=None, bmi_version="1.1"):
-    tests = [pkg_resources.resource_filename(__name__, os.path.join("tests_pytest"))]
+def test(
+    package,
+    input_file=None,
+    manifest=None,
+    bmi_version="1.1",
+    extra_args=None,
+    help_pytest=False,
+):
+    args = [pkg_resources.resource_filename(__name__, os.path.join("tests_pytest"))]
     os.environ["BMITEST_CLASS"] = package
     os.environ["BMITEST_INPUT_FILE"] = input_file
-    os.environ["BMITEST_MANIFEST"] = manifest
     os.environ["BMI_VERSION_STRING"] = bmi_version
 
-    if verbosity:
-        tests += ["-" + "v" * verbosity]
-    return pytest.main(tests)
+    if manifest is not None:
+        with open(manifest, "r") as fp:
+            manifest = fp.read()
+        os.environ["BMITEST_MANIFEST"] = manifest
+
+    extra_args = extra_args or []
+    if help_pytest:
+        extra_args.append("--help")
+    args += extra_args
+
+    print("Running: {0}".format(" ".join(args)))
+    return pytest.main(args)
 
 
 def configure_parser_test(sub_parsers=None):
@@ -50,41 +67,30 @@ def configure_parser_test(sub_parsers=None):
 
     p.add_argument("cls", help="Full name of class to test.")
     p.add_argument("--infile", default="", help="Name of input file for init method.")
-    p.add_argument("--manifest", default="", type=str, help="Name of manifest file of input files.")
+    p.add_argument(
+        "--manifest", default="", type=str, help="Name of manifest file of input files."
+    )
     p.add_argument("--bmi-version", default="1.1", help="BMI version to test against")
-    p.add_argument(
-        "-v",
-        "--verbose",
-        action="count",
-        dest="verbose",
-        default=1,
-        help="increase verbosity",
-    )
-    p.add_argument(
-        "--no-doctests",
-        action="store_false",
-        dest="doctests",
-        default=True,
-        help="Do not run doctests in module",
-    )
+    p.add_argument("--help-pytest", action="store_true", help="Print help for pytest")
     p.set_defaults(func=execute)
 
     return p
 
 
-def execute(args):
+def execute(args, extra):
     return test(
         args.cls,
         input_file=args.infile,
         manifest=args.manifest,
-        verbosity=args.verbose,
         bmi_version=args.bmi_version,
+        extra_args=extra,
+        help_pytest=args.help_pytest,
     )
 
 
 def main():
     p = configure_parser_test()
 
-    args = p.parse_args()
+    args, extra = p.parse_known_args()
 
-    sys.exit(args.func(args))
+    sys.exit(args.func(args, extra))
