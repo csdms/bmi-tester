@@ -8,10 +8,11 @@ import pkg_resources
 import pytest
 
 
-def test(package, input_file=None, verbosity=None, bmi_version="1.1"):
+def test(package, input_file=None, manifest=None, verbosity=None, bmi_version="1.1"):
     tests = [pkg_resources.resource_filename(__name__, os.path.join("tests_pytest"))]
     os.environ["BMITEST_CLASS"] = package
     os.environ["BMITEST_INPUT_FILE"] = input_file
+    os.environ["BMITEST_MANIFEST"] = manifest
     os.environ["BMI_VERSION_STRING"] = bmi_version
 
     if verbosity:
@@ -49,6 +50,7 @@ def configure_parser_test(sub_parsers=None):
 
     p.add_argument("cls", help="Full name of class to test.")
     p.add_argument("--infile", default="", help="Name of input file for init method.")
+    p.add_argument("--manifest", default="", type=str, help="Name of manifest file of input files.")
     p.add_argument("--bmi-version", default="1.1", help="BMI version to test against")
     p.add_argument(
         "-v",
@@ -74,6 +76,7 @@ def execute(args):
     return test(
         args.cls,
         input_file=args.infile,
+        manifest=args.manifest,
         verbosity=args.verbose,
         bmi_version=args.bmi_version,
     )
