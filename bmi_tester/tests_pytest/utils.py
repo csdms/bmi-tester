@@ -1,5 +1,3 @@
-
-
 def all_names(bmi):
     in_names = bmi.get_input_var_names()
     out_names = bmi.get_output_var_names()
@@ -11,10 +9,9 @@ def out_names(bmi):
     return set(out_names)
 
 
-def strictly_input_names(bmi):
+def in_names(bmi):
     in_names = bmi.get_input_var_names()
-    out_names = bmi.get_output_var_names()
-    return set(in_names) - set(out_names)
+    return set(in_names)
 
 
 def all_grids(bmi, gtype=None):

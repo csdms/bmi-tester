@@ -1,13 +1,12 @@
 from __future__ import print_function
-import warnings
 
+import warnings
 from distutils.version import StrictVersion
+
 import numpy as np
 import pytest
 
-from .utils import strictly_input_names
-from .conftest import BMI_VERSION_STRING, Bmi, INPUT_FILE
-
+from .conftest import BMI_VERSION_STRING, INPUT_FILE, Bmi
 
 BMI_VERSION = StrictVersion(BMI_VERSION_STRING)
 
