@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 import pytest
 
-from . import Bmi, INPUT_FILE
+from .conftest import Bmi, INPUT_FILE
 
 
 def test_has_initialize(bmi):

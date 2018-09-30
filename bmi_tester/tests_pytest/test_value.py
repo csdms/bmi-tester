@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from .utils import strictly_input_names
-from . import BMI_VERSION_STRING, Bmi, INPUT_FILE
+from .conftest import BMI_VERSION_STRING, Bmi, INPUT_FILE
 
 
 BMI_VERSION = StrictVersion(BMI_VERSION_STRING)
