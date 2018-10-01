@@ -37,6 +37,7 @@ install:
 - source activate _testing
 - conda install -q conda-build anaconda-client sphinx pytest flake8
 - conda install -q --file=requirements.txt
+- python setup.py install
 script:
 - make lint test
 - conda build ./conda-recipe --old-build-string
