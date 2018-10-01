@@ -10,13 +10,14 @@ source:
 requirements:
   build:
     - python
+    - pip
 
   run:
     - python
     - numpy
     - pytest
     - scripting
-    - cfunits-python
+    - cfunits
     - standard_names
 
 build:
