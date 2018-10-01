@@ -10,20 +10,14 @@ source:
 requirements:
   build:
     - python
-    - setuptools
-    - numpydoc
-    - numpy
-    - pytest
-    - cfunits-python
-    - standard_names
+    - pip
 
   run:
     - python
-    - setuptools
-    - numpydoc
     - numpy
     - pytest
-    - cfunits-python
+    - scripting
+    - cfunits
     - standard_names
 
 build:

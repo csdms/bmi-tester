@@ -1,25 +1,27 @@
 #! /usr/bin/env python
-import pytest
-
-from . import Bmi, INPUT_FILE
+from .conftest import INPUT_FILE, Bmi
 
 
-def test_has_initialize(new_bmi):
+def test_has_initialize(bmi):
     """Test component has an initialize method."""
-    assert hasattr(new_bmi, "initialize")
+    assert hasattr(bmi, "initialize")
 
 
-def test_initialize(new_bmi):
+def test_initialize(staged_tmpdir):
     """Test component can initialize itself."""
-    bmi = Bmi()
-    assert bmi.initialize(INPUT_FILE) is None
+    with staged_tmpdir.as_cwd():
+        bmi = Bmi()
+        assert bmi.initialize(INPUT_FILE) is None
 
 
-def test_update(new_bmi):
+def test_update(staged_tmpdir):
     """Test component can update itself."""
-    assert new_bmi.update() is None
+    with staged_tmpdir.as_cwd():
+        bmi = Bmi()
+        bmi.initialize(INPUT_FILE)
+        assert bmi.update() is None
 
 
-def test_has_finalize(new_bmi):
+def test_has_finalize(bmi):
     """Test component has a finalize method."""
-    assert hasattr(new_bmi, "finalize")
+    assert hasattr(bmi, "finalize")
