@@ -15,6 +15,7 @@ requirements:
     - python
     - numpy
     - pytest
+    - scripting
     - cfunits-python
     - standard_names
 
