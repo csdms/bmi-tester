@@ -34,9 +34,11 @@ install:
 - conda config --set always_yes yes --set changeps1 no
 - conda create -n _testing python=$TRAVIS_PYTHON_VERSION
 - source activate _testing
-- conda install -q conda-build anaconda-client sphinx pytest pytest-cov coveralls
+- conda install -q conda-build anaconda-client sphinx pytest
+- conda install -q --file=requirements.txt
 script:
-- conda build ./recipe -c conda-forge -c csdms-stack --old-build-string
+- make lint test
+- conda build ./conda-recipe --old-build-string
 after_success:
 - curl https://raw.githubusercontent.com/csdms/ci-tools/master/anaconda_upload.py
   > $HOME/anaconda_upload.py
