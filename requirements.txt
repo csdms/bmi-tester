@@ -1,5 +1,3 @@
-numpydoc
-nose
 numpy
 cfunits
 standard_names
