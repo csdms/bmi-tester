@@ -1,14 +1,77 @@
 from __future__ import print_function
+
+import importlib
 import os
-import sys
 import shutil
+import sys
 
 import pytest
-# from scripting.contexts import cd, cp
 from scripting import cd, cp
 
-from . import Bmi, INPUT_FILE, MANIFEST
-from .utils import get_test_parameters
+
+def load_component(entry_point):
+    module_name, cls_name = entry_point.split(":")
+
+    component = None
+    try:
+        module = importlib.import_module(module_name)
+    except ImportError:
+        raise
+    else:
+        try:
+            component = module.__dict__[cls_name]
+        except KeyError:
+            raise ImportError(cls_name)
+
+    return component
+
+
+try:
+    class_to_test = os.environ["BMITEST_CLASS"]
+except KeyError:
+    Bmi = None
+else:
+    Bmi = load_component(class_to_test)
+INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE", None)
+BMI_VERSION_STRING = os.environ.get("BMI_VERSION_STRING", "1.1")
+
+
+def all_grids(bmi, gtype=None):
+    in_names = set(bmi.get_input_var_names())
+    out_names = set(bmi.get_output_var_names())
+
+    grids = set()
+    for name in in_names | out_names:
+        gid = bmi.get_var_grid(name)
+        if gtype == bmi.get_grid_type(gid)[1] or gtype is None:
+            grids.add(gid)
+    return grids
+
+
+def get_test_parameters(infile=None):
+    infile = infile or INPUT_FILE
+
+    try:
+        with open(".ROOT_DIR", "r") as fp:
+            root_dir = fp.read()
+    except IOError:
+        root_dir = "."
+
+    bmi = Bmi()
+    with cd(root_dir):
+        bmi.initialize(infile or INPUT_FILE)
+
+    in_names = set(bmi.get_input_var_names())
+    out_names = set(bmi.get_output_var_names())
+
+    meta = {
+        "gid": all_grids(bmi),
+        "var_name": in_names | out_names,
+        "in_var_name": in_names - out_names,
+        "out_var_name": out_names,
+    }
+
+    return meta
 
 
 @pytest.fixture(scope="session")
@@ -18,8 +81,9 @@ def bmi():
 
 @pytest.fixture(scope="session")
 def initialized_bmi(tmpdir_factory, infile=None, manifest=None):
-    infile = infile or INPUT_FILE
-    manifest = manifest or MANIFEST
+    infile = os.environ.get("BMITEST_INPUT_FILE", None)
+    manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
+
     tmp = tmpdir_factory.mktemp("data")
     with tmp.as_cwd() as prev:
         for file_ in manifest:
@@ -33,8 +97,8 @@ def initialized_bmi(tmpdir_factory, infile=None, manifest=None):
 
 @pytest.fixture
 def staged_tmpdir(tmpdir, infile=None, manifest=None):
-    infile = infile or INPUT_FILE
-    manifest = manifest or MANIFEST
+    infile = os.environ.get("BMITEST_INPUT_FILE", None)
+    manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
     with tmpdir.as_cwd() as prev:
         for file_ in manifest:
             cp(os.path.join(prev, file_), file_, create_dirs=True)
