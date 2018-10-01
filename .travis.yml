@@ -32,6 +32,7 @@ install:
 - export PATH="$CONDA_PREFIX/bin:$PATH"
 - hash -r
 - conda config --set always_yes yes --set changeps1 no
+- conda config --add channels conda-forge
 - conda create -n _testing python=$TRAVIS_PYTHON_VERSION
 - source activate _testing
 - conda install -q conda-build anaconda-client sphinx pytest
