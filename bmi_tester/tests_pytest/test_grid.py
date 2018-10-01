@@ -1,6 +1,3 @@
-from .utils import all_names, all_grids
-
-
 VALID_GRID_TYPES = (
     "scalar",
     "vector",

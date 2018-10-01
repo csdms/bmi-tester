@@ -1,6 +1,5 @@
-import numpy as np
-
 import cfunits
+import numpy as np
 
 
 def test_get_var_grid(initialized_bmi, var_name):
