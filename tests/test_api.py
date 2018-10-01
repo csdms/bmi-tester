@@ -3,7 +3,7 @@ from bmi_tester.api import check_bmi
 
 def test_bmi_check(tmpdir):
     with tmpdir.as_cwd():
-        with open("input.yaml", "w") as fp:
+        with open("input.yaml", "w"):
             pass
         assert (
             check_bmi(
@@ -15,7 +15,7 @@ def test_bmi_check(tmpdir):
 
 def test_bmi_check_with_manifest_as_list(tmpdir):
     with tmpdir.as_cwd():
-        with open("input.yaml", "w") as fp:
+        with open("input.yaml", "w"):
             pass
         assert (
             check_bmi(
@@ -32,7 +32,7 @@ def test_bmi_check_with_manifest_as_string(tmpdir):
     with tmpdir.as_cwd():
         with open("manifest.txt", "w") as fp:
             fp.write("input.yaml")
-        with open("input.yaml", "w") as fp:
+        with open("input.yaml", "w"):
             pass
         assert (
             check_bmi(

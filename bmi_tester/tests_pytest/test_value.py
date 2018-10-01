@@ -59,8 +59,6 @@ def test_get_input_values(staged_tmpdir, in_var_name):
         bmi = Bmi()
         bmi.initialize(INPUT_FILE)
 
-        gid = bmi.get_var_grid(in_var_name)
-
         values = empty_var_buffer(bmi, in_var_name)
         values.fill(BAD_VALUE[values.dtype.kind])
         rtn = bmi.set_value(in_var_name, values)
@@ -76,8 +74,6 @@ def test_get_input_values(staged_tmpdir, in_var_name):
 
 def test_get_output_values(initialized_bmi, out_var_name):
     """Output values are numpy arrays."""
-    gid = initialized_bmi.get_var_grid(out_var_name)
-
     values = empty_var_buffer(initialized_bmi, out_var_name)
     values.fill(BAD_VALUE[values.dtype.kind])
     initial = values.copy()
