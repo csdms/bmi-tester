@@ -19,6 +19,7 @@ requirements:
     - scripting
     - cfunits
     - standard_names
+    - model_metadata
 
 build:
   number: 0
