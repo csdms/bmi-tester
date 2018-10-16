@@ -3,3 +3,4 @@ cfunits
 standard_names
 pytest
 scripting
+model_metadata
