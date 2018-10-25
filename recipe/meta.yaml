@@ -20,6 +20,7 @@ requirements:
     - cfunits
     - standard_names
     - model_metadata
+    - click
 
 build:
   number: 0
@@ -31,7 +32,7 @@ test:
   imports:
     - bmi_tester
   commands:
-    - bmi-test -h
+    - bmi-test --help
 
 about:
   home: http://github.com/csdms/bmi-tester
