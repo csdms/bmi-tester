@@ -4,3 +4,4 @@ standard_names
 pytest
 scripting
 model_metadata
+click
