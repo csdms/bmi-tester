@@ -1,6 +1,7 @@
 #! /usr/bin/env python
-import cfunits
 from pytest import approx
+
+import cfunits
 
 
 def test_get_start_time(initialized_bmi):
@@ -8,7 +9,7 @@ def test_get_start_time(initialized_bmi):
     start = initialized_bmi.get_start_time()
 
     assert isinstance(start, float)
-    assert start == approx(0.)
+    assert start == approx(0.0)
 
 
 def test_get_time_step(initialized_bmi):

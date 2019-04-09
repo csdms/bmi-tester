@@ -41,16 +41,16 @@ class Bmi(object):
         return self._output_var_names
 
     def get_current_time(self):
-        return 0.
+        return 0.0
 
     def get_start_time(self):
-        return 0.
+        return 0.0
 
     def get_end_time(self):
-        return 1.
+        return 1.0
 
     def get_time_step(self):
-        return 1.
+        return 1.0
 
     def get_time_units(self):
         return "s"
@@ -87,7 +87,7 @@ class Bmi(object):
         return shape
 
     def get_grid_spacing(self, id_, spacing):
-        spacing[:] = (10., 20.)
+        spacing[:] = (10.0, 20.0)
         return spacing
 
     def get_value(self, name, buffer):
