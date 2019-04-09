@@ -25,6 +25,7 @@ setup(
         "cfunits",
         "click",
         "model_metadata",
+        "netCDF4",
         "numpy",
         "py-scripting",
         "pytest",
