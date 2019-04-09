@@ -1,7 +1,3 @@
-numpy
-cfunits
-standard_names
-pytest
-scripting
-model_metadata
-click
+coveralls
+pytest>=3.6
+pytest-cov
