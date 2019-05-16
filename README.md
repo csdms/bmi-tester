@@ -5,16 +5,16 @@ Status](https://readthedocs.org/projects/bmi-tester/badge/?version=latest)](http
 [![Coverage
 Status](https://coveralls.io/repos/github/csdms/bmi_tester/badge.svg?branch=master)](https://coveralls.io/github/csdms/bmi_tester?branch=master)
 [![Anaconda-Server
-Badge](https://anaconda.org/csdms/bmi_tester/badges/version.svg)](https://anaconda.org/csdms/bmi_tester)
+Badge](https://anaconda.org/conda-forge/bmi_tester/badges/version.svg)](https://anaconda.org/conda-forge/bmi_tester)
 [![Anaconda-Server
-Badge](https://anaconda.org/csdms/bmi_tester/badges/installer/conda.svg)](https://conda.anaconda.org/csdms)
+Badge](https://anaconda.org/conda-forge/bmi_tester/badges/installer/conda.svg)](https://conda.anaconda.org/conda-forge)
 [![Anaconda-Server
-Badge](https://anaconda.org/csdms/bmi_tester/badges/downloads.svg)](https://anaconda.org/csdms/bmi_tester)
+Badge](https://anaconda.org/conda-forge/bmi_tester/badges/downloads.svg)](https://anaconda.org/conda-forge/bmi_tester)
 
 bmi-tester
 ==========
 
-Test a Python implementation of the Basic Model Interface.
+Test Python implementations of the Basic Model Interface.
 
 Links
 -----

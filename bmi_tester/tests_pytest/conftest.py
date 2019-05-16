@@ -4,6 +4,7 @@ import importlib
 import os
 
 import pytest
+
 from scripting import cd, cp
 
 
@@ -84,8 +85,9 @@ def initialized_bmi(tmpdir_factory, infile=None, manifest=None):
 
     tmp = tmpdir_factory.mktemp("data")
     with tmp.as_cwd() as prev:
-        for file_ in manifest:
-            cp(os.path.join(str(prev), file_), file_, create_dirs=True)
+        for file_ in [fname.strip() for fname in manifest]:
+            if file_:
+                cp(os.path.join(str(prev), file_), file_, create_dirs=True)
 
         bmi = Bmi()
         bmi.initialize(infile)
@@ -98,8 +100,9 @@ def staged_tmpdir(tmpdir, infile=None, manifest=None):
     infile = os.environ.get("BMITEST_INPUT_FILE", None)
     manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
     with tmpdir.as_cwd() as prev:
-        for file_ in manifest:
-            cp(os.path.join(str(prev), file_), file_, create_dirs=True)
+        for file_ in [fname.strip() for fname in manifest]:
+            if file_:
+                cp(os.path.join(str(prev), file_), file_, create_dirs=True)
     return tmpdir
 
 

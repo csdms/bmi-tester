@@ -1,10 +1,12 @@
 #! /usr/bin/env python
 from __future__ import print_function
 
+import importlib
 import re
 import tempfile
 
 import click
+
 from model_metadata.api import query, stage
 from scripting import cd
 
@@ -33,6 +35,23 @@ def validate_entry_point(ctx, param, value):
                 param_hint="module_name:ClassName",
             )
     return value
+
+
+def load_component(entry_point):
+    module_name, cls_name = entry_point.split(":")
+
+    component = None
+    try:
+        module = importlib.import_module(module_name)
+    except ImportError:
+        raise
+    else:
+        try:
+            component = module.__dict__[cls_name]
+        except KeyError:
+            raise ImportError(cls_name)
+
+    return component
 
 
 @click.command(
@@ -85,7 +104,8 @@ def main(
 
     if root_dir is None:
         stage_dir = tempfile.mkdtemp()
-        model = class_name
+        # model = class_name
+        model = load_component(entry_point)
         config_file = query(model, "run.config_file.path")
         manifest = stage(model, stage_dir)
     else:
