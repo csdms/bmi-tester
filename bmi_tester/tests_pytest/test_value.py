@@ -26,7 +26,9 @@ def empty_var_buffer(bmi, var_name):
     if loc == "node":
         size = bmi.get_grid_size(gid)
     elif loc == "edge":
-        size = bmi.get_grid_number_of_edges(gid)
+        size = bmi.get_grid_edge_count(gid)
+    elif loc == "face":
+        size = bmi.get_grid_face_count(gid)
     else:
         size = 0
 
