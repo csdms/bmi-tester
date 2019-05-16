@@ -3,5 +3,5 @@ channels:
   - conda-forge
 dependencies:
   - python=3.7
-  - cfunits
+  - pymt
   - udunits2
