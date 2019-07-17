@@ -23,7 +23,6 @@ install:
   - cmd: conda update --yes --quiet conda
   - cmd: set PYTHONUNBUFFERED=1
   - cmd: conda config --set always_yes yes
-  - cmd: conda update conda
   - cmd: conda config --append channels conda-forge
   - cmd: conda env create -n test_env --file ci/requirements-$CONDA_ENV.yml
   - cmd: conda activate test_env
@@ -34,4 +33,4 @@ install:
 build: false
 
 test_script:
-  - pytest
+  - pytest -vvv
