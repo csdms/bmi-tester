@@ -100,14 +100,10 @@ def main(
     pytest_args,
     help_pytest,
 ):
-    module_name, class_name = entry_point.split(":")
-
     if root_dir is None:
         stage_dir = tempfile.mkdtemp()
-        # model = class_name
-        model = load_component(entry_point)
-        config_file = query(model, "run.config_file.path")
-        manifest = stage(model, stage_dir)
+        config_file = query(entry_point, "run.config_file.path")
+        manifest = stage(entry_point, stage_dir)
     else:
         stage_dir = root_dir
 
