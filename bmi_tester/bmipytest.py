@@ -47,7 +47,7 @@ def load_component(entry_point):
         raise
     else:
         try:
-            component = module.__dict__[cls_name]
+            component = module.__dict__[cls_name].__name__
         except KeyError:
             raise ImportError(cls_name)
 
