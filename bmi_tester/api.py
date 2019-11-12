@@ -35,4 +35,8 @@ def check_bmi(
     args += extra_args
 
     print("Running: {0}".format(" ".join(args)), file=sys.stderr)
+    print("export BMITEST_CLASS={0}".format(os.environ["BMITEST_CLASS"]))
+    print("export BMITEST_INPUT_FILE={0}".format(os.environ["BMITEST_INPUT_FILE"]))
+    print("export BMI_VERSION_STRING={0}".format(os.environ["BMI_VERSION_STRING"]))
+
     return pytest.main(args)
