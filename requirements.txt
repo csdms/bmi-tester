@@ -1,3 +1,8 @@
-coveralls
-pytest>=3.6
-pytest-cov
+cfunits
+click
+model_metadata
+netCDF4
+numpy
+py-scripting
+pytest
+standard_names
