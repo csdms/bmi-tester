@@ -28,7 +28,7 @@ install:
   - cmd: set PYTHONUNBUFFERED=1
   - cmd: conda config --set always_yes yes
   - cmd: conda config --append channels conda-forge
-  - cmd: conda create -n test_env python=$PYTHON
+  - cmd: conda create -n test_env python=%PYTHON%
   - cmd: conda activate test_env
   - cmd: python --version
   - cmd: pip install . -r requirements-testing.txt
