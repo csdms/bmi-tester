@@ -31,3 +31,10 @@ def test_get_grid_type(initialized_bmi, gid):
     assert gtype in VALID_GRID_TYPES
     if gtype == "scalar":
         assert initialized_bmi.get_grid_rank(gid) == 0
+
+
+def test_get_grid_node_count(initialized_bmi, gid):
+    "Test number of nodes in grid {gid}".format(gid=gid)
+    size = initialized_bmi.get_grid_node_count(gid)
+    assert isinstance(size, int)
+    assert size > 0
