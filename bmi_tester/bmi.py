@@ -79,6 +79,9 @@ class Bmi(object):
     def get_grid_size(self, id_):
         return 12
 
+    def get_grid_node_count(self, id_):
+        return 12
+
     def get_grid_type(self, id_):
         return "uniform_rectilinear"
 
