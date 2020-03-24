@@ -32,7 +32,6 @@ install:
   - cmd: conda activate test_env
   - cmd: python --version
   - cmd: pip install . -r requirements-testing.txt
-  - cmd: conda install pymt
 
 build: false
 

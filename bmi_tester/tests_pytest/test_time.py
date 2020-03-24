@@ -1,5 +1,6 @@
 #! /usr/bin/env python
-from pymt import cfunits
+#from pymt import cfunits
+import cfunits
 from pytest import approx
 
 
