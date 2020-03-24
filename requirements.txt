@@ -1,4 +1,3 @@
-cfunits
 click
 model_metadata
 netCDF4
