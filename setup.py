@@ -25,9 +25,7 @@ setup(
     packages=find_packages(),
     cmdclass=versioneer.get_cmdclass(),
     entry_points={
-        "console_scripts": [
-            "bmi-test=bmi_tester.bmipytest:main"
-        ],
+        "console_scripts": ["bmi-test=bmi_tester.bmipytest:main"],
         "bmi.plugins": ["bmi_test=bmi_tester.bmipytest:configure_parser_test"],
     },
 )

@@ -1,7 +1,6 @@
 #! /usr/bin/env python
-from pytest import approx
-
 from pymt import cfunits
+from pytest import approx
 
 
 def test_get_start_time(initialized_bmi):

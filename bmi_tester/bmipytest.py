@@ -6,7 +6,6 @@ import re
 import tempfile
 
 import click
-
 from model_metadata.api import query, stage
 from scripting import cd
 
