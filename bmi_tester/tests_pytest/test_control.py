@@ -1,4 +1,3 @@
-#! /usr/bin/env python
 from .conftest import INPUT_FILE, Bmi
 
 

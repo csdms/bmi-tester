@@ -1,8 +1,6 @@
-#! /usr/bin/env python
 import warnings
 
 import pytest
-
 import standard_names
 
 

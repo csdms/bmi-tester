@@ -3,11 +3,15 @@ environment:
   matrix:
     - TARGET_ARCH: x64
       CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
-      CONDA_ENV: py37-windows
+      PYTHON: "3.8"
 
     - TARGET_ARCH: x64
-      CONDA_INSTALL_LOCN: C:\\Miniconda36-x64
-      CONDA_ENV: py36-windows
+      CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
+      PYTHON: "3.7"
+
+    - TARGET_ARCH: x64
+      CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
+      PYTHON: "3.6"
 
 platform:
   - x64
@@ -24,11 +28,11 @@ install:
   - cmd: set PYTHONUNBUFFERED=1
   - cmd: conda config --set always_yes yes
   - cmd: conda config --append channels conda-forge
-  - cmd: conda env create -n test_env --file ci/requirements-$CONDA_ENV.yml
+  - cmd: conda create -n test_env python=%PYTHON%
   - cmd: conda activate test_env
   - cmd: python --version
-  - cmd: pip install . -r requirements.txt
-
+  - cmd: pip install . -r requirements-testing.txt
+  - cmd: conda install 'pymt>=1.1'
 
 build: false
 

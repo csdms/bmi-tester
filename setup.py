@@ -21,23 +21,11 @@ setup(
         "Programming Language :: Python :: Implementation :: CPython",
         "Topic :: Scientific/Engineering :: Physics",
     ],
-    install_requires=[
-        "cfunits",
-        "click",
-        "model_metadata",
-        "netCDF4",
-        "numpy",
-        "py-scripting",
-        "pytest",
-        "standard_names",
-    ],
+    install_requires=open("requirements.txt", "r").read().splitlines(),
     packages=find_packages(),
     cmdclass=versioneer.get_cmdclass(),
     entry_points={
-        "console_scripts": [
-            # 'bmi-tester=bmi_tester.cmd:main',
-            "bmi-test=bmi_tester.bmipytest:main"
-        ],
+        "console_scripts": ["bmi-test=bmi_tester.bmipytest:main"],
         "bmi.plugins": ["bmi_test=bmi_tester.bmipytest:configure_parser_test"],
     },
 )

@@ -1,6 +1,10 @@
 import numpy as np
+import pytest
 
-from pymt import cfunits
+try:
+    from pymt import cfunits
+except FileNotFoundError:
+    cfunits = None
 
 
 def test_get_var_grid(initialized_bmi, var_name):
@@ -32,6 +36,7 @@ def test_get_var_type(initialized_bmi, var_name):
         )
 
 
+@pytest.mark.skipif(cfunits is None, reason="cfunits is broken on this platform")
 def test_get_var_units(initialized_bmi, var_name):
     """Test the units of the variables."""
     units = initialized_bmi.get_var_units(var_name)

@@ -4,7 +4,6 @@ import importlib
 import os
 
 import pytest
-
 from scripting import cd, cp
 
 
@@ -58,7 +57,7 @@ def get_test_parameters(infile=None):
 
     bmi = Bmi()
     with cd(root_dir):
-        bmi.initialize(infile or INPUT_FILE)
+        bmi.initialize(infile)
 
     in_names = set(bmi.get_input_var_names())
     out_names = set(bmi.get_output_var_names())
@@ -106,8 +105,10 @@ def staged_tmpdir(tmpdir, infile=None, manifest=None):
     return tmpdir
 
 
+params = get_test_parameters()
+
+
 def pytest_generate_tests(metafunc):
-    params = get_test_parameters()
 
     if "gid" in metafunc.fixturenames:
         metafunc.parametrize("gid", params["gid"])

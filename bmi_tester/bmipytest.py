@@ -1,17 +1,23 @@
 #! /usr/bin/env python
-from __future__ import print_function
-
 import importlib
+import os
 import re
+import sys
 import tempfile
+from functools import partial
 
 import click
-
+import pkg_resources
+from model_metadata import MetadataNotFoundError
 from model_metadata.api import query, stage
+from pytest import ExitCode
 from scripting import cd
 
 from . import __version__
 from .api import check_bmi
+
+out = partial(click.secho, bold=True, err=True)
+err = partial(click.secho, fg="red", err=True)
 
 
 def validate_entry_point(ctx, param, value):
@@ -54,6 +60,21 @@ def load_component(entry_point):
     return component
 
 
+def _stage_component(entry_point, stage_dir="."):
+    config_file = query(entry_point, "run.config_file.path")
+    manifest = stage(entry_point, str(stage_dir))
+
+    return config_file, manifest
+
+
+def _tree(files):
+    tree = []
+    prefix = ["|--"] * (len(files) - 1) + ["`--"]
+    for p, fname in zip(prefix, files):
+        tree.append(f"{p} {fname}")
+    return os.linesep.join(tree)
+
+
 @click.command(
     context_settings=dict(ignore_unknown_options=True, allow_extra_args=True)
 )
@@ -78,7 +99,13 @@ def load_component(entry_point):
     ),
     help="Define root directory for BMI tests",
 )
-@click.option("--config-file", help="Name to model configuration file")
+@click.option(
+    "--config-file",
+    type=click.Path(
+        exists=True, file_okay=True, dir_okay=False, writable=True, resolve_path=True
+    ),
+    help="Name of model configuration file",
+)
 @click.option(
     "--manifest",
     type=click.Path(
@@ -100,20 +127,73 @@ def main(
     pytest_args,
     help_pytest,
 ):
-    if root_dir is None:
-        stage_dir = tempfile.mkdtemp()
-        config_file = query(entry_point, "run.config_file.path")
-        manifest = stage(entry_point, stage_dir)
-    else:
-        stage_dir = root_dir
+    """Validate a BMI implementation.
 
-    print("Running tests in {0}".format(stage_dir))
+    \b
+    Examples:
+
+      Test a BMI for the class *Hydrotrend* in module *pymt_hydrotrend*,
+
+        $ bmi-test pymt_hydrotrend:Hydrotrend
+
+    This will test the BMI with a default set of input files as obtained
+    through the model metadata associated with the component.
+
+    If the component you would like to test does not have model metadata
+    that bmi-tester recognizes, or you would like to test with a non-default
+    set of input files, use the *--root-dir* and *--config-file* options.
+
+        $ bmi-tests pymt_hydrotrend:Hydrotrend --root-dir=my_files/ --config-file=config.txt
+
+    where *my_files* is a folder that contains the input files to test with
+    and *config.txt* is the configuration file, which will be passed to the
+    *initialize* method.
+    """
+    if root_dir and not config_file:
+        err("using --root-dir but no config file specified (use --config-file)")
+        raise click.Abort()
+
+    if root_dir:
+        stage_dir = root_dir
+        if manifest is None:
+            manifest = os.listdir(stage_dir)
+    else:
+        stage_dir = tempfile.mkdtemp()
+        try:
+            config_file, manifest = _stage_component(entry_point, stage_dir)
+        except MetadataNotFoundError:
+            _, name = entry_point.split(":")
+            config_file, manifest = _stage_component(name, stage_dir)
+
+    tests_dir = pkg_resources.resource_filename(__name__, "tests_pytest")
+
+    if not quiet:
+        out(f"Location of tests: {tests_dir}")
+        out(f"Entry point: {entry_point}")
+        out(f"BMI version: {bmi_version}")
+        out(f"Stage folder: {stage_dir}")
+        out(f"> tree -d {stage_dir}")
+        if manifest:
+            out(_tree(manifest))
+        out(f"> cat {stage_dir}/{config_file}")
+        with open(os.path.join(stage_dir, config_file), "r") as fp:
+            out(fp.read())
+
     with cd(stage_dir):
-        return check_bmi(
+        status = check_bmi(
             entry_point,
+            tests_dir=tests_dir,
             input_file=config_file,
             manifest=manifest,
             bmi_version=bmi_version,
-            extra_args=pytest_args,
+            extra_args=pytest_args + ("-vvv",),
             help_pytest=help_pytest,
         )
+
+    if not quiet:
+        if status == ExitCode.OK:
+            out("🎉 All tests passed!")
+        else:
+            err("😞 There were errors")
+
+    sys.exit(status)
