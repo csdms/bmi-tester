@@ -35,6 +35,9 @@ def test_get_grid_type(initialized_bmi, gid):
 
 def test_get_grid_node_count(initialized_bmi, gid):
     "Test number of nodes in grid {gid}".format(gid=gid)
-    size = initialized_bmi.get_grid_node_count(gid)
+    if hasattr(initialized_bmi, "get_grid_node_count"):
+        size = initialized_bmi.get_grid_node_count(gid)
+    else:
+        size = initialized_bmi.get_grid_size(gid)
     assert isinstance(size, int)
     assert size > 0
