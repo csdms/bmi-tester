@@ -174,8 +174,6 @@ def main(
         except MetadataNotFoundError:
             config_file, manifest = _stage_component(class_name, stage_dir)
 
-    tests_dir = pkg_resources.resource_filename(__name__, "tests_pytest")
-    # tests_dir = pkg_resources.resource_filename(__name__, "test_control")
     stages = sorted(
         [pathlib.Path(pkg_resources.resource_filename(__name__, "bootstrap"))]
         + list(
