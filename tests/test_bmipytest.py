@@ -5,11 +5,11 @@ entry_point = "os:getcwd"
 module_name, cls_name = entry_point.split(":")
 
 
-def test_component_is_string():
+def test_component_is_not_string():
     component = load_component(entry_point)
-    assert isinstance(component, str)
+    assert not isinstance(component, str)
 
 
 def test_component_is_classname():
     component = load_component(entry_point)
-    assert component == cls_name
+    assert component.__name__ == cls_name
