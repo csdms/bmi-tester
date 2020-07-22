@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import importlib
 import os
+import pathlib
 import re
 import sys
 import tempfile
@@ -53,7 +54,8 @@ def load_component(entry_point):
         raise
     else:
         try:
-            component = module.__dict__[cls_name].__name__
+            component = module.__dict__[cls_name]
+        #     component = module.__dict__[cls_name].__name__
         except KeyError:
             raise ImportError(cls_name)
 
@@ -153,6 +155,14 @@ def main(
         err("using --root-dir but no config file specified (use --config-file)")
         raise click.Abort()
 
+    module_name, class_name = entry_point.split(":")
+
+    try:
+        Bmi = load_component(entry_point)
+    except ImportError:
+        err(f"unable to import BMI implementation, {class_name}, from {module_name}")
+        raise click.Abort()
+
     if root_dir:
         stage_dir = root_dir
         if manifest is None:
@@ -162,14 +172,25 @@ def main(
         try:
             config_file, manifest = _stage_component(entry_point, stage_dir)
         except MetadataNotFoundError:
-            _, name = entry_point.split(":")
-            config_file, manifest = _stage_component(name, stage_dir)
+            config_file, manifest = _stage_component(class_name, stage_dir)
 
     tests_dir = pkg_resources.resource_filename(__name__, "tests_pytest")
+    # tests_dir = pkg_resources.resource_filename(__name__, "test_control")
+    stages = sorted(
+        [pathlib.Path(pkg_resources.resource_filename(__name__, "bootstrap"))]
+        + list(
+            pathlib.Path(pkg_resources.resource_filename(__name__, "tests")).glob(
+                "stage_*"
+            )
+        )
+    )
 
     if not quiet:
-        out(f"Location of tests: {tests_dir}")
+        out(f"Location of tests:")
+        for stage in (str(stage) for stage in stages):
+            out(f"- {stage}")
         out(f"Entry point: {entry_point}")
+        out(repr(Bmi()))
         out(f"BMI version: {bmi_version}")
         out(f"Stage folder: {stage_dir}")
         out(f"> tree -d {stage_dir}")
@@ -180,15 +201,19 @@ def main(
             out(fp.read())
 
     with cd(stage_dir):
-        status = check_bmi(
-            entry_point,
-            tests_dir=tests_dir,
-            input_file=config_file,
-            manifest=manifest,
-            bmi_version=bmi_version,
-            extra_args=pytest_args + ("-vvv",),
-            help_pytest=help_pytest,
-        )
+        for stage in sorted(stages):
+            status = check_bmi(
+                entry_point,
+                tests_dir=str(stage),
+                # tests_dir=tests_dir,
+                input_file=config_file,
+                manifest=manifest,
+                bmi_version=bmi_version,
+                extra_args=pytest_args + ("-vvv",),
+                help_pytest=help_pytest,
+            )
+            if status != ExitCode.OK:
+                break
 
     if not quiet:
         if status == ExitCode.OK:
