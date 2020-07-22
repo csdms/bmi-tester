@@ -4,4 +4,5 @@ netCDF4
 numpy
 py-scripting
 pytest
+pytest-dependency
 standard_names

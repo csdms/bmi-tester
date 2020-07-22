@@ -7,6 +7,7 @@ import pytest
 from pytest import approx
 
 
+@pytest.mark.dependency()
 def test_get_start_time(initialized_bmi):
     """Test that there is a start time."""
     start = initialized_bmi.get_start_time()
@@ -15,6 +16,7 @@ def test_get_start_time(initialized_bmi):
     assert start == approx(0.0)
 
 
+@pytest.mark.dependency()
 def test_get_time_step(initialized_bmi):
     """Test that there is a time step."""
     time_step = initialized_bmi.get_time_step()
@@ -38,6 +40,7 @@ def test_time_units_is_valid(initialized_bmi):
     assert units.istime
 
 
+@pytest.mark.dependency(depends=["test_get_start_time", "test_get_end_time"])
 def test_get_current_time(initialized_bmi):
     """Test that there is a current time."""
     start = initialized_bmi.get_start_time()
@@ -50,6 +53,7 @@ def test_get_current_time(initialized_bmi):
 
 
 @pytest.mark.skip()
+@pytest.mark.dependency(depends=["test_get_start_time"])
 def test_get_end_time(initialized_bmi):
     """Test that there is a stop time."""
     start = initialized_bmi.get_start_time()
