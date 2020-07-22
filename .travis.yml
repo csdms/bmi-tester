@@ -57,6 +57,7 @@ before_install:
 - source activate _testing
 - conda info -a && conda list
 install:
+- conda install udunits2 -c conda-forge
 - pip install -e .
 script:
 - pip install -r requirements-testing.txt
