@@ -1,10 +1,12 @@
 import numpy as np
 import pytest
 
-try:
-    from pymt import cfunits
-except FileNotFoundError:
-    cfunits = None
+# try:
+#     from pymt import cfunits
+# except FileNotFoundError:
+#     cfunits = None
+
+from bmi_tester.api import check_units
 
 
 # @pytest.mark.dependency()
@@ -67,9 +69,10 @@ def test_get_var_type(initialized_bmi, var_name):
         )
 
 
-@pytest.mark.skipif(cfunits is None, reason="cfunits is broken on this platform")
+# @pytest.mark.skipif(cfunits is None, reason="cfunits is broken on this platform")
 def test_get_var_units(initialized_bmi, var_name):
     """Test the units of the variables."""
     units = initialized_bmi.get_var_units(var_name)
     assert isinstance(units, str)
-    cfunits.Units(units)
+    assert check_units(units)
+    # cfunits.Units(units)

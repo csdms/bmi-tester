@@ -1,10 +1,12 @@
 #! /usr/bin/env python
-try:
-    from pymt import cfunits
-except FileNotFoundError:
-    cfunits = None
+# try:
+#     from pymt import cfunits
+# except FileNotFoundError:
+#     cfunits = None
 import pytest
 from pytest import approx
+
+from bmi_tester.api import check_units
 
 
 @pytest.mark.dependency()
@@ -31,13 +33,14 @@ def test_time_units_is_str(initialized_bmi):
     assert isinstance(units, str)
 
 
-@pytest.mark.skipif(cfunits is None, reason="cfunits is broken on this platform")
+# @pytest.mark.skipif(cfunits is None, reason="cfunits is broken on this platform")
 def test_time_units_is_valid(initialized_bmi):
     """Test the units of time are valid."""
     units = initialized_bmi.get_time_units()
-    units = cfunits.Units(units)
+    assert check_units(units)
+    # units = cfunits.Units(units)
 
-    assert units.istime
+    # assert units.istime
 
 
 @pytest.mark.dependency(depends=["test_get_start_time", "test_get_end_time"])
