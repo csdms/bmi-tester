@@ -57,6 +57,7 @@ before_install:
 - source activate _testing
 - conda info -a && conda list
 install:
+- pip install cython setuptools numpy wheel
 - conda install udunits2 -c conda-forge
 - pip install .
 script:
