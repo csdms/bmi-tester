@@ -31,8 +31,8 @@ install:
   - cmd: conda create -n test_env python=%PYTHON%
   - cmd: conda activate test_env
   - cmd: python --version
-  - cmd: pip install . -r requirements-testing.txt
   - cmd: conda install udunits2
+  - cmd: pip install . -r requirements-testing.txt
 
 build: false
 
