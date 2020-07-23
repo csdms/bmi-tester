@@ -2,7 +2,7 @@
 requires = ["cython", "numpy", "setuptools", "wheel"]
 
 [tool.pytest.ini_options]
-minversion = "5.0"
+minversion = "6.0.0rc1"
 testpaths = ["tests"]
 norecursedirs = [".*", "*.egg*", "build", "dist"]
 addopts = """
