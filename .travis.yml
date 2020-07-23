@@ -55,10 +55,10 @@ before_install:
 - conda config --set always_yes yes --set changeps1 no
 - conda create -n _testing python=$PYTHON
 - source activate _testing
+- pip install cython setuptools numpy wheel
+- conda install udunits2 c-compiler -c conda-forge
 - conda info -a && conda list
 install:
-- pip install cython setuptools numpy wheel
-- conda install udunits2 -c conda-forge
 - pip install .
 script:
 - pip install -r requirements-testing.txt
