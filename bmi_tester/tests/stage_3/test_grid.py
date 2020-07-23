@@ -1,5 +1,6 @@
 from distutils.version import StrictVersion
 
+import numpy as np
 import pytest
 
 from ..conftest import skip_if_grid_type_is, skip_if_grid_type_is_not, BMI_VERSION
@@ -92,7 +93,7 @@ def test_get_grid_edges_nodes(initialized_bmi, gid):
     rtn = initialized_bmi.get_grid_edges_node(gid, edge_nodes)
     assert rtn is edge_nodes
     assert np.all(edge_nodes >= 0)
-    assert np.all(edge_nodes < n_edges)
+    assert np.all(edge_nodes < n_nodes)
 
 
 # @pytest.mark.dependency(depends=["test_get_grid_node_count", "test_get_grid_edge_count", "test_get_grid_face_count"])
@@ -100,7 +101,6 @@ def test_get_grid_edges_per_face(initialized_bmi, gid):
     "Test number of edges at each face for grid {gid}".format(gid=gid)
     skip_if_grid_type_is_not(initialized_bmi, gid, "unstructured")
 
-    n_nodes = initialized_bmi.get_grid_node_count(gid)
     n_edges = initialized_bmi.get_grid_edge_count(gid)
     n_faces = initialized_bmi.get_grid_face_count(gid)
 
@@ -122,7 +122,6 @@ def test_get_grid_face_edges(initialized_bmi, gid):
 
     n_faces = initialized_bmi.get_grid_face_count(gid)
     n_edges = initialized_bmi.get_grid_edge_count(gid)
-    n_nodes = initialized_bmi.get_grid_node_count(gid)
 
     if n_faces == 0:
         pytest.skip("grid has no edges")

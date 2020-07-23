@@ -61,7 +61,6 @@ def suppress_stdout(streams):
         os.close(fd)
 
 
-
 def check_units(units):
     path_to_udunits_lib = ctypes.util.find_library("udunits2")
     udunits = ctypes.CDLL(path_to_udunits_lib)

@@ -1,7 +1,6 @@
 import warnings
 
 import numpy as np
-import pytest
 
 from ..conftest import skip_if_grid_type_is_not
 

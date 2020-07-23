@@ -1,9 +1,8 @@
-import warnings
 from distutils.version import StrictVersion
 
 import numpy as np
 import pytest
-from pytest_dependency import depends
+# from pytest_dependency import depends
 
 from ..conftest import BMI_VERSION_STRING, INPUT_FILE, Bmi
 

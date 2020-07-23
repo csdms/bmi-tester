@@ -184,9 +184,9 @@ def main(
     )
 
     if not quiet:
-        out(f"Location of tests:")
-        for stage in (str(stage) for stage in stages):
-            out(f"- {stage}")
+        out("Location of tests:")
+        for stage_path in (str(stage_path) for stage_path in stages):
+            out(f"- {stage_path}")
         out(f"Entry point: {entry_point}")
         out(repr(Bmi()))
         out(f"BMI version: {bmi_version}")
@@ -199,10 +199,10 @@ def main(
             out(fp.read())
 
     with cd(stage_dir):
-        for stage in sorted(stages):
+        for stage_path in sorted(stages):
             status = check_bmi(
                 entry_point,
-                tests_dir=str(stage),
+                tests_dir=str(stage_path),
                 # tests_dir=tests_dir,
                 input_file=config_file,
                 manifest=manifest,

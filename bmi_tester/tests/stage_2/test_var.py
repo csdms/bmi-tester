@@ -15,7 +15,7 @@ from bmi_tester.api import check_units
 #     """Test the grid of the variables."""
 #     if initialized_bmi.get_var_location(var_name) == "none":
 #         pytest.skip(f"var, {var_name}, is not located on a grid")
-# 
+#
 #     gid = initialized_bmi.get_var_grid(var_name)
 #     assert isinstance(gid, int)
 

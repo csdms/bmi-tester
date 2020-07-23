@@ -23,9 +23,9 @@ def skip_if_grid_type_is(bmi, gid, gtype):
     if bmi.get_grid_type(gid) in gtype:
         gtypes = ", ".join(gtype)
         if len(gtype) > 1:
-            pytest.skip(f"grid {gid} is one of {gtype}")
+            pytest.skip(f"grid {gid} is one of {gtypes}")
         else:
-            pytest.skip(f"grid {gid} is {gtype}")
+            pytest.skip(f"grid {gid} is {gtypes}")
 
 
 def load_component(entry_point):

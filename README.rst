@@ -1,5 +1,5 @@
-|Build Status| |Documentation Status| |Coverage Status| |Anaconda-Server
-Badge| |Anaconda-Server Badge| |Anaconda-Server Badge|
+|Build Status| |Documentation Status| |Coverage Status| |Conda Version|
+|Conda Installation| |Conda Downloads|
 
 bmi-tester
 ==========
@@ -22,9 +22,9 @@ Links
    :target: http://bmi-tester.readthedocs.io/en/latest/?badge=latest
 .. |Coverage Status| image:: https://coveralls.io/repos/github/csdms/bmi-tester/badge.svg?branch=master
    :target: https://coveralls.io/github/csdms/bmi-tester?branch=master
-.. |Anaconda-Server Badge| image:: https://anaconda.org/conda-forge/bmi-tester/badges/version.svg
+.. |Conda Version| image:: https://anaconda.org/conda-forge/bmi-tester/badges/version.svg
    :target: https://anaconda.org/conda-forge/bmi-tester
-.. |Anaconda-Server Badge| image:: https://anaconda.org/conda-forge/bmi-tester/badges/installer/conda.svg
+.. |Conda Installation| image:: https://anaconda.org/conda-forge/bmi-tester/badges/installer/conda.svg
    :target: https://conda.anaconda.org/conda-forge
-.. |Anaconda-Server Badge| image:: https://anaconda.org/conda-forge/bmi-tester/badges/downloads.svg
+.. |Conda Downloads| image:: https://anaconda.org/conda-forge/bmi-tester/badges/downloads.svg
    :target: https://anaconda.org/conda-forge/bmi-tester
