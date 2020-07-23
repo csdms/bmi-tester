@@ -37,6 +37,7 @@ install:
   - cmd: conda create -n test_env python=%PYTHON%
   - cmd: conda activate test_env
   - cmd: python --version
+  - cmd: pip install cython setuptools numpy wheel
   - cmd: pip install -U --pre pytest
   - cmd: pip install -r requirements-testing.txt
   - cmd: conda install udunits2 c-compiler
