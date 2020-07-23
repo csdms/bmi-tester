@@ -1,5 +1,8 @@
 environment:
 
+  global:
+    WITH_COMPILER: "cmd /E:ON /V:ON /C .\\ci\\build.cmd"
+
   matrix:
     - TARGET_ARCH: x64
       CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
@@ -32,8 +35,9 @@ install:
   - cmd: conda activate test_env
   - cmd: python --version
   - cmd: pip install -U --pre pytest
+  - cmd: pip install -r requirements-testing.txt
   - cmd: conda install udunits2 c-compiler
-  - cmd: pip install . -r requirements-testing.txt
+  - cmd: %WITH_COMPILER% pip install .
 
 build: false
 
