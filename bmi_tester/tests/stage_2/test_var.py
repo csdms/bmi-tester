@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from bmi_tester.api import check_units
+from bmi_tester.units import Units
 
 # try:
 #     from pymt import cfunits
@@ -74,5 +74,6 @@ def test_get_var_units(initialized_bmi, var_name):
     """Test the units of the variables."""
     units = initialized_bmi.get_var_units(var_name)
     assert isinstance(units, str)
-    assert check_units(units)
+    unit_system = Units()
+    assert unit_system.is_valid(units)
     # cfunits.Units(units)

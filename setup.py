@@ -1,13 +1,14 @@
 #! /usr/bin/env python
-from setuptools import find_packages, setup
+from setuptools import find_packages, setup, Extension
+
 
 def read(filename):
     with open(filename, "r", encoding="utf-8") as fp:
         return fp.read()
 
 
-long_description = u'\n\n'.join(
-    [read('README.rst'), read('CREDITS.rst'), read('CHANGES.rst')]
+long_description = u"\n\n".join(
+    [read("README.rst"), read("CREDITS.rst"), read("CHANGES.rst")]
 )
 
 
@@ -38,4 +39,7 @@ setup(
         "console_scripts": ["bmi-test=bmi_tester.bmipytest:main"],
         "bmi.plugins": ["bmi_test=bmi_tester.bmipytest:configure_parser_test"],
     },
+    ext_modules=[
+        Extension("bmi_tester.units", ["bmi_tester/units.pyx"], libraries=["udunits2"],)
+    ],
 )
