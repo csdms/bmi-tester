@@ -1,3 +1,5 @@
+# cython: language_level=3
+
 cdef extern from "udunits2.h":
     ctypedef struct ut_system:
         pass
