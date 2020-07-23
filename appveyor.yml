@@ -6,14 +6,17 @@ environment:
   matrix:
     - TARGET_ARCH: x64
       CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
+      DISTUTILS_USE_SDK: "1"
       PYTHON: "3.8"
 
     - TARGET_ARCH: x64
       CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
+      DISTUTILS_USE_SDK: "1"
       PYTHON: "3.7"
 
     - TARGET_ARCH: x64
       CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
+      DISTUTILS_USE_SDK: "1"
       PYTHON: "3.6"
 
 platform:
@@ -37,7 +40,7 @@ install:
   - cmd: pip install -U --pre pytest
   - cmd: pip install -r requirements-testing.txt
   - cmd: conda install udunits2 c-compiler
-  - cmd: %WITH_COMPILER% pip install .
+  - cmd: "%WITH_COMPILER% pip install ."
 
 build: false
 
