@@ -1,6 +1,13 @@
 #! /usr/bin/env python
+import os
+import sys
 from setuptools import find_packages, setup, Extension
 
+
+if sys.platform.startswith("win"):
+    udunits2_prefix = os.path.join(sys.prefix, "Library")
+else:
+    udunits2_prefix = sys.prefix
 
 def read(filename):
     with open(filename, "r", encoding="utf-8") as fp:
@@ -40,6 +47,12 @@ setup(
         "bmi.plugins": ["bmi_test=bmi_tester.bmipytest:configure_parser_test"],
     },
     ext_modules=[
-        Extension("bmi_tester.units", ["bmi_tester/units.pyx"], libraries=["udunits2"],)
+        Extension(
+            "bmi_tester.units",
+            ["bmi_tester/units.pyx"],
+            libraries=["udunits2"],
+            include_dirs=[os.path.join(udunits2_prefix, "include")],
+            library_dirs=[os.path.join(udunits2_prefix, "lib")],
+        )
     ],
 )
