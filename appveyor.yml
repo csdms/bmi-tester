@@ -23,7 +23,8 @@ platform:
   - x64
 
 # os: Visual Studio 2017
-os: Previous Visual Studio 2015
+# os: Previous Visual Studio 2015
+os: Visual Studio 2019
 
 init:
   - "ECHO %CONDA_INSTALL_LOCN% %CONDA_PY% %HOME% %PLATFORM%"
