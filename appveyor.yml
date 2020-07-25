@@ -41,7 +41,7 @@ install:
   - cmd: pip install cython setuptools numpy wheel
   - cmd: pip install -U --pre pytest
   - cmd: pip install -r requirements-testing.txt
-  - cmd: conda install udunits2 c-compiler
+  - cmd: conda install udunits2
   - cmd: pip install .
 
 build: false
