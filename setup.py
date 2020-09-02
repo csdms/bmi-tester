@@ -9,6 +9,7 @@ if sys.platform.startswith("win"):
 else:
     udunits2_prefix = sys.prefix
 
+
 def read(filename):
     with open(filename, "r", encoding="utf-8") as fp:
         return fp.read()
@@ -42,6 +43,7 @@ setup(
     keywords=["bmi"],
     install_requires=open("requirements.txt", "r").read().splitlines(),
     packages=find_packages(),
+    include_package_data=True,
     entry_points={
         "console_scripts": ["bmi-test=bmi_tester.bmipytest:main"],
         "bmi.plugins": ["bmi_test=bmi_tester.bmipytest:configure_parser_test"],
