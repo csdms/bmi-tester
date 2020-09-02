@@ -1,16 +1,35 @@
 #! /usr/bin/env python
-from setuptools import find_packages, setup
+import os
+import sys
+from setuptools import find_packages, setup, Extension
 
-import versioneer
+
+if sys.platform.startswith("win"):
+    udunits2_prefix = os.path.join(sys.prefix, "Library")
+else:
+    udunits2_prefix = sys.prefix
+
+
+def read(filename):
+    with open(filename, "r", encoding="utf-8") as fp:
+        return fp.read()
+
+
+long_description = u"\n\n".join(
+    [read("README.rst"), read("CREDITS.rst"), read("CHANGES.rst")]
+)
+
 
 setup(
     name="bmi-tester",
-    version=versioneer.get_version(),
+    version="0.5.dev0",
     author="Eric Hutton",
     author_email="eric.hutton@colorado.edu",
+    url="https://github.com/csdms/bmi-tester",
     description="Test Python BMI bindings.",
-    long_description=open("README.rst").read(),
+    long_description=long_description,
     classifiers=[
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
@@ -21,11 +40,21 @@ setup(
         "Programming Language :: Python :: Implementation :: CPython",
         "Topic :: Scientific/Engineering :: Physics",
     ],
+    keywords=["bmi"],
     install_requires=open("requirements.txt", "r").read().splitlines(),
     packages=find_packages(),
-    cmdclass=versioneer.get_cmdclass(),
+    include_package_data=True,
     entry_points={
         "console_scripts": ["bmi-test=bmi_tester.bmipytest:main"],
         "bmi.plugins": ["bmi_test=bmi_tester.bmipytest:configure_parser_test"],
     },
+    ext_modules=[
+        Extension(
+            "bmi_tester.units",
+            ["bmi_tester/units.pyx"],
+            libraries=["udunits2"],
+            include_dirs=[os.path.join(udunits2_prefix, "include")],
+            library_dirs=[os.path.join(udunits2_prefix, "lib")],
+        )
+    ],
 )

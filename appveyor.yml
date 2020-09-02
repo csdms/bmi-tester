@@ -1,40 +1,40 @@
 environment:
 
+  global:
+    WITH_COMPILER: "cmd /E:ON /V:ON /C .\\ci\\build.cmd"
+
   matrix:
-    - TARGET_ARCH: x64
-      CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
-      PYTHON: "3.8"
 
-    - TARGET_ARCH: x64
-      CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
-      PYTHON: "3.7"
+    - PYTHON: "3.8"
+      MINICONDA: C:\\Miniconda38-x64
 
-    - TARGET_ARCH: x64
-      CONDA_INSTALL_LOCN: C:\\Miniconda37-x64
-      PYTHON: "3.6"
+    - PYTHON: "3.7"
+      MINICONDA: C:\\Miniconda37-x64
+
+    - PYTHON: "3.6"
+      MINICONDA: C:\\Miniconda36-x64
 
 platform:
   - x64
 
-os: Previous Visual Studio 2015
+image: Visual Studio 2019
 
 init:
-  - "ECHO %CONDA_INSTALL_LOCN% %CONDA_PY% %HOME% %PLATFORM%"
+  - "ECHO %PYTHON% %HOME% %PLATFORM%"
   - "ECHO %APPVEYOR_REPO_BRANCH%"
 
 install:
-  - cmd: call %CONDA_INSTALL_LOCN%\Scripts\activate.bat
-  - cmd: conda update --yes --quiet conda
+  - cmd: call %MINICONDA%\Scripts\activate.bat
+  - cmd: conda install mamba -c conda-forge --yes
+  - cmd: mamba config --set always_yes yes
   - cmd: set PYTHONUNBUFFERED=1
-  - cmd: conda config --set always_yes yes
-  - cmd: conda config --append channels conda-forge
-  - cmd: conda create -n test_env python=%PYTHON%
-  - cmd: conda activate test_env
+  - cmd: mamba install udunits2 -c conda-forge --yes
+  - cmd: mamba list
   - cmd: python --version
-  - cmd: pip install . -r requirements-testing.txt
-  - cmd: conda install 'pymt>=1.1'
 
 build: false
 
 test_script:
-  - pytest -vvv
+  - cmd: pip install -r requirements-testing.txt
+  - cmd: pip install -e .
+  - cmd: pytest -vvv
