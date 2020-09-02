@@ -4,12 +4,19 @@ Changelog for bmi-tester
 0.5.0 (unreleased)
 ------------------
 
-- No changes yet
+- Fixed an error with empty_var_buffer where it returned a read-only array (#20)
+
+- Fixed MANIFEST.in to include necessary source files (#21)
+
+- Added test stages where successive stages depend on one another (#19)
+
+- Cleaned up continuous integration and added Python 3.8 builds (#18)
 
 
 0.4.4 (2020-03-23)
 ------------------
 
+- Added test for get_grid_node_count (#17)
 
 0.4.3 (2019-11-12)
 ------------------
