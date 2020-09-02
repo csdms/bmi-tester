@@ -18,6 +18,7 @@ jobs:
   - stage: docs
     os: linux
     install:
+    - mamba install udunits2 --yes -c conda-forge
     - pip install -r requirements-docs.txt
     - pip install -e .
     script:
