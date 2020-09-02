@@ -4,41 +4,13 @@ import numpy as np
 import pytest
 # from pytest_dependency import depends
 
+from bmi_tester.api import empty_var_buffer
+
 from ..conftest import BMI_VERSION_STRING, INPUT_FILE, Bmi
 
 BMI_VERSION = StrictVersion(BMI_VERSION_STRING)
 
 BAD_VALUE = {"f": np.nan, "i": -999, "u": 0}
-
-
-def empty_var_buffer(bmi, var_name):
-    # gid = bmi.get_var_grid(var_name)
-    # if BMI_VERSION > "1.0":
-    #     loc = bmi.get_var_location(var_name)
-    # else:
-    #     warnings.warn(
-    #         "get_var_location not implemented (assuming nodes)", FutureWarning
-    #     )
-    #     loc = "node"
-
-    # if loc == "node":
-    #     size = bmi.get_grid_node_count(gid)
-    # elif loc == "edge":
-    #     size = bmi.get_grid_edge_count(gid)
-    # elif loc == "face":
-    #     size = bmi.get_grid_face_count(gid)
-    # else:
-    #     size = 0
-
-    # itemsize = bmi.get_var_itemsize(var_name)
-    # nbytes = itemsize * size
-    nbytes = bmi.get_var_nbytes(var_name)
-    dtype = np.dtype(bmi.get_var_type(var_name))
-
-    values = np.frombuffer(np.random.bytes(nbytes), dtype=dtype)
-    # values = np.empty(size, dtype=dtype)
-
-    return values
 
 
 # @pytest.mark.dependency()
