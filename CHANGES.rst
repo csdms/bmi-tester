@@ -1,8 +1,8 @@
 Changelog for bmi-tester
 ========================
 
-0.5.0 (unreleased)
-------------------
+0.5 (2020-09-02)
+----------------
 
 - Fixed an error with empty_var_buffer where it returned a read-only array (#20)
 
