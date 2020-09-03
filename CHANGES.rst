@@ -1,6 +1,12 @@
 Changelog for bmi-tester
 ========================
 
+0.6 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 0.5 (2020-09-02)
 ----------------
 
