@@ -1,7 +1,7 @@
 Changelog for bmi-tester
 ========================
 
-0.5.1 (unreleased)
+0.5.1 (2020-09-10)
 ------------------
 
 - Fixed the time units check to allow dimensionless units (#22)
