@@ -39,9 +39,7 @@ def test_time_units_is_valid(initialized_bmi):
     units = initialized_bmi.get_time_units()
     unit_system = Units()
     assert unit_system.is_valid(units)
-    assert unit_system.is_time(units)
-    # units = cfunits.Units(units)
-    # assert units.istime
+    assert unit_system.is_time(units) or unit_system.is_dimensionless(units)
 
 
 @pytest.mark.dependency(depends=["test_get_start_time", "test_get_end_time"])
