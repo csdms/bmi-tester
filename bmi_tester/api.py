@@ -15,7 +15,7 @@ def check_bmi(
     tests_dir=None,
     input_file=None,
     manifest=None,
-    bmi_version="1.1",
+    bmi_version="2.0",
     extra_args=None,
     help_pytest=False,
 ):
