@@ -115,7 +115,7 @@ def _tree(files):
     ),
     help="Path to manifest file of staged model input files.",
 )
-@click.option("--bmi-version", default="1.1", help="BMI version to test against")
+@click.option("--bmi-version", default="2.0", help="BMI version to test against")
 @click.argument("entry_point", callback=validate_entry_point)
 @click.argument("pytest_args", nargs=-1, type=click.UNPROCESSED)
 def main(
