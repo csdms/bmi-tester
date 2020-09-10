@@ -19,3 +19,11 @@ def test_check_invalid_units():
     assert not unit_system.is_valid("foo")
     assert not unit_system.is_valid("m ** 2")
     assert not unit_system.is_valid("-")
+
+
+def test_dimensionless_units():
+    unit_system = Units()
+    assert unit_system.is_dimensionless("")
+    assert unit_system.is_dimensionless("1")
+    assert not unit_system.is_dimensionless("m")
+    assert not unit_system.is_dimensionless("-")
