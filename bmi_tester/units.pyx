@@ -37,6 +37,7 @@ cdef extern from "udunits2.h":
     ut_unit* ut_parse(const ut_system* system, const char* string, int encoding)
     int ut_are_convertible(const ut_unit* unit1, const ut_unit* unit2)
     int ut_format(const ut_unit* unit, char* buf, size_t size, unsigned opts)
+    int ut_is_dimensionless(const ut_unit* unit)
 
 
 cdef class Units:
@@ -72,6 +73,10 @@ cdef class Units:
         src_unit = ut_parse(self._c_system, units.encode("utf-8"), 0)
         dst_unit = ut_parse(self._c_system, "s".encode("utf-8"), 0)
         return bool(ut_are_convertible(src_unit, dst_unit))
+
+    def is_dimensionless(self, units):
+        unit = ut_parse(self._c_system, units.encode("utf-8"), 0)
+        return ut_is_dimensionless(unit) != 0
 
     def __dealloc__(self):
         ut_free_system(self._c_system)
