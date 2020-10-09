@@ -4,13 +4,15 @@ Changelog for bmi-tester
 0.5.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed a bug in the unstructured grid tests (#24)
 
 
 0.5.1 (2020-09-10)
 ------------------
 
 - Fixed the time units check to allow dimensionless units (#22)
+
+- Fixed remaining bmi version strings to 2.0 (#23)
 
 0.5 (2020-09-02)
 ----------------
