@@ -78,7 +78,7 @@ def test_get_grid_face_count(initialized_bmi, gid):
 
 
 # @pytest.mark.dependency(depends=["test_get_grid_node_count", "test_get_grid_edge_count"])
-def test_get_grid_edges_nodes(initialized_bmi, gid):
+def test_get_grid_edge_nodes(initialized_bmi, gid):
     "Test nodes at edges for grid {gid}".format(gid=gid)
     skip_if_grid_type_is_not(initialized_bmi, gid, "unstructured")
 
@@ -90,7 +90,7 @@ def test_get_grid_edges_nodes(initialized_bmi, gid):
 
     edge_nodes = np.full((n_edges, 2), -1, dtype=int).reshape(-1)
 
-    rtn = initialized_bmi.get_grid_edges_node(gid, edge_nodes)
+    rtn = initialized_bmi.get_grid_edge_nodes(gid, edge_nodes)
     assert rtn is edge_nodes
     assert np.all(edge_nodes >= 0)
     assert np.all(edge_nodes < n_nodes)
