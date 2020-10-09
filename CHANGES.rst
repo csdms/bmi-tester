@@ -1,7 +1,7 @@
 Changelog for bmi-tester
 ========================
 
-0.5.2 (unreleased)
+0.5.2 (2020-10-09)
 ------------------
 
 - Fixed a bug in the unstructured grid tests (#24)
