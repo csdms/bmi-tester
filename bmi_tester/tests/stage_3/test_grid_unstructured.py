@@ -14,7 +14,7 @@ def test_grid_x(initialized_bmi, gid):
         pytest.skip(f"grid is rank {ndim}")
 
     if gtype == "unstructured":
-        size = initialized_bmi.get_grid_number_of_nodes(gid)
+        size = initialized_bmi.get_grid_node_count(gid)
     elif gtype == "rectilinear":
         shape = np.empty(ndim, dtype=np.int32)
         initialized_bmi.get_grid_shape(gid, shape)
@@ -35,7 +35,7 @@ def test_grid_y(initialized_bmi, gid):
         pytest.skip(f"grid is rank {ndim}")
 
     if gtype == "unstructured":
-        size = initialized_bmi.get_grid_number_of_nodes(gid)
+        size = initialized_bmi.get_grid_node_count(gid)
     elif gtype == "rectilinear":
         shape = np.empty(ndim, dtype=np.int32)
         initialized_bmi.get_grid_shape(gid, shape)
@@ -56,7 +56,7 @@ def test_grid_z(initialized_bmi, gid):
         pytest.skip(f"grid is rank {ndim}")
 
     if gtype == "unstructured":
-        size = initialized_bmi.get_grid_number_of_nodes(gid)
+        size = initialized_bmi.get_grid_node_count(gid)
     elif gtype == "rectilinear":
         shape = np.empty(ndim, dtype=np.int32)
         initialized_bmi.get_grid_shape(gid, shape)
