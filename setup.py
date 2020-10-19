@@ -22,7 +22,7 @@ long_description = u"\n\n".join(
 
 setup(
     name="bmi-tester",
-    version="0.5.3.dev0",
+    version="0.5.3",
     author="Eric Hutton",
     author_email="eric.hutton@colorado.edu",
     url="https://github.com/csdms/bmi-tester",

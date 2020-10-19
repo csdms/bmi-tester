@@ -1,7 +1,7 @@
 Changelog for bmi-tester
 ========================
 
-0.5.3 (unreleased)
+0.5.3 (2020-10-19)
 ------------------
 
 - Change tests that use ID arrays (e.g. face_nodes, edge_nodes, etc.) to
