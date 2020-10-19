@@ -88,7 +88,7 @@ def test_get_grid_edge_nodes(initialized_bmi, gid):
     if n_edges == 0:
         pytest.skip("grid has no edges")
 
-    edge_nodes = np.full((n_edges, 2), -1, dtype=int).reshape(-1)
+    edge_nodes = np.full((n_edges, 2), -10, dtype=np.int32).reshape(-1)
 
     rtn = initialized_bmi.get_grid_edge_nodes(gid, edge_nodes)
     assert rtn is edge_nodes
@@ -96,6 +96,7 @@ def test_get_grid_edge_nodes(initialized_bmi, gid):
     assert np.all(edge_nodes < n_nodes)
 
 
+@pytest.mark.skip("edges_per_face")
 # @pytest.mark.dependency(depends=["test_get_grid_node_count", "test_get_grid_edge_count", "test_get_grid_face_count"])
 def test_get_grid_edges_per_face(initialized_bmi, gid):
     "Test number of edges at each face for grid {gid}".format(gid=gid)
@@ -107,7 +108,7 @@ def test_get_grid_edges_per_face(initialized_bmi, gid):
     if n_faces == 0:
         pytest.skip("grid has no faces")
 
-    edges_per_face = np.full(n_faces, -1, dtype=int)
+    edges_per_face = np.full(n_faces, -1, dtype=np.int32)
 
     rtn = initialized_bmi.get_grid_edges_per_face(gid, edges_per_face)
     assert rtn is edges_per_face
@@ -115,6 +116,7 @@ def test_get_grid_edges_per_face(initialized_bmi, gid):
     assert np.all(edges_per_face < n_edges)
 
 
+@pytest.mark.skip("face_edges")
 @pytest.mark.dependency(depends=["test_get_grid_node_count", "test_get_grid_edge_count", "test_get_grid_face_count", "test_get_grid_edges_per_face"])
 def test_get_grid_face_edges(initialized_bmi, gid):
     "Test edges at face for grid {gid}".format(gid=gid)
@@ -126,10 +128,10 @@ def test_get_grid_face_edges(initialized_bmi, gid):
     if n_faces == 0:
         pytest.skip("grid has no edges")
 
-    edges_per_face = np.full(n_faces, -1, dtype=int)
+    edges_per_face = np.full(n_faces, -1, dtype=np.int32)
     initialized_bmi.get_grid_edges_per_face(gid, edges_per_face)
 
-    face_edges = np.full(edges_per_face.sum(), -1, dtype=int)
+    face_edges = np.full(edges_per_face.sum(), -1, dtype=np.int32)
 
     rtn = initialized_bmi.get_grid_face_edges(gid, face_edges)
     assert rtn is face_edges

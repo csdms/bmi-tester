@@ -4,7 +4,8 @@ Changelog for bmi-tester
 0.5.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Change tests that use ID arrays (e.g. face_nodes, edge_nodes, etc.) to
+  allocate those array buffers as int32 (#25)
 
 
 0.5.2 (2020-10-09)
