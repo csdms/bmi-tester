@@ -38,6 +38,7 @@ def test_get_var_location(initialized_bmi, var_name):
     assert loc in ("node", "edge", "face", "none")
 
 
+@pytest.mark.skip("too dangerous")
 # @pytest.mark.dependency(depends=["initialize_works", "test_get_var_grid", "get_var_nbytes"], scope="session")
 def test_set_input_values(staged_tmpdir, in_var_name):
     """Input values are numpy arrays."""
