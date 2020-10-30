@@ -58,7 +58,7 @@ before_install:
     source $HOME/.bashrc
   fi
 - micromamba activate
-- micromamba install python=$PYTHON pip mamba --yes -c conda-forge
+- micromamba install python=$PYTHON -p $MAMBA_ROOT_PREFIX pip mamba --yes -c conda-forge
 install:
 - mamba install udunits2 --yes -c conda-forge
 - pip install .
