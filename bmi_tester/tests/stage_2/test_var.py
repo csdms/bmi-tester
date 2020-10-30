@@ -48,12 +48,13 @@ def test_var_on_grid(initialized_bmi, var_name):
         pytest.skip(f"var, {var_name}, is not located on a grid")
 
     gid = initialized_bmi.get_var_grid(var_name)
-    if loc == "node":
-        assert initialized_bmi.get_grid_node_count(gid) > 0
-    elif loc == "edge":
-        assert initialized_bmi.get_grid_edge_count(gid) > 0
-    elif loc == "face":
-        assert initialized_bmi.get_grid_face_count(gid) > 0
+    if initialized_bmi.get_grid_type(gid) == "unstructured":
+        if loc == "node":
+            assert initialized_bmi.get_grid_node_count(gid) > 0
+        elif loc == "edge":
+            assert initialized_bmi.get_grid_edge_count(gid) > 0
+        elif loc == "face":
+            assert initialized_bmi.get_grid_face_count(gid) > 0
 
 
 def test_get_var_type(initialized_bmi, var_name):

@@ -48,7 +48,7 @@ def test_get_grid_type(initialized_bmi, gid):
 # @pytest.mark.dependency()
 def test_get_grid_node_count(initialized_bmi, gid):
     "Test number of nodes in grid {gid}".format(gid=gid)
-    skip_if_grid_type_is(initialized_bmi, gid, "none")
+    skip_if_grid_type_is_not(initialized_bmi, gid, "unstructured")
 
     n_nodes = initialized_bmi.get_grid_node_count(gid)
     assert isinstance(n_nodes, int)
