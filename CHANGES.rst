@@ -7,7 +7,7 @@ Changelog for bmi-tester
 - Removed the test for set_value as it's just too dangerous (#26)
 
 - Fixed tests that use get_grid_node_count on grids that
-  are not unstructured
+  are not unstructured (#27)
 
 
 0.5.3 (2020-10-19)
