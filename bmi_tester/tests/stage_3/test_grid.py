@@ -3,7 +3,7 @@ from distutils.version import StrictVersion
 import numpy as np
 import pytest
 
-from ..conftest import skip_if_grid_type_is, skip_if_grid_type_is_not, BMI_VERSION
+from ..conftest import skip_if_grid_type_is_not, BMI_VERSION
 
 
 VALID_GRID_TYPES = (
