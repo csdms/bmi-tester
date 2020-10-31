@@ -1,7 +1,7 @@
 Changelog for bmi-tester
 ========================
 
-0.5.4 (unreleased)
+0.5.4 (2020-10-31)
 ------------------
 
 - Removed the test for set_value as it's just too dangerous (#26)
