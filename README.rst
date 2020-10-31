@@ -16,8 +16,8 @@ Links
 -  `Get <http://bmi-tester.readthedocs.io/en/latest/getting.html>`__:
    Installation instructions
 
-.. |Build Status| image:: https://travis-ci.org/csdms/bmi-tester.svg?branch=master
-   :target: https://travis-ci.org/csdms/bmi-tester
+.. |Build Status| image:: https://travis-ci.com/csdms/bmi-tester.svg?branch=master
+   :target: https://travis-ci.com/csdms/bmi-tester
 .. |Documentation Status| image:: https://readthedocs.org/projects/bmi-tester/badge/?version=latest
    :target: http://bmi-tester.readthedocs.io/en/latest/?badge=latest
 .. |Coverage Status| image:: https://coveralls.io/repos/github/csdms/bmi-tester/badge.svg?branch=master
