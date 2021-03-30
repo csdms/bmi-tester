@@ -41,6 +41,7 @@ jobs:
       - name: Install requirements
         run: |
           mamba install --file=requirements.txt --file=requirements-testing.txt
+          mamba install gimli.units scripting
           mamba list
 
       - name: Build and install package
