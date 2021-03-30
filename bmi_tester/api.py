@@ -96,7 +96,7 @@ def check_units(units):
     udunits = ctypes.CDLL(path_to_udunits_lib)
 
     ut_read_xml = udunits.ut_read_xml
-    ut_read_xml.argtypes = (ctypes.c_char_p, )
+    ut_read_xml.argtypes = (ctypes.c_char_p,)
     ut_read_xml.restype = ctypes.c_void_p
 
     ut_parse = udunits.ut_parse

@@ -44,7 +44,9 @@ def test_get_grid_type(initialized_bmi, gid):
     assert gtype in VALID_GRID_TYPES
 
 
-@pytest.mark.skipif(BMI_VERSION < StrictVersion("2.0"), reason="get_grid_node_count is BMI 2.0")
+@pytest.mark.skipif(
+    BMI_VERSION < StrictVersion("2.0"), reason="get_grid_node_count is BMI 2.0"
+)
 # @pytest.mark.dependency()
 def test_get_grid_node_count(initialized_bmi, gid):
     "Test number of nodes in grid {gid}".format(gid=gid)
@@ -117,7 +119,14 @@ def test_get_grid_edges_per_face(initialized_bmi, gid):
 
 
 @pytest.mark.skip("face_edges")
-@pytest.mark.dependency(depends=["test_get_grid_node_count", "test_get_grid_edge_count", "test_get_grid_face_count", "test_get_grid_edges_per_face"])
+@pytest.mark.dependency(
+    depends=[
+        "test_get_grid_node_count",
+        "test_get_grid_edge_count",
+        "test_get_grid_face_count",
+        "test_get_grid_edges_per_face",
+    ]
+)
 def test_get_grid_face_edges(initialized_bmi, gid):
     "Test edges at face for grid {gid}".format(gid=gid)
     skip_if_grid_type_is_not(initialized_bmi, gid, "unstructured")

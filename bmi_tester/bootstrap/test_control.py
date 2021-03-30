@@ -7,6 +7,7 @@ from scripting import cp
 
 # from .conftest import INPUT_FILE, Bmi
 
+
 def load_component(entry_point):
     module_name, cls_name = entry_point.split(":")
 
@@ -48,7 +49,9 @@ def test_has_finalize():
     assert hasattr(bmi, "finalize")
 
 
-@pytest.mark.dependency(depends=["has_initialize", "has_finalize"], name="initialize_works")
+@pytest.mark.dependency(
+    depends=["has_initialize", "has_finalize"], name="initialize_works"
+)
 def test_initialize(tmpdir):
     """Test component can initialize itself."""
     infile = os.environ.get("BMITEST_INPUT_FILE", None)
