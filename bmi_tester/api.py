@@ -10,7 +10,6 @@ import pkg_resources
 import pytest
 import six
 
-
 SECONDS = gimli.units.Unit("s")
 
 
@@ -105,7 +104,7 @@ def check_unit_is_valid(unit):
 
 
 def check_unit_is_time(unit):
-    try;
+    try:
         gimli.units.Unit(unit).to(SECONDS)
     except gimli.IncompatibleUnitsError:
         return False

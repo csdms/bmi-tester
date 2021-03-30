@@ -1,6 +1,11 @@
 import pkg_resources
 
-from .api import check_bmi, check_unit_is_valid, check_unit_is_time, check_unit_is_dimensionless
+from .api import (
+    check_bmi,
+    check_unit_is_dimensionless,
+    check_unit_is_time,
+    check_unit_is_valid,
+)
 
 __version__ = pkg_resources.get_distribution("bmi_tester").version
 __all__ = [

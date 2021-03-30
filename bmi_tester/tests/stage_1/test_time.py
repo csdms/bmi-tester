@@ -6,10 +6,12 @@
 import pytest
 from pytest import approx
 
-from bmi_tester.units import Units
 from bmi_tester.api import (
-    check_unit_is_valid, check_unit_is_time, check_unit_is_dimensionless
+    check_unit_is_dimensionless,
+    check_unit_is_time,
+    check_unit_is_valid,
 )
+from bmi_tester.units import Units
 
 
 @pytest.mark.dependency()
