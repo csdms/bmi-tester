@@ -2,6 +2,7 @@ from distutils.version import StrictVersion
 
 import numpy as np
 import pytest
+
 # from pytest_dependency import depends
 
 from bmi_tester.api import empty_var_buffer

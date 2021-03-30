@@ -1,7 +1,6 @@
 click
 model_metadata
 numpy
-py-scripting
 pytest
 pytest-dependency
 standard_names
