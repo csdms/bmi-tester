@@ -1,14 +1,12 @@
 import contextlib
-import ctypes
-import ctypes.util
 import os
-import sys
 
 import gimli
 import numpy as np
 import pkg_resources
 import pytest
 import six
+
 
 SECONDS = gimli.units.Unit("s")
 

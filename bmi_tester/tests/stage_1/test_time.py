@@ -11,7 +11,6 @@ from bmi_tester.api import (
     check_unit_is_time,
     check_unit_is_valid,
 )
-from bmi_tester.units import Units
 
 
 @pytest.mark.dependency()
