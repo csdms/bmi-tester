@@ -1,7 +1,8 @@
 click
+gimli.units
 model_metadata
 numpy
-py-scripting
+scripting
 pytest
 pytest-dependency
 standard_names
