@@ -4,10 +4,14 @@ import ctypes.util
 import os
 import sys
 
+import gimli
 import numpy as np
 import pkg_resources
 import pytest
 import six
+
+
+SECONDS = gimli.units.Unit("s")
 
 
 def check_bmi(
@@ -91,18 +95,23 @@ def empty_var_buffer(bmi, var_name):
     return values
 
 
-def check_units(units):
-    path_to_udunits_lib = ctypes.util.find_library("udunits2")
-    udunits = ctypes.CDLL(path_to_udunits_lib)
+def check_unit_is_valid(unit):
+    try:
+        gimli.units.Unit(unit)
+    except gimli.UnitNameError:
+        return False
+    else:
+        return True
 
-    ut_read_xml = udunits.ut_read_xml
-    ut_read_xml.argtypes = (ctypes.c_char_p,)
-    ut_read_xml.restype = ctypes.c_void_p
 
-    ut_parse = udunits.ut_parse
-    ut_parse.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_int)
-    ut_parse.restype = ctypes.c_void_p
+def check_unit_is_time(unit):
+    try;
+        gimli.units.Unit(unit).to(SECONDS)
+    except gimli.IncompatibleUnitsError:
+        return False
+    else:
+        return True
 
-    with suppress_stdout(sys.stderr):
-        ut_system = ut_read_xml(None)
-    return ut_parse(ut_system, units.encode("utf-8"), 0) is not None
+
+def check_unit_is_dimensionless(unit):
+    return gimli.units.Unit(unit).is_dimensionless
