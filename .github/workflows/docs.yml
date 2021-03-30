@@ -35,24 +35,27 @@ jobs:
 
         steps:
           - uses: actions/checkout@v2
+
           - uses: conda-incubator/setup-miniconda@v2
             with:
               auto-update-conda: true
-              python-version: 3.8
-              channels: conda-forge
+              python-version: ${{ matrix.python-version }}
+              mamba-version: "*"
+              channels: conda-forge,defaults
               channel-priority: true
 
-          - name: Show conda installation info
+          - name: Install requirements
             run: |
-              conda info
-              conda list
+              mamba install --file=requirements.txt --file=requirements-docs.txt
+              mamba install gimli.units scripting
+              mamba info
+              mamba list
 
-          - name: Install dependencies
+          - name: Install package
             run: |
-              conda install mamba
-              mamba install --file=requirements.txt
-              pip install -r requirements-docs.txt
               pip install -e .
 
           - name: Build documentation
-            run: make -C docs clean html
+            run: |
+              sphinx-apidoc --force -o docs/api bmi_tester *tests
+              make -C docs clean html
