@@ -6,7 +6,11 @@
 import pytest
 from pytest import approx
 
-from bmi_tester.units import Units
+from bmi_tester.api import (
+    check_unit_is_dimensionless,
+    check_unit_is_time,
+    check_unit_is_valid,
+)
 
 
 @pytest.mark.dependency()
@@ -37,9 +41,8 @@ def test_time_units_is_str(initialized_bmi):
 def test_time_units_is_valid(initialized_bmi):
     """Test the units of time are valid."""
     units = initialized_bmi.get_time_units()
-    unit_system = Units()
-    assert unit_system.is_valid(units)
-    assert unit_system.is_time(units) or unit_system.is_dimensionless(units)
+    assert check_unit_is_valid(units)
+    assert check_unit_is_time(units) or check_unit_is_dimensionless(units)
 
 
 @pytest.mark.dependency(depends=["test_get_start_time", "test_get_end_time"])

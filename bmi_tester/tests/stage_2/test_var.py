@@ -1,23 +1,7 @@
 import numpy as np
 import pytest
 
-from bmi_tester.units import Units
-
-# try:
-#     from pymt import cfunits
-# except (FileNotFoundError, ModuleNotFoundError):
-#     cfunits = None
-
-
-# @pytest.mark.dependency()
-# @pytest.mark.dependency(depends=["test_get_var_location"])
-# def test_get_var_grid(initialized_bmi, var_name):
-#     """Test the grid of the variables."""
-#     if initialized_bmi.get_var_location(var_name) == "none":
-#         pytest.skip(f"var, {var_name}, is not located on a grid")
-#
-#     gid = initialized_bmi.get_var_grid(var_name)
-#     assert isinstance(gid, int)
+from bmi_tester.api import check_unit_is_valid
 
 
 def test_get_var_itemsize(initialized_bmi, var_name):
@@ -70,11 +54,8 @@ def test_get_var_type(initialized_bmi, var_name):
         )
 
 
-# @pytest.mark.skipif(cfunits is None, reason="cfunits is broken on this platform")
 def test_get_var_units(initialized_bmi, var_name):
     """Test the units of the variables."""
     units = initialized_bmi.get_var_units(var_name)
     assert isinstance(units, str)
-    unit_system = Units()
-    assert unit_system.is_valid(units)
-    # cfunits.Units(units)
+    assert check_unit_is_valid(units)

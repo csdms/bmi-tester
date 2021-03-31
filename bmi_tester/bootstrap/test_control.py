@@ -4,7 +4,6 @@ import os
 import pytest
 from scripting import cp
 
-
 # from .conftest import INPUT_FILE, Bmi
 
 

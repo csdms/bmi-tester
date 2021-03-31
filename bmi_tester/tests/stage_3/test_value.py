@@ -3,11 +3,12 @@ from distutils.version import StrictVersion
 import numpy as np
 import pytest
 
-# from pytest_dependency import depends
-
 from bmi_tester.api import empty_var_buffer
 
 from ..conftest import BMI_VERSION_STRING, INPUT_FILE, Bmi
+
+# from pytest_dependency import depends
+
 
 BMI_VERSION = StrictVersion(BMI_VERSION_STRING)
 
