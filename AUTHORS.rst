@@ -10,4 +10,5 @@ Development Leads
 Contributors
 ------------
 
+- `Tian Gan <https://github.com/gantian127>`
 - `Scott Stewart <https://github.com/sc0tts>`_
