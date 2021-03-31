@@ -360,3 +360,29 @@ epub_exclude_files = ["search.html"]
 
 # If false, no index is generated.
 # epub_use_index = True
+
+
+napoleon_numpy_docstring = True
+napoleon_google_docstring = False
+napoleon_include_init_with_doc = True
+napoleon_include_special_with_doc = True
+
+# The name of an image file (relative to this directory) to place at the top
+# of the sidebar.
+html_logo = "_static/powered-by-logo-header.png"
+
+html_sidebars = {
+    "index": [
+        "sidebarintro.html",
+        "links.html",
+        "sourcelink.html",
+        "searchbox.html",
+    ],
+    "**": [
+        "sidebarintro.html",
+        "links.html",
+        "sourcelink.html",
+        "searchbox.html",
+    ],
+}
+
