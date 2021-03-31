@@ -1,7 +1,7 @@
 Changelog for bmi-tester
 ========================
 
-0.5.5 (unreleased)
+0.5.5 (2021-03-31)
 ------------------
 
 - Fixed documentation builds on readthedocs (#31)
