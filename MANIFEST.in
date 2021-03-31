@@ -1,11 +1,16 @@
 include LICENSE
 include *.rst
 include requirements*.txt
-include *.yml
 include Makefile
+
 recursive-include bmi_tester/data/udunits *
+recursive-include docs/_static *png
+recursive-include docs/_templates *html
 recursive-include docs *.bat
 recursive-include docs *.py
 recursive-include docs *.rst
 recursive-include docs Makefile
 recursive-include tests *.py
+
+exclude environment.yml
+exclude .readthedocs.yaml
