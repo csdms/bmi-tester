@@ -4,7 +4,16 @@ Changelog for bmi-tester
 0.5.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed documentation builds on readthedocs (#31)
+
+- Added usage and installation instructions to the README,
+  and did a general cleaning up of the docs (#30)
+
+- Fixed a bug when validating some cf-compliant units (#29)
+
+- Added gimli.units as a requirement for unit parsing (#29)
+
+- Added GitHub actions for continuous integration (#28)
 
 
 0.5.4 (2020-10-31)
