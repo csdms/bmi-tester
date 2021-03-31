@@ -2,7 +2,7 @@ import importlib
 import os
 
 import pytest
-from scripting import cp
+from model_metadata.scripting import cp
 
 # from .conftest import INPUT_FILE, Bmi
 
