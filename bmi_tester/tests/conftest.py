@@ -3,7 +3,7 @@ import os
 from distutils.version import StrictVersion
 
 import pytest
-from scripting import cd, cp
+from model_metadata.scripting import as_cwd, cp
 
 
 def skip_if_grid_type_is_not(bmi, gid, gtype):
@@ -86,7 +86,7 @@ def get_test_parameters(infile=None, count=0):
     count += 1
 
     bmi = Bmi()
-    with cd(root_dir):
+    with as_cwd(root_dir):
         bmi.initialize(infile)
 
         in_names = set(bmi.get_input_var_names())

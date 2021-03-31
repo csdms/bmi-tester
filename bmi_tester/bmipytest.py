@@ -12,7 +12,7 @@ import pkg_resources
 from model_metadata import MetadataNotFoundError
 from model_metadata.api import query, stage
 from pytest import ExitCode
-from scripting import cd
+from model_metadata.scripting import as_cwd
 
 from . import __version__
 from .api import check_bmi
@@ -198,7 +198,7 @@ def main(
         with open(os.path.join(stage_dir, config_file), "r") as fp:
             out(fp.read())
 
-    with cd(stage_dir):
+    with as_cwd(stage_dir):
         for stage_path in sorted(stages):
             status = check_bmi(
                 entry_point,

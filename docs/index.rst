@@ -1,10 +1,9 @@
-.. bmi_tester documentation master file, created by
-   sphinx-quickstart on Tue Jan  3 11:19:57 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. image:: _static/bmi-tester-logo-text-lowercase.png
+    :align: center
+    :scale: 10%
+    :alt: Sequence
+    :target: https://sequence.readthedocs.org/
 
-Utilities for testing Python BMI implementaions
-===============================================
 
 The `bmi_tester` package provides command-line utilities for testing
 a Python classes that implement the Basic Model Interface (BMI).
@@ -12,44 +11,40 @@ a Python classes that implement the Basic Model Interface (BMI).
 users to run tests programmatically. The package is also easily
 extendable so that new tests can be added to the suite.
 
-Quickstart
-----------
 
-Install the ``bmi_tester`` package:
+Getting Started
+---------------
 
-.. code:: bash
-
-    $ conda install bmi_tester -c csdms-stack
-
-This installs the `bmi_tester` package as well as the `bmi-tester`
-command. To get help, use the `-h` option:
-
-.. code:: bash
-
-    $ bmi-tester -h
-
-If the class you wish to test is installed (that is, you can run
-`from <something> import <class-to-test>`), you can use the
-`bmi-tester` command to test your implementation:
-
-.. code:: bash
-
-    $ bmi-tester something.class-to-test
-
-
-User Guide
-----------
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
 
-   bmi_tester
+   readme
 
-References
-==========
+..   usage
+..   installation
 
-.. [BmiGitHub] BMI on GitHub
+API Reference
+-------------
 
-  https://github.com/csdms/bmi
+If you are looking for information on a specific function, class, or
+method, this part of the documentation is for you.
+
+.. toctree::
+   :maxdepth: 2
+
+   api/index
+
+
+Miscellaneous Pages
+-------------------
+
+.. toctree::
+   :maxdepth: 2
+
+   authors
+   changelog
+   license
+
 
 Indices and tables
 ==================

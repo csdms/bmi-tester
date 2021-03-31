@@ -47,7 +47,7 @@ jobs:
           - name: Install requirements
             run: |
               mamba install --file=requirements.txt --file=requirements-docs.txt
-              mamba install gimli.units scripting
+              mamba install gimli.units
               mamba info
               mamba list
 
@@ -57,5 +57,4 @@ jobs:
 
           - name: Build documentation
             run: |
-              sphinx-apidoc --force -o docs/api bmi_tester *tests
-              make -C docs clean html
+              make docs
