@@ -1,12 +1,12 @@
 [build-system]
-requires = ["cython", "numpy", "setuptools", "wheel"]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.pytest.ini_options]
 minversion = "6.0.0rc1"
 testpaths = ["tests"]
 norecursedirs = [".*", "*.egg*", "build", "dist"]
 addopts = """
-    --ignore setup.py
     --ignore bmi_tester/bootstrap
     --ignore bmi_tester/tests
     --tb native

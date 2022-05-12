@@ -58,7 +58,7 @@ From Source
 +++++++++++
 
 After downloading the *bmi-tester* source code, run the following from
-the project's top-level folder (the one that contains *setup.py*) to
+the project's top-level folder (the one that contains *pyproject.toml*) to
 install into the current environment,
 
 .. code:: bash
