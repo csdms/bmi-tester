@@ -2,6 +2,84 @@
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "bmi-tester"
+description = "Test Python BMI bindings"
+version = "0.5.6.dev0"
+authors = [
+  {email = "eric.hutton@colorado.edu"},
+  {name = "Eric Hutton"},
+]
+maintainers = [
+  {email = "eric.hutton@colorado.edu"},
+  {name = "Eric Hutton"},
+  {email = "mark.piper@colorado.edu"},
+  {name = "Mark Piper"}
+]
+keywords = [
+  "bmi",
+  "csdms",
+  "model",
+  "python",
+]
+license = {file = "LICENSE"}
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+requires-python = ">=3.9"
+dependencies = [
+  "click",
+  "gimli.units",
+  "model_metadata",
+  "numpy",
+  "pytest",
+  "pytest-dependency",
+  "standard_names",
+]
+dynamic = ["readme"]
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "flake8",
+]
+testing = [
+  "coveralls",
+  "pytest>=3.6",
+  "pytest-cov",
+]
+docs = [
+  "sphinx>=1.5.1",
+]
+build = [
+  "build",
+  "twine",
+  "zest.releaser"
+]
+
+[project.urls]
+homepage = "https://csdms.colorado.edu"
+documentation = "https://csdms.colorado.edu"
+repository = "https://github.com/csdms/bmi-tester"
+changelog = "https://github.com/csdms/bmi-tester/blob/master/CHANGES.rst"
+
+[project.scripts]
+bmi-test = "bmi_tester.bmipytest:main"
+
+[project.entry-points."bmi.plugins"]
+bmi_test = "bmi_tester.bmipytest:configure_parser_test"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.rst", "CREDITS.rst", "CHANGES.rst"], content-type = "text/x-rst"}
+
 [tool.pytest.ini_options]
 minversion = "6.0.0rc1"
 testpaths = ["tests"]
@@ -27,3 +105,6 @@ include_trailing_comma = true
 force_grid_wrap = 0
 combine_as_imports = true
 line_length = 88
+
+[tool.zest-releaser]
+tag-format = "v{version}"
