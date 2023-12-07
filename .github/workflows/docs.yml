@@ -34,12 +34,12 @@ jobs:
             shell: bash -l {0}
 
         steps:
-          - uses: actions/checkout@v2
+          - uses: actions/checkout@v4
 
           - uses: conda-incubator/setup-miniconda@v2
             with:
               auto-update-conda: true
-              python-version: ${{ matrix.python-version }}
+              python-version: "3.11"
               mamba-version: "*"
               channels: conda-forge,defaults
               channel-priority: true
@@ -47,7 +47,6 @@ jobs:
           - name: Install requirements
             run: |
               mamba install --file=requirements.txt --file=requirements-docs.txt
-              mamba install gimli.units
               mamba info
               mamba list
 

@@ -55,7 +55,7 @@ lint: ## check style with flake8
 
 pretty:
 	find bmi_tester -name '*.py' | xargs isort
-	black setup.py tests bmi_tester
+	black tests bmi_tester
 
 test: ## run tests quickly with the default Python
 	pytest
@@ -83,9 +83,8 @@ release: dist ## package and upload a release
 	twine upload dist/*
 
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+	python -m build
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py develop
+	pip install -e .

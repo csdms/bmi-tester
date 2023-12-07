@@ -2,7 +2,6 @@ name: bmi-tester
 channels:
   - conda-forge
 dependencies:
-- gimli.units
 - pip
 - pip:
   - -r file:requirements.txt

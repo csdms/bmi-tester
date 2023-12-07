@@ -1,4 +1,5 @@
 click
+gimli.units
 model_metadata
 numpy
 pytest
