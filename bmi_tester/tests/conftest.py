@@ -159,7 +159,6 @@ def var_name(request):
 
 
 def pytest_generate_tests(metafunc):
-
     if "gid" in metafunc.fixturenames:
         metafunc.parametrize("gid", params["gid"])
     # elif "var_name" in metafunc.fixturenames:
