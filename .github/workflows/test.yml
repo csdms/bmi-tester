@@ -48,5 +48,5 @@ jobs:
           pytest --cov=bmi_tester --cov-report=xml:$(pwd)/coverage.xml -vvv
 
       - name: Coveralls
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
-        uses: AndreMiras/coveralls-python-action@v20201129
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        uses: AndreMiras/coveralls-python-action@develop
