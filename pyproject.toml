@@ -21,6 +21,7 @@ keywords = [
   "csdms",
   "model",
   "python",
+  "testing",
 ]
 license = {file = "LICENSE"}
 classifiers = [
@@ -31,6 +32,7 @@ classifiers = [
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3",
   "Topic :: Scientific/Engineering :: Physics",
 ]
@@ -50,6 +52,7 @@ dynamic = ["readme"]
 dev = [
   "black",
   "flake8",
+  "isort",
 ]
 testing = [
   "coveralls",
@@ -66,10 +69,10 @@ build = [
 ]
 
 [project.urls]
-homepage = "https://csdms.colorado.edu"
-documentation = "https://csdms.colorado.edu"
-repository = "https://github.com/csdms/bmi-tester"
-changelog = "https://github.com/csdms/bmi-tester/blob/master/CHANGES.rst"
+Homepage = "https://csdms.colorado.edu"
+Documentation = "https://bmi-tester.readthedocs.io/"
+Repository = "https://github.com/csdms/bmi-tester"
+Changelog = "https://github.com/csdms/bmi-tester/blob/master/CHANGES.rst"
 
 [project.scripts]
 bmi-test = "bmi_tester.bmipytest:main"
@@ -88,7 +91,7 @@ addopts = """
     --ignore bmi_tester/bootstrap
     --ignore bmi_tester/tests
     --tb native
-    --strict
+    --strict-markers
     --durations 16
     --doctest-modules
     -vvv
