@@ -1,4 +1,4 @@
-from distutils.version import StrictVersion
+from packaging.version import Version
 
 import numpy as np
 import pytest
@@ -10,7 +10,7 @@ from ..conftest import BMI_VERSION_STRING, INPUT_FILE, Bmi
 # from pytest_dependency import depends
 
 
-BMI_VERSION = StrictVersion(BMI_VERSION_STRING)
+BMI_VERSION = Version(BMI_VERSION_STRING)
 
 BAD_VALUE = {"f": np.nan, "i": -999, "u": 0}
 

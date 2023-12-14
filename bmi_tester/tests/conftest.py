@@ -1,6 +1,6 @@
 import importlib
 import os
-from distutils.version import StrictVersion
+from packaging.version import Version
 
 import pytest
 from model_metadata.scripting import as_cwd, cp
@@ -54,7 +54,7 @@ else:
 INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE", None)
 # BMI_VERSION_STRING = os.environ.get("BMI_VERSION_STRING", "1.1")
 BMI_VERSION_STRING = os.environ.get("BMI_VERSION_STRING", "2.0")
-BMI_VERSION = StrictVersion(BMI_VERSION_STRING)
+BMI_VERSION = Version(BMI_VERSION_STRING)
 
 
 def all_grids(bmi, gtype=None):
