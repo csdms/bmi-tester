@@ -7,7 +7,7 @@ from .api import (
     check_unit_is_valid,
 )
 
-__version__ = version("bmi_tester")
+__version__ = version("bmi-tester")
 __all__ = [
     "check_bmi",
     "check_unit_is_valid",
