@@ -25,7 +25,7 @@ BAD_VALUE = {"f": np.nan, "i": -999, "u": 0}
 def test_get_var_location(initialized_bmi, var_name):
     """Test for get_var_location"""
     # assert False
-    if BMI_VERSION < "1.1":
+    if BMI_VERSION < Version("1.1"):
         pytest.skip(
             "testing BMIv{ver}: get_var_location was introduced in BMIv1.1".format(
                 ver=BMI_VERSION
