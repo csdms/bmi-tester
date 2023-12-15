@@ -2,10 +2,10 @@ name: bmi-tester
 channels:
   - conda-forge
 dependencies:
-- python >=3.9
-- pip
-- udunits2
-- pip:
-  - -r requirements.txt
-  - -r requirements-docs.txt
-  - -r requirements-testing.txt
+  - python >=3.9
+  - pip
+  - udunits2
+  - pip:
+    - -r requirements.txt
+    - -r requirements-docs.txt
+    - -r requirements-testing.txt
