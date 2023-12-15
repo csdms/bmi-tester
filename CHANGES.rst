@@ -1,7 +1,7 @@
 Changelog for bmi-tester
 ========================
 
-0.5.6 (unreleased)
+0.5.6 (2023-12-15)
 ------------------
 
 - Fix docs build (#36)
