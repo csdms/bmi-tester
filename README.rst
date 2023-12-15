@@ -115,8 +115,8 @@ Links
    :target: https://github.com/csdms/bmi-tester/actions/workflows/test.yml
 .. |Documentation Status| image:: https://readthedocs.org/projects/bmi-tester/badge/?version=latest
    :target: http://bmi-tester.readthedocs.io/en/latest/?badge=latest
-.. |Coverage Status| image:: https://coveralls.io/repos/github/csdms/bmi-tester/badge.svg?branch=master
-   :target: https://coveralls.io/github/csdms/bmi-tester?branch=master
+.. |Coverage Status| image:: https://coveralls.io/repos/github/csdms/bmi-tester/badge.svg
+   :target: https://coveralls.io/github/csdms/bmi-tester
 .. |Conda Version| image:: https://anaconda.org/conda-forge/bmi-tester/badges/version.svg
    :target: https://anaconda.org/conda-forge/bmi-tester
 .. |Conda Downloads| image:: https://anaconda.org/conda-forge/bmi-tester/badges/downloads.svg
