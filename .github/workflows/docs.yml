@@ -36,23 +36,22 @@ jobs:
         steps:
           - uses: actions/checkout@v4
 
-          - uses: conda-incubator/setup-miniconda@v2
+          - uses: conda-incubator/setup-miniconda@v3
             with:
-              auto-update-conda: true
               python-version: "3.11"
+              environment-file: environment.yml
               mamba-version: "*"
               channels: conda-forge,defaults
               channel-priority: true
 
-          - name: Install requirements
+          - name: Show conda installation info
             run: |
-              mamba install --file=requirements.txt --file=requirements-docs.txt
               mamba info
               mamba list
 
           - name: Install package
             run: |
-              pip install -e .
+              make install
 
           - name: Build documentation
             run: |

@@ -2,7 +2,7 @@ bmi-tester: Test Basic Model Interface implementations
 ======================================================
 
 |Build Status| |Documentation Status| |Coverage Status| |Conda Version|
-|Conda Installation| |Conda Downloads|
+|Conda Downloads|
 
 About
 -----
@@ -119,7 +119,5 @@ Links
    :target: https://coveralls.io/github/csdms/bmi-tester?branch=master
 .. |Conda Version| image:: https://anaconda.org/conda-forge/bmi-tester/badges/version.svg
    :target: https://anaconda.org/conda-forge/bmi-tester
-.. |Conda Installation| image:: https://anaconda.org/conda-forge/bmi-tester/badges/installer/conda.svg
-   :target: https://conda.anaconda.org/conda-forge
 .. |Conda Downloads| image:: https://anaconda.org/conda-forge/bmi-tester/badges/downloads.svg
    :target: https://anaconda.org/conda-forge/bmi-tester

@@ -1,4 +1,4 @@
-from distutils.version import StrictVersion
+from packaging.version import Version
 
 import numpy as np
 import pytest
@@ -44,7 +44,7 @@ def test_get_grid_type(initialized_bmi, gid):
 
 
 @pytest.mark.skipif(
-    BMI_VERSION < StrictVersion("2.0"), reason="get_grid_node_count is BMI 2.0"
+    BMI_VERSION < Version("2.0"), reason="get_grid_node_count is BMI 2.0"
 )
 # @pytest.mark.dependency()
 def test_get_grid_node_count(initialized_bmi, gid):

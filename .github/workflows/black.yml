@@ -17,5 +17,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
       - uses: psf/black@stable
-        with:
-          args: ". --check"
+
+      - name: Format
+        run: |
+          pip install black
+          black .

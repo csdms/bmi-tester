@@ -20,15 +20,15 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v3
         with:
-          auto-update-conda: true
           python-version: ${{ matrix.python-version }}
+          environment-file: environment.yml
           mamba-version: "*"
           channels: conda-forge,defaults
           channel-priority: true
@@ -38,14 +38,9 @@ jobs:
           mamba info
           mamba list
 
-      - name: Install requirements
-        run: |
-          mamba install --file=requirements.txt --file=requirements-testing.txt
-          mamba list
-
       - name: Build and install package
         run: |
-          pip install -e .
+          make install
 
       - name: Test
         run: |
@@ -53,5 +48,5 @@ jobs:
           pytest --cov=bmi_tester --cov-report=xml:$(pwd)/coverage.xml -vvv
 
       - name: Coveralls
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9'
-        uses: AndreMiras/coveralls-python-action@v20201129
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        uses: AndreMiras/coveralls-python-action@develop
