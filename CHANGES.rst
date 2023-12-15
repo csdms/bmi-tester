@@ -4,8 +4,11 @@ Changelog for bmi-tester
 0.5.6 (unreleased)
 ------------------
 
-- Move static metadata to setup.cfg; update requirements; update CI workflows (#32)
+- Fix docs build (#36)
+
 - Updates for Python 3.12 (#35)
+
+- Move static metadata to setup.cfg; update requirements; update CI workflows (#32)
 
 
 0.5.5 (2021-03-31)
