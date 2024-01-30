@@ -29,7 +29,7 @@ except KeyError:
 else:
     Bmi = load_component(class_to_test)
 
-INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE", None)
+INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE")
 
 
 @pytest.mark.dependency()
@@ -51,7 +51,7 @@ def test_has_finalize():
 )
 def test_initialize(tmpdir):
     """Test component can initialize itself."""
-    infile = os.environ.get("BMITEST_INPUT_FILE", None)
+    infile = os.environ.get("BMITEST_INPUT_FILE")
     manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
 
     with tmpdir.as_cwd() as prev:
@@ -68,7 +68,7 @@ def test_initialize(tmpdir):
 @pytest.mark.dependency(depends=["initialize_works"])
 def test_update(tmpdir):
     """Test component can update itself."""
-    infile = os.environ.get("BMITEST_INPUT_FILE", None)
+    infile = os.environ.get("BMITEST_INPUT_FILE")
     manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
 
     with tmpdir.as_cwd() as prev:

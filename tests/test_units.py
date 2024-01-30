@@ -1,8 +1,6 @@
-from bmi_tester.api import (
-    check_unit_is_dimensionless,
-    check_unit_is_time,
-    check_unit_is_valid,
-)
+from bmi_tester.api import check_unit_is_dimensionless
+from bmi_tester.api import check_unit_is_time
+from bmi_tester.api import check_unit_is_valid
 
 
 def test_check_valid_units():

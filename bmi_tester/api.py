@@ -5,8 +5,6 @@ import gimli
 import numpy as np
 import pkg_resources
 import pytest
-import six
-
 
 SECONDS = gimli.units.Unit("s")
 
@@ -29,8 +27,8 @@ def check_bmi(
     os.environ["BMI_VERSION_STRING"] = bmi_version
 
     if manifest:
-        if isinstance(manifest, six.string_types):
-            with open(manifest, "r") as fp:
+        if isinstance(manifest, str):
+            with open(manifest) as fp:
                 manifest = fp.read()
         else:
             manifest = os.linesep.join(manifest)

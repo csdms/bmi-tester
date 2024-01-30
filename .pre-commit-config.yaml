@@ -32,6 +32,7 @@ repos:
   rev: 5.13.2
   hooks:
   - id: isort
+    args: [--force-single-line-imports]
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.5.0
@@ -46,7 +47,7 @@ repos:
     - id: forbid-new-submodules
     - id: mixed-line-ending
     - id: trailing-whitespace
-    - id: name-tests-test
+    # - id: name-tests-test
     - id: file-contents-sorter
       files: |
         (?x)^(
