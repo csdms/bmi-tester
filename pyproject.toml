@@ -40,7 +40,7 @@ requires-python = ">=3.9"
 dependencies = [
   "click",
   "gimli.units",
-  "model_metadata",
+  "model_metadata>=0.8",
   "numpy",
   "pytest",
   "pytest-dependency",
