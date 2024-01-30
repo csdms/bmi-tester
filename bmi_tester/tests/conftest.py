@@ -1,9 +1,19 @@
+import contextlib
 import importlib
 import os
+import shutil
+from collections.abc import Generator
 from packaging.version import Version
 
 import pytest
-from model_metadata.scripting import as_cwd, cp
+
+
+@contextlib.contextmanager
+def as_cwd(path: str) -> Generator[None, None, None]:
+    prev_cwd = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(prev_cwd)
 
 
 def skip_if_grid_type_is_not(bmi, gid, gtype):
@@ -124,7 +134,8 @@ def initialized_bmi(tmpdir_factory, infile=None, manifest=None):
     with tmp.as_cwd() as prev:
         for file_ in [fname.strip() for fname in manifest]:
             if file_:
-                cp(os.path.join(str(prev), file_), tmp / file_, create_dirs=True)
+                os.makedirs(tmp / os.path.dirname(file_), exist_ok=True)
+                shutil.copy2(prev / file_, tmp / file_)
 
         bmi = Bmi()
         bmi.initialize(infile)

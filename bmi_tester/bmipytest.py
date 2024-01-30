@@ -1,10 +1,12 @@
 #! /usr/bin/env python
+import contextlib
 import importlib
 import os
 import pathlib
 import re
 import sys
 import tempfile
+from collections.abc import Generator
 from functools import partial
 
 import click
@@ -12,7 +14,6 @@ import pkg_resources
 from model_metadata import MetadataNotFoundError
 from model_metadata.api import query, stage
 from pytest import ExitCode
-from model_metadata.scripting import as_cwd
 
 from . import __version__
 from .api import check_bmi
@@ -220,3 +221,11 @@ def main(
             err("😞 There were errors")
 
     sys.exit(status)
+
+
+@contextlib.contextmanager
+def as_cwd(path: str) -> Generator[None, None, None]:
+    prev_cwd = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(prev_cwd)
