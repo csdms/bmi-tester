@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class Bmi(object):
+class Bmi:
     _input_var_names = ("land_surface__elevation", "land_surface_air__temperature")
     _output_var_names = (
         "land_surface__elevation",
@@ -22,7 +22,7 @@ class Bmi(object):
         }
 
     def initialize(self, config_file):
-        with open(config_file, "r"):
+        with open(config_file):
             pass
 
     def update(self):

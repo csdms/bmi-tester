@@ -1,6 +1,5 @@
 from bmi_tester.bmipytest import load_component
 
-
 entry_point = "os:getcwd"
 module_name, cls_name = entry_point.split(":")
 

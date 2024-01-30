@@ -1,78 +1,77 @@
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
-name = "bmi-tester"
+name = "bmi_tester"
+requires-python = ">=3.10"
 description = "Test Python BMI bindings"
-version = "0.5.7.dev0"
+keywords = [
+    "bmi",
+    "csdms",
+    "model",
+    "python",
+    "testing",
+]
 authors = [
-  {email = "eric.hutton@colorado.edu"},
-  {name = "Eric Hutton"},
+    { email = "eric.hutton@colorado.edu" },
+    { name = "Eric Hutton" },
 ]
 maintainers = [
-  {email = "eric.hutton@colorado.edu"},
-  {name = "Eric Hutton"},
-  {email = "mark.piper@colorado.edu"},
-  {name = "Mark Piper"}
+    { email = "eric.hutton@colorado.edu" },
+    { name = "Eric Hutton" },
+    { email = "mark.piper@colorado.edu" },
+    { name = "Mark Piper" },
 ]
-keywords = [
-  "bmi",
-  "csdms",
-  "model",
-  "python",
-  "testing",
-]
-license = {file = "LICENSE"}
 classifiers = [
-  "Development Status :: 4 - Beta",
-  "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
-  "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "Programming Language :: Python :: 3",
-  "Topic :: Scientific/Engineering :: Physics",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Physics",
 ]
-requires-python = ">=3.9"
 dependencies = [
-  "click",
-  "gimli.units",
-  "model_metadata",
-  "numpy",
-  "pytest",
-  "pytest-dependency",
-  "standard_names",
+    "click",
+    "gimli.units",
+    "model-metadata>=0.8",
+    "numpy",
+    "pytest",
+    "pytest-dependency",
+    "standard-names",
 ]
-dynamic = ["readme"]
+dynamic = [
+    "readme",
+    "version",
+]
+
+[project.license]
+text = "MIT"
 
 [project.optional-dependencies]
 dev = [
-  "black",
-  "flake8",
-  "isort",
+    "black",
+    "flake8",
+    "isort",
 ]
 testing = [
-  "coveralls",
-  "pytest>=3.6",
-  "pytest-cov",
+    "coveralls",
+    "pytest-cov",
+    "pytest>=3.6",
 ]
 docs = [
-  "sphinx>=1.5.1",
+    "sphinx>=1.5.1",
 ]
 build = [
-  "build",
-  "twine",
-  "zest.releaser"
+    "build",
+    "twine",
+    "zest.releaser",
 ]
 
 [project.urls]
-Homepage = "https://csdms.colorado.edu"
-Documentation = "https://bmi-tester.readthedocs.io/"
-Repository = "https://github.com/csdms/bmi-tester"
 Changelog = "https://github.com/csdms/bmi-tester/blob/master/CHANGES.rst"
+Documentation = "https://bmi-tester.readthedocs.io/"
+Homepage = "https://csdms.colorado.edu"
+Repository = "https://github.com/csdms/bmi-tester"
 
 [project.scripts]
 bmi-test = "bmi_tester.bmipytest:main"
@@ -80,13 +79,38 @@ bmi-test = "bmi_tester.bmipytest:main"
 [project.entry-points."bmi.plugins"]
 bmi_test = "bmi_tester.bmipytest:configure_parser_test"
 
-[tool.setuptools.dynamic]
-readme = {file = ["README.rst", "CREDITS.rst", "CHANGES.rst"], content-type = "text/x-rst"}
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic.readme]
+file = "README.rst"
+content-type = "text/x-rst"
+
+[tool.setuptools.dynamic.version]
+attr = "bmi_tester._version.__version__"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+line_length = 88
 
 [tool.pytest.ini_options]
 minversion = "6.0.0rc1"
-testpaths = ["tests"]
-norecursedirs = [".*", "*.egg*", "build", "dist"]
+testpaths = [
+    "tests",
+]
+norecursedirs = [
+    ".*",
+    "*.egg*",
+    "build",
+    "dist",
+]
 addopts = """
     --ignore bmi_tester/bootstrap
     --ignore bmi_tester/tests
@@ -99,15 +123,9 @@ addopts = """
 doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
     "IGNORE_EXCEPTION_DETAIL",
-    "ALLOW_UNICODE"
+    "ALLOW_UNICODE",
 ]
-
-[tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-combine_as_imports = true
-line_length = 88
 
 [tool.zest-releaser]
 tag-format = "v{version}"
+python-file-with-version = "bmi_tester/_version.py"

@@ -20,7 +20,7 @@ def test_get_grid_shape(initialized_bmi, gid):
     try:
         rtn = initialized_bmi.get_grid_shape(gid, shape)
     except TypeError:
-        warnings.warn("get_grid_shape should take two arguments")
+        warnings.warn("get_grid_shape should take two arguments", stacklevel=2)
         rtn = initialized_bmi.get_grid_shape(gid)
         shape[:] = rtn
     else:

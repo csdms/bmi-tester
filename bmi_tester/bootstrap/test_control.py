@@ -1,10 +1,8 @@
 import importlib
 import os
+import shutil
 
 import pytest
-from model_metadata.scripting import cp
-
-# from .conftest import INPUT_FILE, Bmi
 
 
 def load_component(entry_point):
@@ -31,7 +29,7 @@ except KeyError:
 else:
     Bmi = load_component(class_to_test)
 
-INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE", None)
+INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE")
 
 
 @pytest.mark.dependency()
@@ -53,13 +51,14 @@ def test_has_finalize():
 )
 def test_initialize(tmpdir):
     """Test component can initialize itself."""
-    infile = os.environ.get("BMITEST_INPUT_FILE", None)
+    infile = os.environ.get("BMITEST_INPUT_FILE")
     manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
 
     with tmpdir.as_cwd() as prev:
         for file_ in [fname.strip() for fname in manifest]:
             if file_:
-                cp(os.path.join(str(prev), file_), tmpdir / file_, create_dirs=True)
+                os.makedirs(tmpdir / os.path.dirname(file_), exist_ok=True)
+                shutil.copy2(os.path.join(prev, file_), tmpdir / file_)
 
         bmi = Bmi()
         assert bmi.initialize(INPUT_FILE) is None
@@ -69,13 +68,15 @@ def test_initialize(tmpdir):
 @pytest.mark.dependency(depends=["initialize_works"])
 def test_update(tmpdir):
     """Test component can update itself."""
-    infile = os.environ.get("BMITEST_INPUT_FILE", None)
+    infile = os.environ.get("BMITEST_INPUT_FILE")
     manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
 
     with tmpdir.as_cwd() as prev:
         for file_ in [fname.strip() for fname in manifest]:
             if file_:
-                cp(os.path.join(str(prev), file_), tmpdir / file_, create_dirs=True)
+                os.makedirs(tmpdir / os.path.dirname(file_), exist_ok=True)
+                shutil.copy2(os.path.join(prev, file_), tmpdir / file_)
+                # cp(os.path.join(str(prev), file_), tmpdir / file_, create_dirs=True)
 
         bmi = Bmi()
         bmi.initialize(INPUT_FILE)

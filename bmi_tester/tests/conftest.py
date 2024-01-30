@@ -1,9 +1,19 @@
+import contextlib
 import importlib
 import os
-from packaging.version import Version
+import shutil
+from collections.abc import Generator
 
 import pytest
-from model_metadata.scripting import as_cwd, cp
+from packaging.version import Version
+
+
+@contextlib.contextmanager
+def as_cwd(path: str) -> Generator[None, None, None]:
+    prev_cwd = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(prev_cwd)
 
 
 def skip_if_grid_type_is_not(bmi, gid, gtype):
@@ -51,7 +61,7 @@ except KeyError:
     Bmi = None
 else:
     Bmi = load_component(class_to_test)
-INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE", None)
+INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE")
 # BMI_VERSION_STRING = os.environ.get("BMI_VERSION_STRING", "1.1")
 BMI_VERSION_STRING = os.environ.get("BMI_VERSION_STRING", "2.0")
 BMI_VERSION = Version(BMI_VERSION_STRING)
@@ -77,9 +87,9 @@ def get_test_parameters(infile=None, count=0):
     infile = infile or INPUT_FILE
 
     try:
-        with open(".ROOT_DIR", "r") as fp:
+        with open(".ROOT_DIR") as fp:
             root_dir = fp.read()
-    except IOError:
+    except OSError:
         root_dir = "."
     if count > 1:
         raise RuntimeError()
@@ -117,14 +127,15 @@ def bmi():
 
 @pytest.fixture(scope="session")
 def initialized_bmi(tmpdir_factory, infile=None, manifest=None):
-    infile = os.environ.get("BMITEST_INPUT_FILE", None)
+    infile = os.environ.get("BMITEST_INPUT_FILE")
     manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
 
     tmp = tmpdir_factory.mktemp("data")
     with tmp.as_cwd() as prev:
         for file_ in [fname.strip() for fname in manifest]:
             if file_:
-                cp(os.path.join(str(prev), file_), tmp / file_, create_dirs=True)
+                os.makedirs(tmp / os.path.dirname(file_), exist_ok=True)
+                shutil.copy2(prev / file_, tmp / file_)
 
         bmi = Bmi()
         bmi.initialize(infile)
@@ -134,12 +145,13 @@ def initialized_bmi(tmpdir_factory, infile=None, manifest=None):
 
 @pytest.fixture(scope="function")
 def staged_tmpdir(tmpdir, infile=None, manifest=None):
-    infile = os.environ.get("BMITEST_INPUT_FILE", None)
+    infile = os.environ.get("BMITEST_INPUT_FILE")
     manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
     with tmpdir.as_cwd() as prev:
         for file_ in [fname.strip() for fname in manifest]:
             if file_:
-                cp(os.path.join(str(prev), file_), tmpdir / file_, create_dirs=True)
+                os.makedirs(tmpdir / os.path.dirname(file_), exist_ok=True)
+                shutil.copy2(prev / file_, tmpdir / file_)
     return tmpdir
 
 

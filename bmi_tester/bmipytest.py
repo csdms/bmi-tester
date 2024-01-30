@@ -1,18 +1,20 @@
 #! /usr/bin/env python
+import contextlib
 import importlib
 import os
 import pathlib
 import re
 import sys
 import tempfile
+from collections.abc import Generator
 from functools import partial
 
 import click
 import pkg_resources
 from model_metadata import MetadataNotFoundError
-from model_metadata.api import query, stage
+from model_metadata.api import query
+from model_metadata.api import stage
 from pytest import ExitCode
-from model_metadata.scripting import as_cwd
 
 from . import __version__
 from .api import check_bmi
@@ -33,12 +35,12 @@ def validate_entry_point(ctx, param, value):
             )
         if not re.match(MODULE_REGEX, module_name):
             raise click.BadParameter(
-                "Bad module name ({0})".format(module_name),
+                f"Bad module name ({module_name})",
                 param_hint="module_name:ClassName",
             )
         if not re.match(CLASS_REGEX, class_name):
             raise click.BadParameter(
-                "Bad class name ({0})".format(class_name),
+                f"Bad class name ({class_name})",
                 param_hint="module_name:ClassName",
             )
     return value
@@ -78,7 +80,7 @@ def _tree(files):
 
 
 @click.command(
-    context_settings=dict(ignore_unknown_options=True, allow_extra_args=True)
+    context_settings={"ignore_unknown_options": True, "allow_extra_args": True}
 )
 @click.version_option(version=__version__)
 @click.option(
@@ -195,7 +197,7 @@ def main(
         if manifest:
             out(_tree(manifest))
         out(f"> cat {stage_dir}/{config_file}")
-        with open(os.path.join(stage_dir, config_file), "r") as fp:
+        with open(os.path.join(stage_dir, config_file)) as fp:
             out(fp.read())
 
     with as_cwd(stage_dir):
@@ -220,3 +222,11 @@ def main(
             err("😞 There were errors")
 
     sys.exit(status)
+
+
+@contextlib.contextmanager
+def as_cwd(path: str) -> Generator[None, None, None]:
+    prev_cwd = os.getcwd()
+    os.chdir(path)
+    yield
+    os.chdir(prev_cwd)
