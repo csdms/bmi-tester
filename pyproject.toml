@@ -93,6 +93,11 @@ content-type = "text/x-rst"
 [tool.setuptools.dynamic.version]
 attr = "bmi_tester._version.__version__"
 
+[tool.setuptools.packages.find]
+where = [
+    "src",
+]
+
 [tool.isort]
 multi_line_output = 3
 include_trailing_comma = true
@@ -128,4 +133,4 @@ doctest_optionflags = [
 
 [tool.zest-releaser]
 tag-format = "v{version}"
-python-file-with-version = "bmi_tester/_version.py"
+python-file-with-version = "src/bmi_tester/_version.py"
