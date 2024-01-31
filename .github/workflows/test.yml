@@ -24,29 +24,32 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: ${{ matrix.python-version }}
-          environment-file: environment.yml
-          mamba-version: "*"
-          channels: conda-forge,defaults
-          channel-priority: true
-
-      - name: Show conda installation info
-        run: |
-          mamba info
-          mamba list
-
-      - name: Build and install package
-        run: |
-          make install
+          miniforge-variant: Mambaforge
+          miniforge-version: latest
 
       - name: Test
         run: |
-          python -c 'import bmi_tester; print(bmi_tester.__version__)'
-          pytest --cov=bmi_tester --cov-report=xml:$(pwd)/coverage.xml -vvv
+          pip install nox
+          nox -s test --force-pythons="${{ matrix.python-version }}"
 
       - name: Coveralls
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        if: matrix.os == 'ubuntu-latest'
         uses: AndreMiras/coveralls-python-action@develop
+        with:
+          parallel: true
+          flag-name: py${{ matrix.python-version }}-${{ matrix.os }}
+
+          debug: true
+
+  coveralls_finish:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: AndreMiras/coveralls-python-action@develop
+        with:
+          parallel-finished: true
+          debug: true
