@@ -31,7 +31,9 @@ def test(session: nox.Session) -> None:
 def test_cli(session: nox.Session) -> None:
     """Run the tests."""
     session.install("model-metadata")
-    session.conda_install("gimli.units", "pymt_hydrotrend", channel=["nodefaults", "conda-forge"])
+    session.conda_install(
+        "gimli.units", "pymt_hydrotrend", channel=["nodefaults", "conda-forge"]
+    )
     session.install(".")
 
     session.run("bmi-test", "pymt_hydrotrend:Hydrotrend")
