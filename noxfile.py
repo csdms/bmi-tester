@@ -27,6 +27,16 @@ def test(session: nox.Session) -> None:
         session.run("coverage", "report", "--ignore-errors", "--show-missing")
 
 
+@nox.session(name="test-cli", python=PYTHON_VERSION, venv_backend="conda")
+def test_cli(session: nox.Session) -> None:
+    """Run the tests."""
+    session.install("model-metadata")
+    session.conda_install("gimli.units", "pymt_hydrotrend", channel=["nodefaults", "conda-forge"])
+    session.install(".")
+
+    session.run("bmi-test", "pymt_hydrotrend:Hydrotrend")
+
+
 @nox.session
 def lint(session: nox.Session) -> None:
     """Look for lint."""
