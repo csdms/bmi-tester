@@ -35,7 +35,13 @@ jobs:
         run: |
           pip install nox
           nox -s test --force-pythons="${{ matrix.python-version }}"
-          nox -s test-cli --force-pythons="${{ matrix.python-version }}"
+
+      - name: Test CLI
+        run: |
+          pip install model-metadata
+          conda install gimli.units pymt_hydrotrend -c conda-forge
+          pip install .
+          bmi-test pymt_hydrotrend:Hydrotrend
 
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest'
