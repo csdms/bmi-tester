@@ -29,11 +29,14 @@ def test_not_dimensionless_units():
 @pytest.mark.parametrize(
     "unit",
     (
-        "s", "d", "yr", "seconds since 1970-01-01",
+        "s",
+        "d",
+        "yr",
+        "seconds since 1970-01-01",
         "seconds since 1970-01-01 00:00:00 UTC",
         "days since 1970-01-01 00:00:00 UTC",
         "years since 1970-01-01 00:00:00 UTC",
-    )
+    ),
 )
 def test_time_units(unit):
     assert check_unit_is_time(unit)
