@@ -13,7 +13,7 @@ def test_bmi_check(tmpdir):
         touch_file("input.yaml")
         assert (
             check_bmi(
-                "bmi_tester.bmi:Bmi", input_file="input.yaml", extra_args=["-vvv"]
+                "testing.bmi:BmiExample", input_file="input.yaml", extra_args=["-vvv"]
             )
             == 0
         )
@@ -24,7 +24,7 @@ def test_bmi_check_with_manifest_as_list(tmpdir):
         touch_file("input.yaml")
         assert (
             check_bmi(
-                "bmi_tester.bmi:Bmi",
+                "testing.bmi:BmiExample",
                 extra_args=["-vvv"],
                 input_file="input.yaml",
                 manifest=["input.yaml"],
@@ -41,7 +41,7 @@ def test_bmi_check_with_manifest_as_string(tmpdir):
         touch_file("data.dat")
         assert (
             check_bmi(
-                "bmi_tester.bmi:Bmi",
+                "testing.bmi:BmiExample",
                 extra_args=["-vvv"],
                 input_file="input.yaml",
                 manifest="manifest.txt",
