@@ -8,12 +8,14 @@ import nox
 
 PROJECT = "bmi-tester"
 ROOT = pathlib.Path(__file__).parent
+PYTHON_VERSION = "3.11"
 
 
-@nox.session
+@nox.session(python=PYTHON_VERSION, venv_backend="conda")
 def test(session: nox.Session) -> None:
     """Run the tests."""
     session.install(".[testing]")
+    session.conda_install("gimli.units", channel=["nodefaults", "conda-forge"])
 
     args = ["--cov", PROJECT, "-vvv"] + session.posargs
 
