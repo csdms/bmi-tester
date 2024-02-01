@@ -75,10 +75,10 @@ Homepage = "https://csdms.colorado.edu"
 Repository = "https://github.com/csdms/bmi-tester"
 
 [project.scripts]
-bmi-test = "bmi_tester.bmipytest:main"
+bmi-test = "bmi_tester.main:main"
 
 [project.entry-points."bmi.plugins"]
-bmi_test = "bmi_tester.bmipytest:configure_parser_test"
+bmi_test = "bmi_tester.main:configure_parser_test"
 
 [build-system]
 requires = [
