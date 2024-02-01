@@ -1,7 +1,8 @@
 import contextlib
-import importlib
 import os
 import sys
+from collections.abc import Iterable
+from collections.abc import Sequence
 
 import gimli
 import numpy as np
@@ -16,21 +17,23 @@ SECONDS = gimli.units.Unit("s")
 
 
 def check_bmi(
-    package,
-    tests_dir=None,
-    input_file=None,
-    manifest=None,
-    bmi_version="2.0",
-    extra_args=None,
-    help_pytest=False,
-):
+    package: str,
+    tests_dir: str | Sequence[str] | None = None,
+    input_file: str = "",
+    manifest: str | Sequence[str] | None = None,
+    bmi_version: str = "2.0",
+    extra_args: Iterable[str] | None = None,
+    help_pytest: bool = False,
+) -> int:
     if tests_dir is None:
-        tests_dir = files(__name__) / "_bootstrap"
-        # tests_dir = pkg_resources.resource_filename(__name__, "_bootstrap")
-    args = [str(tests_dir)]
+        tests_dir = str(files(__name__) / "_bootstrap")
+    if isinstance(tests_dir, str):
+        args = [tests_dir]
+    else:
+        args = list(tests_dir)
 
     os.environ["BMITEST_CLASS"] = package
-    os.environ["BMITEST_INPUT_FILE"] = input_file or ""
+    os.environ["BMITEST_INPUT_FILE"] = input_file
     os.environ["BMI_VERSION_STRING"] = bmi_version
 
     if manifest:
@@ -41,12 +44,10 @@ def check_bmi(
             manifest = os.linesep.join(manifest)
         os.environ["BMITEST_MANIFEST"] = manifest
 
-    extra_args = extra_args or []
+    extra_args = list(extra_args or [])
     if help_pytest:
         extra_args.append("--help")
     args += extra_args
-
-    importlib.reload(pytest)
     return pytest.main(args)
 
 
