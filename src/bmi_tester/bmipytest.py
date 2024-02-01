@@ -2,7 +2,6 @@
 import contextlib
 import importlib
 import os
-import pathlib
 import re
 import sys
 import tempfile
@@ -10,14 +9,18 @@ from collections.abc import Generator
 from functools import partial
 
 import click
-import pkg_resources
 from model_metadata import MetadataNotFoundError
 from model_metadata.api import query
 from model_metadata.api import stage
 from pytest import ExitCode
 
-from . import __version__
-from .api import check_bmi
+if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
+    from importlib.resources import files
+else:  # pragma: no cover (<PY312)
+    from importlib_resources import files
+
+from bmi_tester._version import __version__
+from bmi_tester.api import check_bmi
 
 out = partial(click.secho, bold=True, err=True)
 err = partial(click.secho, fg="red", err=True)
@@ -52,13 +55,15 @@ def load_component(entry_point):
     component = None
     try:
         module = importlib.import_module(module_name)
-    except ImportError:
+    except ImportError as error:
+        print(str(error))
         raise
     else:
         try:
             component = module.__dict__[cls_name]
         #     component = module.__dict__[cls_name].__name__
-        except KeyError:
+        except KeyError as error:
+            print(str(error))
             raise ImportError(cls_name)
 
     return component
@@ -161,7 +166,8 @@ def main(
 
     try:
         Bmi = load_component(entry_point)
-    except ImportError:
+    except ImportError as error:
+        print(error)
         err(f"unable to import BMI implementation, {class_name}, from {module_name}")
         raise click.Abort()
 
@@ -177,12 +183,14 @@ def main(
             config_file, manifest = _stage_component(class_name, stage_dir)
 
     stages = sorted(
-        [pathlib.Path(pkg_resources.resource_filename(__name__, "bootstrap"))]
-        + list(
-            pathlib.Path(pkg_resources.resource_filename(__name__, "tests")).glob(
-                "stage_*"
-            )
-        )
+        [files(__name__) / "_bootstrap"]
+        + list((files(__name__) / "_tests").glob("stage_*"))
+        # [pathlib.Path(pkg_resources.resource_filename(__name__, "_bootstrap"))]
+        # + list(
+        #     pathlib.Path(pkg_resources.resource_filename(__name__, "_tests")).glob(
+        #         "stage_*"
+        #     )
+        # )
     )
 
     if not quiet:

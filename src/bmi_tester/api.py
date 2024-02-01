@@ -1,10 +1,15 @@
 import contextlib
 import os
+import sys
 
 import gimli
 import numpy as np
-import pkg_resources
 import pytest
+
+if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
+    from importlib.resources import files
+else:  # pragma: no cover (<PY312)
+    from importlib_resources import files
 
 SECONDS = gimli.units.Unit("s")
 
@@ -19,8 +24,9 @@ def check_bmi(
     help_pytest=False,
 ):
     if tests_dir is None:
-        tests_dir = pkg_resources.resource_filename(__name__, "bootstrap")
-    args = [tests_dir]
+        tests_dir = files(__name__) / "_bootstrap"
+        # tests_dir = pkg_resources.resource_filename(__name__, "_bootstrap")
+    args = [str(tests_dir)]
 
     os.environ["BMITEST_CLASS"] = package
     os.environ["BMITEST_INPUT_FILE"] = input_file or ""
@@ -39,6 +45,7 @@ def check_bmi(
         extra_args.append("--help")
     args += extra_args
 
+    # importlib.reload(pytest)
     return pytest.main(args)
 
 
