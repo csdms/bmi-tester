@@ -1,17 +1,20 @@
 #! /usr/bin/env python
-import contextlib
-import importlib
+import argparse
 import os
-import re
+import pathlib
 import sys
 import tempfile
-from collections.abc import Generator
+from collections.abc import Iterator
+from collections.abc import Sequence
 from functools import partial
+from typing import Any
 
-import click
-from model_metadata import MetadataNotFoundError
+from model_metadata._utils import as_cwd
+from model_metadata._utils import load_component
+from model_metadata._utils import parse_entry_point
 from model_metadata.api import query
 from model_metadata.api import stage
+from model_metadata.errors import BadEntryPointError
 from pytest import ExitCode
 
 if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
@@ -22,120 +25,11 @@ else:  # pragma: no cover (<PY312)
 from bmi_tester._version import __version__
 from bmi_tester.api import check_bmi
 
-out = partial(click.secho, bold=True, err=True)
-err = partial(click.secho, fg="red", err=True)
+out = partial(print, file=sys.stderr)
+err = partial(print, file=sys.stderr)
 
 
-def validate_entry_point(ctx, param, value):
-    MODULE_REGEX = r"^(?!.*\.\.)(?!.*\.$)[A-Za-z][\w\.]*$"
-    CLASS_REGEX = r"^[_a-zA-Z][_a-zA-Z0-9]+$"
-    if value is not None:
-        try:
-            module_name, class_name = value.split(":")
-        except ValueError:
-            raise click.BadParameter(
-                "Bad entry point", param=value, param_hint="module_name:ClassName"
-            )
-        if not re.match(MODULE_REGEX, module_name):
-            raise click.BadParameter(
-                f"Bad module name ({module_name})",
-                param_hint="module_name:ClassName",
-            )
-        if not re.match(CLASS_REGEX, class_name):
-            raise click.BadParameter(
-                f"Bad class name ({class_name})",
-                param_hint="module_name:ClassName",
-            )
-    return value
-
-
-def load_component(entry_point):
-    module_name, cls_name = entry_point.split(":")
-
-    component = None
-    try:
-        module = importlib.import_module(module_name)
-    except ImportError as error:
-        print(str(error))
-        raise
-    else:
-        try:
-            component = module.__dict__[cls_name]
-        #     component = module.__dict__[cls_name].__name__
-        except KeyError as error:
-            print(str(error))
-            raise ImportError(cls_name)
-
-    return component
-
-
-def _stage_component(entry_point, stage_dir="."):
-    config_file = query(entry_point, "run.config_file.path")
-    manifest = stage(entry_point, str(stage_dir))
-
-    return config_file, manifest
-
-
-def _tree(files):
-    tree = []
-    prefix = ["|--"] * (len(files) - 1) + ["`--"]
-    for p, fname in zip(prefix, files):
-        tree.append(f"{p} {fname}")
-    return os.linesep.join(tree)
-
-
-@click.command(
-    context_settings={"ignore_unknown_options": True, "allow_extra_args": True}
-)
-@click.version_option(version=__version__)
-@click.option(
-    "-q",
-    "--quiet",
-    is_flag=True,
-    help=(
-        "Don't emit non-error messages to stderr. Errors are still emitted, "
-        "silence those with 2>/dev/null."
-    ),
-)
-@click.option(
-    "-v", "--verbose", is_flag=True, help="Also emit status messages to stderr."
-)
-@click.option("--help-pytest", is_flag=True, help="Print help about pytest.")
-@click.option(
-    "--root-dir",
-    type=click.Path(
-        exists=True, file_okay=False, dir_okay=True, writable=True, resolve_path=True
-    ),
-    help="Define root directory for BMI tests",
-)
-@click.option(
-    "--config-file",
-    type=click.Path(
-        exists=True, file_okay=True, dir_okay=False, writable=True, resolve_path=True
-    ),
-    help="Name of model configuration file",
-)
-@click.option(
-    "--manifest",
-    type=click.Path(
-        exists=True, file_okay=True, dir_okay=False, readable=True, resolve_path=True
-    ),
-    help="Path to manifest file of staged model input files.",
-)
-@click.option("--bmi-version", default="2.0", help="BMI version to test against")
-@click.argument("entry_point", callback=validate_entry_point)
-@click.argument("pytest_args", nargs=-1, type=click.UNPROCESSED)
-def main(
-    entry_point,
-    root_dir,
-    bmi_version,
-    config_file,
-    manifest,
-    quiet,
-    verbose,
-    pytest_args,
-    help_pytest,
-):
+def main(argv: tuple[str, ...] | None = None) -> int:
     """Validate a BMI implementation.
 
     \b
@@ -158,78 +52,192 @@ def main(
     and *config.txt* is the configuration file, which will be passed to the
     *initialize* method.
     """
-    if root_dir and not config_file:
-        err("using --root-dir but no config file specified (use --config-file)")
-        raise click.Abort()
+    parser = argparse.ArgumentParser(prog="bmi-test")
+    parser.add_argument(
+        "--version", action="version", version=f"bmi-test {__version__}"
+    )
+    parser.add_argument("entry_point", action=ValidateEntryPoint)
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help=(
+            "Don't emit non-error messages to stderr. Errors are still emitted, "
+            "silence those with 2>/dev/null."
+        ),
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Also emit status messages to stderr.",
+    )
+    parser.add_argument(
+        "--help-pytest", action="store_true", help="Print help about pytest."
+    )
+    parser.add_argument(
+        "--root-dir",
+        action=ValidatePathExists,
+        help="Define root directory for BMI tests",
+    )
+    parser.add_argument(
+        "--config-file",
+        action=ValidatePathExists,
+        help="Name of model configuration file",
+    )
+    parser.add_argument(
+        "--manifest",
+        action=ValidatePathExists,
+        help="Path to manifest file of staged model input files.",
+    )
+    parser.add_argument(
+        "--bmi-version", default="2.0", help="BMI version to test against"
+    )
 
-    module_name, class_name = entry_point.split(":")
+    args = parser.parse_args(argv)
 
-    try:
-        Bmi = load_component(entry_point)
-    except ImportError as error:
-        print(error)
-        err(f"unable to import BMI implementation, {class_name}, from {module_name}")
-        raise click.Abort()
-
-    if root_dir:
-        stage_dir = root_dir
-        if manifest is None:
-            manifest = os.listdir(stage_dir)
+    if args.root_dir:
+        stage = Stage(
+            args.root_dir,
+            config_file=args.config_file,
+            manifest=args.manifest,
+        )
     else:
-        stage_dir = tempfile.mkdtemp()
-        try:
-            config_file, manifest = _stage_component(entry_point, stage_dir)
-        except MetadataNotFoundError:
-            config_file, manifest = _stage_component(class_name, stage_dir)
+        stage = Stage.from_entry_point(":".join(args.entry_point))
 
-    path_to_tests = importlib_resources.files(__name__).resolve()
+    with as_cwd(stage.dir):
+        status = run_the_tests(
+            ":".join(args.entry_point),
+            stage.config_file,
+            stage.manifest,
+            bmi_version=args.bmi_version,
+        )
+
+    if not args.quiet:
+        if status == ExitCode.OK:
+            out("🎉 All tests passed!")
+        else:
+            err("😞 There were errors")
+
+    return status
+
+
+class Stage:
+    def __init__(
+        self, stage_dir, config_file, manifest: str | Iterator[str] | None = None
+    ):
+        self._stage_dir = stage_dir
+        self._config_file = config_file
+        if manifest is None:
+            manifest = stage_dir
+        if isinstance(manifest, str):
+            self._manifest = os.listdir(manifest)
+        else:
+            self._manifest = list(manifest)
+
+    @property
+    def dir(self):
+        return self._stage_dir
+
+    @property
+    def manifest(self):
+        return self._manifest
+
+    @property
+    def config_file(self):
+        return self._config_file
+
+    @classmethod
+    def from_entry_point(cls, entry_point):
+        module_name, class_name = parse_entry_point(entry_point)
+        try:
+            Bmi = load_component(module_name, class_name)
+        except ImportError:
+            err(
+                f"unable to import BMI implementation, {class_name},"
+                f" from {module_name}"
+            )
+            return 1
+
+        stage_dir = tempfile.mkdtemp()
+        manifest = stage(Bmi, str(stage_dir))
+        config_file = query(Bmi, "run.config_file.path")
+
+        return cls(stage_dir, config_file=config_file, manifest=manifest)
+
+
+def run_the_tests(
+    entry_point: str,
+    config_file: str,
+    manifest: str,
+    bmi_version: str = "2.0",
+    pytest_help: bool = False,
+) -> int:
+    path_to_tests = pathlib.Path(str(importlib_resources.files(__name__))).resolve()
     stages = [
         str(p)
         for p in [path_to_tests / "_bootstrap"]
         + sorted((path_to_tests / "_tests").glob("stage_*"))
     ]
 
-    if not quiet:
-        out("Location of tests:")
-        for stage_path in stages:
-            out(f"- {stage_path}")
-        out(f"Entry point: {entry_point}")
-        out(repr(Bmi()))
-        out(f"BMI version: {bmi_version}")
-        out(f"Stage folder: {stage_dir}")
-        out(f"> tree -d {stage_dir}")
-        if manifest:
-            out(_tree(manifest))
-        out(f"> cat {stage_dir}/{config_file}")
-        with open(os.path.join(stage_dir, config_file)) as fp:
-            out(fp.read())
+    status = 0
+    for stage_dir in stages:
+        status = check_bmi(
+            entry_point,
+            tests_dir=stage_dir,
+            input_file=config_file,
+            manifest=manifest,
+            bmi_version=bmi_version,
+            # extra_args=pytest_args + ("-vvv",),
+            help_pytest=pytest_help,
+        )
+        if status != ExitCode.OK:
+            break
 
-    with as_cwd(stage_dir):
-        for stage in stages:
-            status = check_bmi(
-                entry_point,
-                tests_dir=stage,
-                input_file=config_file,
-                manifest=manifest,
-                bmi_version=bmi_version,
-                extra_args=pytest_args + ("-vvv",),
-                help_pytest=help_pytest,
-            )
-            if status != ExitCode.OK:
-                break
+    return status
 
-    if not quiet:
-        if status == ExitCode.OK:
-            out("🎉 All tests passed!")
+
+class ValidateEntryPoint(argparse.Action):
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        values: str | Sequence[Any] | None,
+        option_string: str | None = None,
+    ) -> None:
+        if not isinstance(values, str):
+            parser.error(f"{values}: invalid entry-point: not a string")
+
+        entry_point = values
+        try:
+            module_name, class_name = parse_entry_point(entry_point)
+        except BadEntryPointError as error:
+            parser.error(f"{entry_point}: invalid entry-point: {str(error)}")
         else:
-            err("😞 There were errors")
-
-    sys.exit(status)
+            setattr(namespace, self.dest, (module_name, class_name))
 
 
-@contextlib.contextmanager
-def as_cwd(path: str) -> Generator[None, None, None]:
-    prev_cwd = os.getcwd()
-    os.chdir(path)
-    yield
-    os.chdir(prev_cwd)
+class ValidatePathExists(argparse.Action):
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        values: str | Sequence[Any] | None,
+        option_string: str | None = None,
+    ) -> None:
+        if not isinstance(values, str):
+            parser.error(f"{values}: invalid path: not a string")
+
+        path = values
+
+        if not os.path.isdir(path):
+            parser.error(f"{path}: path does not exist")
+        else:
+            setattr(namespace, self.dest, path)
+
+
+def _tree(files):
+    tree = []
+    prefix = ["|--"] * (len(files) - 1) + ["`--"]
+    for p, fname in zip(prefix, files):
+        tree.append(f"{p} {fname}")
+    return os.linesep.join(tree)

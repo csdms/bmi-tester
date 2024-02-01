@@ -31,7 +31,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
 ]
 dependencies = [
-    "click",
     "gimli.units",
     "importlib-resources; python_version < '3.12'",
     "model-metadata>=0.8",
