@@ -1,4 +1,5 @@
 import contextlib
+import importlib
 import os
 import sys
 
@@ -45,7 +46,7 @@ def check_bmi(
         extra_args.append("--help")
     args += extra_args
 
-    # importlib.reload(pytest)
+    importlib.reload(pytest)
     return pytest.main(args)
 
 
