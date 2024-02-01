@@ -1,7 +1,6 @@
-from bmi_tester.bmipytest import load_component
+from bmi_tester.main import load_component
 
 entry_point = "os:getcwd"
-module_name, cls_name = entry_point.split(":")
 
 
 def test_component_is_not_string():
@@ -11,4 +10,5 @@ def test_component_is_not_string():
 
 def test_component_is_classname():
     component = load_component(entry_point)
+    _, cls_name = entry_point.split(":")
     assert component.__name__ == cls_name
