@@ -15,9 +15,9 @@ from model_metadata.api import stage
 from pytest import ExitCode
 
 if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
-    from importlib.resources import files
+    import importlib.resources as importlib_resources
 else:  # pragma: no cover (<PY312)
-    from importlib_resources import files
+    import importlib_resources
 
 from bmi_tester._version import __version__
 from bmi_tester.api import check_bmi
@@ -182,20 +182,16 @@ def main(
         except MetadataNotFoundError:
             config_file, manifest = _stage_component(class_name, stage_dir)
 
-    stages = sorted(
-        [files(__name__) / "_bootstrap"]
-        + list((files(__name__) / "_tests").glob("stage_*"))
-        # [pathlib.Path(pkg_resources.resource_filename(__name__, "_bootstrap"))]
-        # + list(
-        #     pathlib.Path(pkg_resources.resource_filename(__name__, "_tests")).glob(
-        #         "stage_*"
-        #     )
-        # )
-    )
+    path_to_tests = importlib_resources.files(__name__).resolve()
+    stages = [
+        str(p)
+        for p in [path_to_tests / "_bootstrap"]
+        + sorted((path_to_tests / "_tests").glob("stage_*"))
+    ]
 
     if not quiet:
         out("Location of tests:")
-        for stage_path in (str(stage_path) for stage_path in stages):
+        for stage_path in stages:
             out(f"- {stage_path}")
         out(f"Entry point: {entry_point}")
         out(repr(Bmi()))
@@ -209,11 +205,10 @@ def main(
             out(fp.read())
 
     with as_cwd(stage_dir):
-        for stage_path in sorted(stages):
+        for stage in stages:
             status = check_bmi(
                 entry_point,
-                tests_dir=str(stage_path),
-                # tests_dir=tests_dir,
+                tests_dir=stage,
                 input_file=config_file,
                 manifest=manifest,
                 bmi_version=bmi_version,
