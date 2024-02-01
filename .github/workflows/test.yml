@@ -38,10 +38,11 @@ jobs:
 
       - name: Test CLI
         run: |
-          pip install model-metadata
-          conda install gimli.units pymt_hydrotrend -c conda-forge
-          pip install .
-          bmi-test pymt_hydrotrend:Hydrotrend
+          nox -s test-cli --force-pythons="${{ matrix.python-version }}"
+          # pip install model-metadata
+          # conda install gimli.units pymt_hydrotrend -c conda-forge
+          # pip install .
+          # bmi-test pymt_hydrotrend:Hydrotrend
 
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest'
