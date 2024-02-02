@@ -8,7 +8,7 @@ import nox
 
 PROJECT = "bmi-tester"
 ROOT = pathlib.Path(__file__).parent
-PYTHON_VERSION = "3.11"
+PYTHON_VERSION = "3.12"
 
 
 @nox.session(python=PYTHON_VERSION, venv_backend="conda")
@@ -32,11 +32,11 @@ def test_cli(session: nox.Session) -> None:
     """Run the tests."""
     session.install("model-metadata")
     session.conda_install(
-        "gimli.units", "pymt_hydrotrend", channel=["nodefaults", "conda-forge"]
+        "gimli.units", "pymt_topography", channel=["nodefaults", "conda-forge"]
     )
     session.install(".")
 
-    session.run("bmi-test", "pymt_hydrotrend:Hydrotrend")
+    session.run("bmi-test", "pymt_topography:Topography")
 
 
 @nox.session
