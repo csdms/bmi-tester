@@ -2,7 +2,7 @@ import warnings
 
 import numpy as np
 
-from ..conftest import skip_if_grid_type_is_not
+from bmi_tester._tests.conftest import skip_if_grid_type_is_not
 
 
 # @pytest.mark.dependency(depends=["test_get_grid_rank"], scope="session")

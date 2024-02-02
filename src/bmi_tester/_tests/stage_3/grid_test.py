@@ -2,8 +2,8 @@ import numpy as np
 import pytest
 from packaging.version import Version
 
-from ..conftest import BMI_VERSION
-from ..conftest import skip_if_grid_type_is_not
+from bmi_tester._tests.conftest import BMI_VERSION
+from bmi_tester._tests.conftest import skip_if_grid_type_is_not
 
 VALID_GRID_TYPES = (
     "none",

@@ -2,11 +2,10 @@ import numpy as np
 import pytest
 from packaging.version import Version
 
-from bmi_tester.api import empty_var_buffer
-
-from ..conftest import BMI_VERSION_STRING
-from ..conftest import INPUT_FILE
-from ..conftest import Bmi
+from bmi_tester._tests.conftest import BMI_VERSION_STRING
+from bmi_tester._tests.conftest import INPUT_FILE
+from bmi_tester._tests.conftest import Bmi
+from bmi_tester._utils import empty_var_buffer
 
 # from pytest_dependency import depends
 

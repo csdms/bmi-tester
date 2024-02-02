@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from ..conftest import skip_if_grid_type_is
+from bmi_tester._tests.conftest import skip_if_grid_type_is
 
 
 # @pytest.mark.dependency(depends=["test_get_grid_type", "test_get_grid_rank"], scope="session")
