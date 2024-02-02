@@ -3,15 +3,21 @@ import sys
 from collections.abc import Iterable
 from collections.abc import Sequence
 
-import gimli
+try:
+    import gimli
+except ImportError:
+    WITH_GIMLI_UNITS = False
+    SECONDS = None
+else:
+    WITH_GIMLI_UNITS = True
+    SECONDS = gimli.units.Unit("s")
+
 import pytest
 
 if sys.version_info >= (3, 12):  # pragma: no cover (PY12+)
     from importlib.resources import files
 else:  # pragma: no cover (<PY312)
     from importlib_resources import files
-
-SECONDS = gimli.units.Unit("s")
 
 
 def check_bmi(

@@ -14,8 +14,8 @@ PYTHON_VERSION = "3.12"
 @nox.session(python=PYTHON_VERSION, venv_backend="conda")
 def test(session: nox.Session) -> None:
     """Run the tests."""
-    session.conda_install("gimli.units", channel=["nodefaults", "conda-forge"])
     session.install(".[testing]")
+    session.conda_install("gimli.units", channel=["nodefaults", "conda-forge"])
 
     args = ["--cov", PROJECT, "-vvv"] + session.posargs
 
@@ -30,11 +30,10 @@ def test(session: nox.Session) -> None:
 @nox.session(name="test-cli", python=PYTHON_VERSION, venv_backend="conda")
 def test_cli(session: nox.Session) -> None:
     """Run the tests."""
-    session.install("model-metadata")
+    session.install(".")
     session.conda_install(
         "gimli.units", "pymt_topography", channel=["nodefaults", "conda-forge"]
     )
-    session.install(".")
 
     session.run("bmi-test", "pymt_topography:Topography")
 

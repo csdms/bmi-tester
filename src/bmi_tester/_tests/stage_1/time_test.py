@@ -6,6 +6,7 @@
 import pytest
 from pytest import approx
 
+from bmi_tester.api import WITH_GIMLI_UNITS
 from bmi_tester.api import check_unit_is_dimensionless
 from bmi_tester.api import check_unit_is_time
 from bmi_tester.api import check_unit_is_valid
@@ -35,7 +36,7 @@ def test_time_units_is_str(initialized_bmi):
     assert isinstance(units, str)
 
 
-# @pytest.mark.skipif(cfunits is None, reason="cfunits is broken on this platform")
+@pytest.mark.skipif(not WITH_GIMLI_UNITS, reason="gimli.units is not installed")
 def test_time_units_is_valid(initialized_bmi):
     """Test the units of time are valid."""
     units = initialized_bmi.get_time_units()

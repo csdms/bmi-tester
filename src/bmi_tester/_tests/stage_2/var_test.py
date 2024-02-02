@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 
+from bmi_tester.api import WITH_GIMLI_UNITS
 from bmi_tester.api import check_unit_is_valid
 
 
@@ -52,6 +53,7 @@ def test_get_var_type(initialized_bmi, var_name):
         raise AssertionError(f"get_var_type: bad data type name ({dtype})")
 
 
+@pytest.mark.skipif(not WITH_GIMLI_UNITS, reason="gimli.units is not installed")
 def test_get_var_units(initialized_bmi, var_name):
     """Test the units of the variables."""
     units = initialized_bmi.get_var_units(var_name)
