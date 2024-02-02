@@ -1,4 +1,5 @@
-#! /usr/bin/env python
+from __future__ import annotations
+
 import argparse
 import os
 import pathlib
@@ -96,6 +97,10 @@ def main(argv: tuple[str, ...] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.root_dir:
+        if not args.config_file:
+            err("using --root-dir but no config file specified (use --config-file)")
+            return -1
+
         stage = Stage(
             args.root_dir,
             config_file=args.config_file,
@@ -123,31 +128,34 @@ def main(argv: tuple[str, ...] | None = None) -> int:
 
 class Stage:
     def __init__(
-        self, stage_dir, config_file, manifest: str | Iterator[str] | None = None
+        self,
+        stage_dir: str,
+        config_file: str,
+        manifest: str | Iterator[str] | None = None,
     ):
         self._stage_dir = stage_dir
         self._config_file = config_file
         if manifest is None:
             manifest = stage_dir
         if isinstance(manifest, str):
-            self._manifest = os.listdir(manifest)
+            self._manifest = tuple(os.listdir(manifest))
         else:
-            self._manifest = list(manifest)
+            self._manifest = tuple(manifest)
 
     @property
-    def dir(self):
+    def dir(self) -> str:
         return self._stage_dir
 
     @property
-    def manifest(self):
+    def manifest(self) -> tuple[str, ...]:
         return self._manifest
 
     @property
-    def config_file(self):
+    def config_file(self) -> str:
         return self._config_file
 
     @classmethod
-    def from_entry_point(cls, entry_point):
+    def from_entry_point(cls, entry_point: str) -> Stage:
         module_name, class_name = parse_entry_point(entry_point)
         try:
             Bmi = load_component(module_name, class_name)
@@ -156,7 +164,7 @@ class Stage:
                 f"unable to import BMI implementation, {class_name},"
                 f" from {module_name}"
             )
-            return 1
+            raise
 
         stage_dir = tempfile.mkdtemp()
         manifest = stage(Bmi, str(stage_dir))
@@ -168,7 +176,7 @@ class Stage:
 def run_the_tests(
     entry_point: str,
     config_file: str,
-    manifest: str,
+    manifest: tuple[str, ...],
     bmi_version: str = "2.0",
     pytest_help: bool = False,
 ) -> int:
@@ -229,7 +237,8 @@ class ValidatePathExists(argparse.Action):
 
         path = values
 
-        if not os.path.isdir(path):
+        # if not os.path.isdir(path):
+        if not os.path.exists(path):
             parser.error(f"{path}: path does not exist")
         else:
             setattr(namespace, self.dest, path)
@@ -241,3 +250,7 @@ def _tree(files):
     for p, fname in zip(prefix, files):
         tree.append(f"{p} {fname}")
     return os.linesep.join(tree)
+
+
+if __name__ == "__main__":
+    SystemExit(main())
