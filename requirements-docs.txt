@@ -1,1 +1,4 @@
-sphinx>=1.5.1
+myst-parser
+sphinx
+sphinx-inline-tabs
+sphinx_copybutton

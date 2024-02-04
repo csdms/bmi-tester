@@ -31,8 +31,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
 ]
 dependencies = [
-    "click",
-    "gimli.units",
+    "importlib-resources; python_version < '3.12'",
     "model-metadata>=0.8",
     "numpy",
     "pytest",
@@ -48,6 +47,9 @@ dynamic = [
 text = "MIT"
 
 [project.optional-dependencies]
+units = [
+	"gimli.units"
+]
 dev = [
     "black",
     "flake8",
@@ -74,10 +76,10 @@ Homepage = "https://csdms.colorado.edu"
 Repository = "https://github.com/csdms/bmi-tester"
 
 [project.scripts]
-bmi-test = "bmi_tester.bmipytest:main"
+bmi-test = "bmi_tester.main:main"
 
 [project.entry-points."bmi.plugins"]
-bmi_test = "bmi_tester.bmipytest:configure_parser_test"
+bmi_test = "bmi_tester.main:configure_parser_test"
 
 [build-system]
 requires = [
@@ -87,11 +89,16 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.dynamic.readme]
-file = "README.rst"
-content-type = "text/x-rst"
+file = "README.md"
+content-type = "text/markdown"
 
 [tool.setuptools.dynamic.version]
 attr = "bmi_tester._version.__version__"
+
+[tool.setuptools.packages.find]
+where = [
+    "src",
+]
 
 [tool.isort]
 multi_line_output = 3
@@ -128,4 +135,4 @@ doctest_optionflags = [
 
 [tool.zest-releaser]
 tag-format = "v{version}"
-python-file-with-version = "bmi_tester/_version.py"
+python-file-with-version = "src/bmi_tester/_version.py"

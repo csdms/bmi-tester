@@ -3,10 +3,11 @@ version: 2
 build:
   os: ubuntu-22.04
   tools:
-    python: "mambaforge-22.9"
-
-conda:
-  environment: environment.yml
+    python: "3.11"
+  jobs:
+    pre_build:
+      - pip install nox
+      - nox -s build-generated-docs
 
 sphinx:
   builder: html
@@ -15,5 +16,6 @@ sphinx:
 
 python:
   install:
+    - requirements: requirements-docs.txt
     - method: pip
       path: .

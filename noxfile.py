@@ -6,14 +6,16 @@ import shutil
 
 import nox
 
-PROJECT = "bmi-tester"
+PROJECT = "bmi_tester"
 ROOT = pathlib.Path(__file__).parent
+PYTHON_VERSION = "3.12"
 
 
-@nox.session
+@nox.session(python=PYTHON_VERSION, venv_backend="conda")
 def test(session: nox.Session) -> None:
     """Run the tests."""
     session.install(".[testing]")
+    session.conda_install("gimli.units", channel=["nodefaults", "conda-forge"])
 
     args = ["--cov", PROJECT, "-vvv"] + session.posargs
 
@@ -23,6 +25,17 @@ def test(session: nox.Session) -> None:
 
     if "CI" not in os.environ:
         session.run("coverage", "report", "--ignore-errors", "--show-missing")
+
+
+@nox.session(name="test-cli", python=PYTHON_VERSION, venv_backend="conda")
+def test_cli(session: nox.Session) -> None:
+    """Run the tests."""
+    session.install(".")
+    session.conda_install(
+        "gimli.units", "pymt_topography", channel=["nodefaults", "conda-forge"]
+    )
+
+    session.run("bmi-test", "pymt_topography:Topography")
 
 
 @nox.session
@@ -39,6 +52,55 @@ def build(session: nox.Session) -> None:
     session.run("python", "--version")
     session.run("pip", "--version")
     session.run("python", "-m", "build", "--outdir", "./build/wheelhouse")
+
+
+@nox.session(name="build-docs")
+def build_docs(session: nox.Session) -> None:
+    """Build the docs."""
+
+    build_generated_docs(session)
+
+    session.install(
+        *("-r", "requirements-docs.txt"),
+        *("-r", "requirements.txt"),
+    )
+    session.install(".")
+
+    pathlib.Path("build").mkdir(exist_ok=True)
+
+    session.run(
+        "sphinx-build",
+        "-b",
+        "html",
+        "-W",
+        "--keep-going",
+        "docs",
+        "build/html",
+    )
+    session.log("generated docs at build/html")
+
+
+@nox.session(name="build-generated-docs", reuse_venv=True)
+def build_generated_docs(session: nox.Session) -> None:
+    """Build auto-generated files used by the docs."""
+    # FOLDER["docs_generated"].mkdir(exist_ok=True)
+
+    session.install("sphinx")
+    session.install("-e", ".")
+
+    with session.chdir(ROOT):
+        os.makedirs("src/docs/_generated/api", exist_ok=True)
+        session.log("generating api docs in docs/api")
+        session.run(
+            "sphinx-apidoc",
+            "-e",
+            "-force",
+            "--no-toc",
+            "--module-first",
+            "-o",
+            "docs/_generated/api",
+            "src/bmi_tester",
+        )
 
 
 @nox.session(name="publish-testpypi")
@@ -83,7 +145,7 @@ def clean(session):
 
             shutil.rmtree("build", ignore_errors=True)
             shutil.rmtree("dist", ignore_errors=True)
-            shutil.rmtree(f"{PROJECT}.egg-info", ignore_errors=True)
+            shutil.rmtree(f"src/{PROJECT}.egg-info", ignore_errors=True)
             shutil.rmtree(".pytest_cache", ignore_errors=True)
             shutil.rmtree(".venv", ignore_errors=True)
 

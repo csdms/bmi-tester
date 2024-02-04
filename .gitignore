@@ -1,6 +1,8 @@
 *.egg-info/
 *.py[cod]
 .coverage
+.nox/
 __pycache__/
 build/
 dist/
+docs/_generated/
