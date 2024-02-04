@@ -1,7 +1,7 @@
-Developer Documentation
------------------------
+Python API for ``bmi-tester``
+-----------------------------
 
 .. toctree::
    :maxdepth: 2
 
-   modules
+   /_generated/api/bmi_tester

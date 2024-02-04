@@ -6,7 +6,7 @@ import shutil
 
 import nox
 
-PROJECT = "bmi-tester"
+PROJECT = "bmi_tester"
 ROOT = pathlib.Path(__file__).parent
 PYTHON_VERSION = "3.12"
 
@@ -52,6 +52,55 @@ def build(session: nox.Session) -> None:
     session.run("python", "--version")
     session.run("pip", "--version")
     session.run("python", "-m", "build", "--outdir", "./build/wheelhouse")
+
+
+@nox.session(name="build-docs")
+def build_docs(session: nox.Session) -> None:
+    """Build the docs."""
+
+    build_generated_docs(session)
+
+    session.install(
+        *("-r", "requirements-docs.txt"),
+        *("-r", "requirements.txt"),
+    )
+    session.install(".")
+
+    pathlib.Path("build").mkdir(exist_ok=True)
+
+    session.run(
+        "sphinx-build",
+        "-b",
+        "html",
+        "-W",
+        "--keep-going",
+        "docs",
+        "build/html",
+    )
+    session.log(f"generated docs at build/html")
+
+
+@nox.session(name="build-generated-docs", reuse_venv=True)
+def build_generated_docs(session: nox.Session) -> None:
+    """Build auto-generated files used by the docs."""
+    # FOLDER["docs_generated"].mkdir(exist_ok=True)
+
+    session.install("sphinx")
+    session.install("-e", ".")
+
+    with session.chdir(ROOT):
+        os.makedirs("src/docs/_generated/api", exist_ok=True)
+        session.log("generating api docs in docs/api")
+        session.run(
+            "sphinx-apidoc",
+            "-e",
+            "-force",
+            "--no-toc",
+            "--module-first",
+            "-o",
+            "docs/_generated/api",
+            "src/bmi_tester",
+        )
 
 
 @nox.session(name="publish-testpypi")
