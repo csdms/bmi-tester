@@ -1,25 +1,10 @@
 name: Documentation
 
-on:
-    push:
-        paths:
-            - "docs/**"
-            - "AUTHORS.rst"
-            - "CHANGES.rst"
-            - "CONTRIBUTING.rst"
-            - "LICENSE.rst"
-            - "README.rst"
-    pull_request:
-        paths:
-            - "docs/**"
-            - "AUTHORS.rst"
-            - "CHANGES.rst"
-            - "CONTRIBUTING.rst"
-            - "LICENSE.rst"
-            - "README.rst"
+on: [push, pull_request]
 
 jobs:
     build:
+        name: Build documentation
         # We want to run on external PRs, but not on our own internal PRs as they'll be run
         # by the push to the branch. Without this if check, checks are duplicated since
         # internal PRs match both the push and pull_request events.
@@ -35,24 +20,13 @@ jobs:
 
         steps:
           - uses: actions/checkout@v4
-
-          - uses: conda-incubator/setup-miniconda@v3
+          - name: Set up Python 3.11
+            uses: actions/setup-python@v4
             with:
-              python-version: "3.11"
-              environment-file: environment.yml
-              mamba-version: "*"
-              channels: conda-forge,defaults
-              channel-priority: true
+              python-version: 3.11
 
-          - name: Show conda installation info
-            run: |
-              mamba info
-              mamba list
-
-          - name: Install package
-            run: |
-              make install
+          - name: Install dependencies
+            run: pip install nox
 
           - name: Build documentation
-            run: |
-              make docs
+            run: nox -s build-docs
