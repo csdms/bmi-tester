@@ -1,3 +1,5 @@
+# bmi-tester
+
 [anaconda-badge]: https://anaconda.org/conda-forge/bmi-tester/badges/version.svg
 [anaconda-link]: https://anaconda.org/conda-forge/bmi-tester
 [build-badge]: https://github.com/csdms/bmi-tester/actions/workflows/test.yml/badge.svg
@@ -9,8 +11,6 @@
 [pypi-badge]: https://badge.fury.io/py/bmi-tester.svg
 [pypi-link]: https://pypi.org/project/bmi-tester/
 [python-badge]: https://img.shields.io/pypi/pyversions/bmi-tester.svg
-
-# bmi-tester: Test Basic Model Interface implementations
 
 ![[Build Status][build-link]][build-badge]
 ![[PyPI][pypi-link]][pypi-badge]
