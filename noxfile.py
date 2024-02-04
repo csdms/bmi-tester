@@ -77,7 +77,7 @@ def build_docs(session: nox.Session) -> None:
         "docs",
         "build/html",
     )
-    session.log(f"generated docs at build/html")
+    session.log("generated docs at build/html")
 
 
 @nox.session(name="build-generated-docs", reuse_venv=True)
