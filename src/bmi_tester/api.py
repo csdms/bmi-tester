@@ -4,13 +4,13 @@ from collections.abc import Iterable
 from collections.abc import Sequence
 
 try:
-    import gimli
+    from gimli import units
 except ImportError:
     WITH_GIMLI_UNITS = False
     SECONDS = None
 else:
     WITH_GIMLI_UNITS = True
-    SECONDS = gimli.units.Unit("s")
+    SECONDS = units.Unit("s")
 
 import pytest
 
