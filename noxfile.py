@@ -11,11 +11,10 @@ ROOT = pathlib.Path(__file__).parent
 PYTHON_VERSION = "3.12"
 
 
-@nox.session(python=PYTHON_VERSION, venv_backend="conda")
+@nox.session
 def test(session: nox.Session) -> None:
     """Run the tests."""
-    session.install(".[testing]")
-    session.conda_install("gimli.units", channel=["nodefaults", "conda-forge"])
+    session.install(".[units,testing]")
 
     args = ["--cov", PROJECT, "-vvv"] + session.posargs
 
@@ -30,10 +29,8 @@ def test(session: nox.Session) -> None:
 @nox.session(name="test-cli", python=PYTHON_VERSION, venv_backend="conda")
 def test_cli(session: nox.Session) -> None:
     """Run the tests."""
-    session.install(".")
-    session.conda_install(
-        "gimli.units", "pymt_topography", channel=["nodefaults", "conda-forge"]
-    )
+    session.install(".[units]")
+    session.conda_install("pymt_topography", channel=["nodefaults", "conda-forge"])
 
     session.run("bmi-test", "pymt_topography:Topography")
 
