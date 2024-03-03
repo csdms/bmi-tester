@@ -1,7 +1,8 @@
 import warnings
 
 import pytest
-import standard_names
+from standard_names.standardname import StandardName
+from standard_names.standardname import is_valid_name
 
 
 def test_get_component_name(initialized_bmi):
@@ -15,8 +16,8 @@ def test_get_component_name(initialized_bmi):
 def test_var_names(var_name):
     """Test var names are valid."""
     assert isinstance(var_name, str)
-    if standard_names.is_valid_name(var_name):
-        standard_names.StandardName(var_name)
+    if is_valid_name(var_name):
+        StandardName(var_name)
     else:
         warnings.warn(f"not a valid standard name: {var_name}", stacklevel=2)
 

@@ -34,7 +34,7 @@ jobs:
       - name: Test
         run: |
           pip install nox
-          nox -s test --force-pythons="${{ matrix.python-version }}"
+          nox -s test
 
       - name: Test CLI
         run: |

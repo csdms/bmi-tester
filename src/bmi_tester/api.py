@@ -4,13 +4,16 @@ from collections.abc import Iterable
 from collections.abc import Sequence
 
 try:
-    import gimli
+    from gimli._udunits2 import UdunitsError
+    from gimli.errors import IncompatibleUnitsError
+    from gimli.errors import UnitNameError
+    from gimli.units import units
 except ImportError:
     WITH_GIMLI_UNITS = False
     SECONDS = None
 else:
     WITH_GIMLI_UNITS = True
-    SECONDS = gimli.units.Unit("s")
+    SECONDS = units.Unit("s")
 
 import pytest
 
@@ -57,8 +60,8 @@ def check_bmi(
 
 def check_unit_is_valid(unit):
     try:
-        gimli.units.Unit(unit)
-    except gimli.UnitNameError:
+        units.Unit(unit)
+    except (UnitNameError, UdunitsError):
         return False
     else:
         return True
@@ -66,12 +69,12 @@ def check_unit_is_valid(unit):
 
 def check_unit_is_time(unit):
     try:
-        gimli.units.Unit(unit).to(SECONDS)
-    except gimli.IncompatibleUnitsError:
+        units.Unit(unit).to(SECONDS)
+    except (IncompatibleUnitsError, UdunitsError):
         return False
     else:
         return True
 
 
 def check_unit_is_dimensionless(unit):
-    return gimli.units.Unit(unit).is_dimensionless
+    return units.Unit(unit).is_dimensionless
