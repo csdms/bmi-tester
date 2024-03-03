@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/psf/black
-  rev: 23.12.1
+  rev: 24.2.0
   hooks:
   - id: black
     name: black
@@ -23,7 +23,7 @@ repos:
     args: [--max-line-length=88]
 
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.15.0
+  rev: v3.15.1
   hooks:
   - id: pyupgrade
     args: [--py310-plus]
