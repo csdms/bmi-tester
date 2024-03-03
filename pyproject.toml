@@ -32,11 +32,11 @@ classifiers = [
 ]
 dependencies = [
     "importlib-resources; python_version < '3.12'",
-    "model-metadata>=0.8",
+    "model-metadata>=0.8.1",
     "numpy",
     "pytest",
     "pytest-dependency",
-    "standard-names",
+    "standard-names>=0.2.8",
 ]
 dynamic = [
     "readme",
@@ -48,7 +48,7 @@ text = "MIT"
 
 [project.optional-dependencies]
 units = [
-	"gimli.units"
+	"gimli.units>=0.3.2"
 ]
 dev = [
     "black",
