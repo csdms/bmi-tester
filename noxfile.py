@@ -20,6 +20,8 @@ def test(session: nox.Session) -> None:
 
     if "CI" in os.environ:
         args.append(f"--cov-report=xml:{ROOT.absolute()!s}/coverage.xml")
+
+    session.run("pip", "list")
     session.run("pytest", *args)
 
     if "CI" not in os.environ:
@@ -32,6 +34,7 @@ def test_cli(session: nox.Session) -> None:
     session.install("-r", "requirements/required.txt", ".[units,testing]")
     session.conda_install("pymt_topography", channel=["nodefaults", "conda-forge"])
 
+    session.run("pip", "list")
     session.run("bmi-test", "pymt_topography:Topography")
 
 
