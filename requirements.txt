@@ -1,5 +1,0 @@
-model_metadata
-numpy
-pytest
-pytest-dependency
-standard_names

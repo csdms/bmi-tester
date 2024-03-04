@@ -14,7 +14,7 @@ PYTHON_VERSION = "3.12"
 @nox.session
 def test(session: nox.Session) -> None:
     """Run the tests."""
-    session.install(".[units,testing]")
+    session.install("-r", "requirements/required.txt", ".[units,testing]")
 
     args = ["--cov", PROJECT, "-vvv"] + session.posargs
 
@@ -29,7 +29,7 @@ def test(session: nox.Session) -> None:
 @nox.session(name="test-cli", python=PYTHON_VERSION, venv_backend="conda")
 def test_cli(session: nox.Session) -> None:
     """Run the tests."""
-    session.install(".[units]")
+    session.install("-r", "requirements/required.txt", ".[units,testing]")
     session.conda_install("pymt_topography", channel=["nodefaults", "conda-forge"])
 
     session.run("bmi-test", "pymt_topography:Topography")
@@ -57,11 +57,7 @@ def build_docs(session: nox.Session) -> None:
 
     build_generated_docs(session)
 
-    session.install(
-        *("-r", "requirements-docs.txt"),
-        *("-r", "requirements.txt"),
-    )
-    session.install(".")
+    session.install("-r", "requirements-docs.in", ".[units]")
 
     pathlib.Path("build").mkdir(exist_ok=True)
 
@@ -83,7 +79,7 @@ def build_generated_docs(session: nox.Session) -> None:
     # FOLDER["docs_generated"].mkdir(exist_ok=True)
 
     session.install("sphinx")
-    session.install("-e", ".")
+    session.install("-e", ".[units]")
 
     with session.chdir(ROOT):
         os.makedirs("src/docs/_generated/api", exist_ok=True)
