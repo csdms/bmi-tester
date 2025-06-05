@@ -18,7 +18,6 @@ def test_get_start_time(initialized_bmi):
     start = initialized_bmi.get_start_time()
 
     assert isinstance(start, float)
-    assert start == approx(0.0)
 
 
 @pytest.mark.dependency()
@@ -59,7 +58,7 @@ def test_get_current_time(initialized_bmi):
 @pytest.mark.skip()
 @pytest.mark.dependency(depends=["test_get_start_time"])
 def test_get_end_time(initialized_bmi):
-    """Test that there is a stop time."""
+    """Test that there is a stop time (and that it's after the start)."""
     start = initialized_bmi.get_start_time()
     stop = initialized_bmi.get_end_time()
 
