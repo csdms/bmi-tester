@@ -1,8 +1,22 @@
 # Changelog for bmi-tester
 
-## 0.5.7 (unreleased)
+## 0.5.10 (unreleased)
 
-- Nothing changed yet.
+- Remove return statement from test (#51)
+
+## 0.5.9 (2024-03-03)
+
+- bmi-tester v0.5.9 (#41)
+- pre-commit autoupdate (#40)
+
+## 0.5.8 (2024-02-05)
+
+- Clean up CI testing (#39)
+
+## 0.5.7 (2024-01-30)
+
+- bmi-tester v0.5.7 (#38)
+- Remove model_metadata.scripting (#37)
 
 ## 0.5.6 (2023-12-15)
 
