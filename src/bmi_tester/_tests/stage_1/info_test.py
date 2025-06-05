@@ -10,8 +10,6 @@ def test_get_component_name(initialized_bmi):
     name = initialized_bmi.get_component_name()
     assert isinstance(name, str)
 
-    return name
-
 
 def test_var_names(var_name):
     """Test var names are valid."""
