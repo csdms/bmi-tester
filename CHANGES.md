@@ -1,5 +1,11 @@
 # Changelog for bmi-tester
 
+## 0.5.11 (unreleased)
+
+
+- Nothing changed yet.
+
+
 ## 0.5.10 (2025-06-05)
 
 - Remove return statement from test (#51)
