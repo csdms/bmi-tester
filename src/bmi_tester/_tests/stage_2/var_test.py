@@ -59,3 +59,28 @@ def test_get_var_units(initialized_bmi, var_name):
     units = initialized_bmi.get_var_units(var_name)
     assert isinstance(units, str)
     assert check_unit_is_valid(units)
+
+def test_set_get_interaction(initialized_bmi):
+    """Test fundmanetal state behaviour of every output variable which is also an input variable:"""
+
+    # Take the intersection of output and input vars
+    for var_name in initialized_bmi.get_output_var_names():
+      if var_name in initialized_bmi.get_input_var_names():
+
+        # Get the variables type
+        ty = np.dtype(initialized_bmi.get_var_type(var_name))
+        # Generate some systematic test cases for this variable's type
+        zero = np.zeros(1, dtype=ty)
+        one  = np.ones(1, dtype=ty)
+        for val in [zero, one, one + one]:
+          # Test set-get behaviour
+          # (i.e., setting a value then getting it produces the same result)
+          initialized_bmi.set_value(var_name, val)
+          val_out = initialized_bmi.get_value(var_name)
+          assert val_out == val
+
+          # Test set-set-get behaviour
+          # (i.e., setting is idempotent; setting twice has no visible effect)
+          initialized_bmi.set_value(var_name, val)
+          val_out_again = initialized_bmi.get_value(var_name)
+          assert val_out_again == val_out
