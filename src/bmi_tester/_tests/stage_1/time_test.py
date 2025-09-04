@@ -50,11 +50,22 @@ def test_get_current_time(initialized_bmi):
     start = initialized_bmi.get_start_time()
     now = initialized_bmi.get_current_time()
     stop = initialized_bmi.get_end_time()
+    time_step = initialized_bmi.get_time_step()
 
     assert isinstance(now, (int, float))
-    assert now <= stop
-    assert now >= start
 
+    # Test that the current time is 'between' the start and stop
+    # times; this depends on whether the time step is negative, positive, or 0
+    assert (((time_step > 0) & (now <= stop))
+            # Inverse model has current time greater than the stop
+           | ((time_step < 0) & (now >= stop))
+           # Instantaneous model has current time equal stop
+           | ((time_step == 0) & (now == stop)))
+    assert (((time_step > 0) & (now >= start))
+            # Inverse model has current time less than the start
+            | ((time_step < 0) & (now <= start))
+            # Instantaneous model has current time equalt the start
+            | ((time_step == 0) & (now == start)))
 
 @pytest.mark.skip()
 @pytest.mark.dependency(depends=["test_get_start_time"])
@@ -62,6 +73,11 @@ def test_get_end_time(initialized_bmi):
     """Test that there is a stop time."""
     start = initialized_bmi.get_start_time()
     stop = initialized_bmi.get_end_time()
+    time_step = initialized_bmi.get_time_step()
 
     assert isinstance(stop, (int, float))
-    assert stop >= start
+    assert ((time_step > 0 & start <= stop)
+          # or an inverse model
+         | (time_step < 0 & stop <= start)
+          # or an instantaneous model
+         | (time_step == 0 & start == stop))
