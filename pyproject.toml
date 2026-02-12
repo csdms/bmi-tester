@@ -1,6 +1,6 @@
 [project]
 name = "bmi_tester"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 description = "Test Python BMI bindings"
 keywords = [
     "bmi",
@@ -25,13 +25,12 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Physics",
 ]
 dependencies = [
-    "importlib-resources; python_version < '3.12'",
     "model-metadata>=0.8.1",
     "numpy",
     "pytest",
