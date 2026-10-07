@@ -1,80 +1,52 @@
 import numpy as np
 import pytest
-from packaging.version import Version
-
-from bmi_tester._tests.conftest import BMI_VERSION_STRING
-from bmi_tester._tests.conftest import INPUT_FILE
-from bmi_tester._tests.conftest import Bmi
-from bmi_tester._utils import empty_var_buffer
-
-# from pytest_dependency import depends
+from numpy.testing import assert_array_equal
 
 
-BMI_VERSION = Version(BMI_VERSION_STRING)
-
-BAD_VALUE = {"f": np.nan, "i": -999, "u": 0}
-
-
-# @pytest.mark.dependency()
-# def test_get_var_location(var_name):
-#     if var_name == "channel_entrance_water_sediment~bedload__mass_flow_rate":
-#         assert False
-
-
-# @pytest.mark.dependency()
-def test_get_var_location(initialized_bmi, var_name):
-    """Test for get_var_location"""
-    # assert False
-    if BMI_VERSION < Version("1.1"):
-        pytest.skip(
-            "testing BMIv{ver}: get_var_location was introduced in BMIv1.1".format(
-                ver=BMI_VERSION
-            )
-        )
-
-    assert hasattr(initialized_bmi, "get_var_location")
-
-    loc = initialized_bmi.get_var_location(var_name)
-
-    assert isinstance(loc, str)
-    assert loc in ("node", "edge", "face", "none")
-
-
-@pytest.mark.skip("too dangerous")
-# @pytest.mark.dependency(depends=["initialize_works", "test_get_var_grid", "get_var_nbytes"], scope="session")
-def test_set_input_values(staged_tmpdir, in_var_name):
+def test_set_input_values(staged_tmpdir, bmi_factory, bmi_config, in_var_name):
     """Input values are numpy arrays."""
     with staged_tmpdir.as_cwd():
-        bmi = Bmi()
-        bmi.initialize(INPUT_FILE)
+        bmi = bmi_factory()
+        bmi.initialize(bmi_config.input_file)
 
-        values = empty_var_buffer(bmi, in_var_name)
-        # values.fill(BAD_VALUE[values.dtype.kind])
-        bmi.set_value(in_var_name, values)
+        try:
+            if in_var_name not in bmi.get_output_var_names():
+                pytest.skip(f"{in_var_name}: no readable current value for this input")
 
-        # if np.isnan(BAD_VALUE[values.dtype.kind]):
-        #     assert np.all(np.isnan(values))
-        # else:
-        #     assert np.all(values == BAD_VALUE[values.dtype.kind])
+            nbytes = bmi.get_var_nbytes(in_var_name)
+            dtype = np.dtype(bmi.get_var_type(in_var_name))
+            itemsize = bmi.get_var_itemsize(in_var_name)
+
+            assert nbytes % dtype.itemsize == 0
+            assert dtype.itemsize == itemsize
+
+            n_items = nbytes // dtype.itemsize
+
+            initial_array = np.empty(n_items, dtype=dtype)
+            assert bmi.get_value(in_var_name, initial_array) is initial_array
+
+            array = initial_array.copy()
+            assert bmi.set_value(in_var_name, array) is None
+            assert_array_equal(array, initial_array)
+        finally:
+            bmi.finalize()
 
 
-# @pytest.mark.dependency(depends=["initialize_works", "test_get_var_grid", "get_var_nbytes"], scope="session")
-# @pytest.mark.dependency(depends=["initialize_works"], scope="session")
-# @pytest.mark.dependency(depends=["test_get_var_location"])
-def test_get_output_values(request, initialized_bmi, out_var_name):
+def test_get_output_values(initialized_bmi, out_var_name):
     """Output values are numpy arrays."""
-    # name = "../../../../../../../Users/huttone/git/csdms/bmi-tester/bmi_tester/tests_pytest/test_var.py::test_get_var_grid[%s]" % out_var_name
-    # depends(request, ["test_get_var_location[%s]" % out_var_name])
+    nbytes = initialized_bmi.get_var_nbytes(out_var_name)
+    dtype = np.dtype(initialized_bmi.get_var_type(out_var_name))
+    itemsize = initialized_bmi.get_var_itemsize(out_var_name)
 
-    # depends(request, [name])
-    # depends(request, ["test_var.py::test_get_var_grid[%s]" % out_var_name]) # , "test_get_var_nbytes[%s]" % out_var_name], scope="session")
+    assert nbytes % dtype.itemsize == 0
+    assert dtype.itemsize == itemsize
 
-    # depends(initialized_bmi, ["test_get_var_grid[%s]" % out_var_name, "test_get_var_nbytes" % out_var_name], scope="session")
+    n_items = nbytes // dtype.itemsize
 
-    values = empty_var_buffer(initialized_bmi, out_var_name)
-    # values.fill(BAD_VALUE[values.dtype.kind])
-    initial = values.tobytes()
-    initialized_bmi.get_value(out_var_name, values)
+    first = np.zeros(n_items, dtype=dtype)
+    second = np.ones(n_items, dtype=dtype)
 
-    assert initial != values.tobytes()
-    # assert np.any(values != initial)
+    assert initialized_bmi.get_value(out_var_name, first) is first
+    assert initialized_bmi.get_value(out_var_name, second) is second
+
+    np.testing.assert_array_equal(first, second)

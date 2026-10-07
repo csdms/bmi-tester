@@ -8,7 +8,6 @@ import nox
 
 PROJECT = "bmi_tester"
 ROOT = pathlib.Path(__file__).parent
-PYTHON_VERSION = "3.12"
 
 
 @nox.session
@@ -26,13 +25,25 @@ def test(session: nox.Session) -> None:
         session.run("coverage", "report", "--ignore-errors", "--show-missing")
 
 
-@nox.session(name="test-cli", python=PYTHON_VERSION, venv_backend="conda")
+@nox.session(name="test-cli")
 def test_cli(session: nox.Session) -> None:
     """Run the tests."""
     session.install(".[units]")
-    session.conda_install("pymt_topography", channel=["nodefaults", "conda-forge"])
 
-    session.run("bmi-test", "pymt_topography:Topography")
+    tmpdir = os.path.abspath(session.create_tmp())
+
+    with session.chdir(tmpdir):
+        with open("config.toml", "w") as stream:
+            print("", file=stream)
+
+        session.run(
+            "bmi-test",
+            f"--root-dir={tmpdir}",
+            "--config-file=config.toml",
+            "testing.bmi:BmiExample",
+            "-vvv",
+            env={"PYTHONPATH": str(ROOT)},
+        )
 
 
 @nox.session

@@ -3,7 +3,10 @@
 ## 0.5.11 (unreleased)
 
 
-- Nothing changed yet.
+- Fixed missing BMI test fixtures by explicitly registering a pytest plugin. (#52)
+- Added a repeatable `--stage` selection to run specific test stages. (#52)
+- Improved control, metadata, time, grid, and value checks. (#52)
+- Dropped Python 3.10 support. (#52)
 
 
 ## 0.5.10 (2025-06-05)

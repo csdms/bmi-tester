@@ -11,14 +11,12 @@ def test_get_var_itemsize(initialized_bmi, var_name):
     assert itemsize > 0
 
 
-# @pytest.mark.dependency()
 def test_get_var_nbytes(initialized_bmi, var_name):
     """Test getting a variable's nbytes"""
     nbytes = initialized_bmi.get_var_nbytes(var_name)
     assert nbytes > 0
 
 
-# @pytest.mark.dependency()
 def test_get_var_location(initialized_bmi, var_name):
     """Test getting a variable's grid location"""
     location = initialized_bmi.get_var_location(var_name)
@@ -26,7 +24,6 @@ def test_get_var_location(initialized_bmi, var_name):
     assert location in ("node", "edge", "face", "none")
 
 
-# @pytest.mark.dependency(depends=["test_get_var_location"])
 def test_var_on_grid(initialized_bmi, var_name):
     loc = initialized_bmi.get_var_location(var_name)
     if initialized_bmi.get_var_location(var_name) == "none":

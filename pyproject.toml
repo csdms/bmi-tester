@@ -1,6 +1,6 @@
 [project]
 name = "bmi_tester"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 description = "Test Python BMI bindings"
 keywords = [
     "bmi",
@@ -25,7 +25,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Physics",
@@ -34,7 +33,8 @@ dependencies = [
     "importlib-resources; python_version < '3.12'",
     "model-metadata>=0.8.1",
     "numpy",
-    "pytest",
+    "packaging",
+    "pytest>=8.0.0",
     "pytest-dependency",
     "standard-names>=0.2.8",
 ]
@@ -58,7 +58,7 @@ dev = [
 testing = [
     "coveralls",
     "pytest-cov",
-    "pytest>=3.6",
+    "pytest",
 ]
 docs = [
     "sphinx>=1.5.1",
@@ -108,7 +108,7 @@ combine_as_imports = true
 line_length = 88
 
 [tool.pytest.ini_options]
-minversion = "6.0.0rc1"
+minversion = "8.0.0"
 testpaths = [
     "tests",
 ]

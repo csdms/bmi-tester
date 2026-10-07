@@ -93,10 +93,13 @@ class BmiExample:
         spacing[:] = (10.0, 20.0)
         return spacing
 
+    def get_grid_origin(self, id_, origin):
+        origin[:] = (-1.0, 2.0)
+        return origin
+
     def get_value(self, name, buffer):
         buffer[:] = self._values[name]
         return buffer
 
     def set_value(self, name, buffer):
         self._values[name][:] = buffer
-        return buffer
