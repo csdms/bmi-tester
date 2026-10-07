@@ -2,6 +2,8 @@ import contextlib
 import os
 
 import numpy as np
+import pytest
+from packaging.version import Version
 
 
 @contextlib.contextmanager
@@ -29,7 +31,7 @@ def empty_var_buffer(bmi, var_name):
     Examples
     --------
     >>> import numpy as np
-    >>> from bmi_tester.api import empty_var_buffer
+    >>> from bmi_tester._utils import empty_var_buffer
 
     >>> class Bmi:
     ...     def get_var_nbytes(self, name):
@@ -50,3 +52,43 @@ def empty_var_buffer(bmi, var_name):
     values = np.frombuffer(np.random.bytes(nbytes), dtype=dtype).copy()
 
     return values
+
+
+def skip_if_not_bmi_2(bmi_version):
+    if bmi_version < Version("2.0"):
+        pytest.skip(f"{bmi_version}: BMI version is less than 2.0")
+
+
+def skip_if_grid_type_is_not(bmi, gid, gtype):
+    if isinstance(gtype, str):
+        gtype = (gtype,)
+    if bmi.get_grid_type(gid) not in gtype:
+        gtypes = ", ".join(gtype)
+        if len(gtype) > 1:
+            pytest.skip(f"grid {gid} is not one of {gtypes}")
+        else:
+            pytest.skip(f"grid {gid} is not {gtypes}")
+
+
+def skip_if_grid_type_is(bmi, gid, gtype):
+    if isinstance(gtype, str):
+        gtype = (gtype,)
+    if bmi.get_grid_type(gid) in gtype:
+        gtypes = ", ".join(gtype)
+        if len(gtype) > 1:
+            pytest.skip(f"grid {gid} is one of {gtypes}")
+        else:
+            pytest.skip(f"grid {gid} is {gtypes}")
+
+
+def all_grids(bmi, gtype=None):
+    in_names = set(bmi.get_input_var_names())
+    out_names = set(bmi.get_output_var_names())
+
+    grids = set()
+    for name in in_names | out_names:
+        if bmi.get_var_location(name) != "none":
+            gid = bmi.get_var_grid(name)
+            if gtype == bmi.get_grid_type(gid) or gtype is None:
+                grids.add(gid)
+    return grids

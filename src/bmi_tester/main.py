@@ -1,16 +1,16 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
 import os
 import pathlib
 import sys
 import tempfile
-from collections.abc import Iterator
+from collections.abc import Iterable
 from collections.abc import Sequence
 from functools import partial
 from typing import Any
 
-from model_metadata._utils import as_cwd
 from model_metadata._utils import load_component
 from model_metadata._utils import parse_entry_point
 from model_metadata.api import query
@@ -28,6 +28,14 @@ from bmi_tester.api import check_bmi
 
 out = partial(print, file=sys.stderr)
 err = partial(print, file=sys.stderr)
+
+
+PATH_TO_TEST_STAGES = {
+    "bootstrap": "_bootstrap",
+    "1": os.path.join("_tests", "stage_1"),
+    "2": os.path.join("_tests", "stage_2"),
+    "3": os.path.join("_tests", "stage_3"),
+}
 
 
 def main(argv: tuple[str, ...] | None = None) -> int:
@@ -93,6 +101,13 @@ def main(argv: tuple[str, ...] | None = None) -> int:
     parser.add_argument(
         "--bmi-version", default="2.0", help="BMI version to test against"
     )
+    parser.add_argument(
+        "--stage",
+        choices=tuple(PATH_TO_TEST_STAGES),
+        action="append",
+        default=None,
+        help="Select test stages to run. Default is to run all stages.",
+    )
 
     args = parser.parse_args(argv)
 
@@ -109,12 +124,13 @@ def main(argv: tuple[str, ...] | None = None) -> int:
     else:
         stage = Stage.from_entry_point(":".join(args.entry_point))
 
-    with as_cwd(stage.dir):
+    with contextlib.chdir(stage.dir):
         status = run_the_tests(
             ":".join(args.entry_point),
             stage.config_file,
             stage.manifest,
             bmi_version=args.bmi_version,
+            stages=args.stage,
         )
 
     if not args.quiet:
@@ -131,7 +147,7 @@ class Stage:
         self,
         stage_dir: str,
         config_file: str,
-        manifest: str | Iterator[str] | None = None,
+        manifest: str | Iterable[str] | None = None,
     ):
         self._stage_dir = stage_dir
         self._config_file = config_file
@@ -179,16 +195,19 @@ def run_the_tests(
     manifest: tuple[str, ...],
     bmi_version: str = "2.0",
     pytest_help: bool = False,
+    stages: Iterable[str] | None = None,
 ) -> int:
     path_to_tests = pathlib.Path(str(importlib_resources.files(__name__))).resolve()
-    stages = [
-        str(p)
-        for p in [path_to_tests / "_bootstrap"]
-        + sorted((path_to_tests / "_tests").glob("stage_*"))
-    ]
+
+    if stages is None:
+        stages = list(PATH_TO_TEST_STAGES)
+    test_dirs = [path_to_tests / PATH_TO_TEST_STAGES[stage] for stage in stages]
 
     status = 0
-    for stage_dir in stages:
+    stages_completed = set()
+    for stage_dir in map(str, test_dirs):
+        if stage_dir in stages_completed:
+            continue
         status = check_bmi(
             entry_point,
             tests_dir=stage_dir,
@@ -200,6 +219,7 @@ def run_the_tests(
         )
         if status != ExitCode.OK:
             break
+        stages_completed.add(stage_dir)
 
     return status
 
@@ -237,7 +257,6 @@ class ValidatePathExists(argparse.Action):
 
         path = values
 
-        # if not os.path.isdir(path):
         if not os.path.exists(path):
             parser.error(f"{path}: path does not exist")
         else:

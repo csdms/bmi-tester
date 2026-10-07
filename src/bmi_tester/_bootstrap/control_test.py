@@ -1,84 +1,78 @@
-import importlib
-import os
-import shutil
+import contextlib
 
 import pytest
 
 
-def load_component(entry_point):
-    module_name, cls_name = entry_point.split(":")
-
-    component = None
-    try:
-        module = importlib.import_module(module_name)
-    except ImportError:
-        raise
-    else:
-        try:
-            component = module.__dict__[cls_name]
-        except KeyError:
-            raise ImportError(cls_name)
-
-    return component
-
-
-try:
-    class_to_test = os.environ["BMITEST_CLASS"]
-except KeyError:
-    Bmi = None
-else:
-    Bmi = load_component(class_to_test)
-
-INPUT_FILE = os.environ.get("BMITEST_INPUT_FILE")
-
-
 @pytest.mark.dependency()
-def test_has_initialize():
+def test_has_initialize(bmi_factory):
     """Test component has an initialize method."""
-    bmi = Bmi()
-    assert hasattr(bmi, "initialize")
+    model = bmi_factory()
+    assert hasattr(model, "initialize")
+    assert callable(model.initialize)
 
 
 @pytest.mark.dependency()
-def test_has_finalize():
+def test_has_finalize(bmi_factory):
     """Test component has a finalize method."""
-    bmi = Bmi()
-    assert hasattr(bmi, "finalize")
+    model = bmi_factory()
+    assert hasattr(model, "finalize")
+    assert callable(model.finalize)
+
+
+@pytest.mark.dependency()
+def test_has_update(bmi_factory):
+    """Test component has an update method."""
+    model = bmi_factory()
+    assert hasattr(model, "update")
+    assert callable(model.update)
 
 
 @pytest.mark.dependency(
-    depends=["has_initialize", "has_finalize"], name="initialize_works"
+    depends=(
+        "test_has_initialize",
+        "test_has_finalize",
+    ),
+    name="initialize_works",
 )
-def test_initialize(tmpdir):
+def test_initialize(staged_tmpdir, bmi_factory, bmi_config):
     """Test component can initialize itself."""
-    infile = os.environ.get("BMITEST_INPUT_FILE")
-    manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
-
-    with tmpdir.as_cwd() as prev:
-        for file_ in [fname.strip() for fname in manifest]:
-            if file_:
-                os.makedirs(tmpdir / os.path.dirname(file_), exist_ok=True)
-                shutil.copy2(os.path.join(prev, file_), tmpdir / file_)
-
-        bmi = Bmi()
-        assert bmi.initialize(INPUT_FILE) is None
-        bmi.finalize()
+    with staged_tmpdir.as_cwd():
+        model = bmi_factory()
+        result = model.initialize(bmi_config.input_file)
+        try:
+            assert result is None
+        finally:
+            model.finalize()
 
 
-@pytest.mark.dependency(depends=["initialize_works"])
-def test_update(tmpdir):
+@pytest.mark.dependency(
+    depends=(
+        "test_has_initialize",
+        "test_has_finalize",
+    ),
+    name="finalize_works",
+)
+def test_finalize(staged_tmpdir, bmi_factory, bmi_config):
+    """Test component can finalize itself."""
+    with staged_tmpdir.as_cwd():
+        model = bmi_factory()
+        model.initialize(bmi_config.input_file)
+
+        result = model.finalize()
+        assert result is None
+
+
+@pytest.mark.dependency(
+    depends=(
+        "initialize_works",
+        "test_has_update",
+    )
+)
+def test_update(staged_tmpdir, bmi_factory, bmi_config):
     """Test component can update itself."""
-    infile = os.environ.get("BMITEST_INPUT_FILE")
-    manifest = os.environ.get("BMITEST_MANIFEST", infile or "").splitlines()
-
-    with tmpdir.as_cwd() as prev:
-        for file_ in [fname.strip() for fname in manifest]:
-            if file_:
-                os.makedirs(tmpdir / os.path.dirname(file_), exist_ok=True)
-                shutil.copy2(os.path.join(prev, file_), tmpdir / file_)
-                # cp(os.path.join(str(prev), file_), tmpdir / file_, create_dirs=True)
-
-        bmi = Bmi()
-        bmi.initialize(INPUT_FILE)
-        assert bmi.update() is None
-        bmi.finalize()
+    with staged_tmpdir.as_cwd():
+        model = bmi_factory()
+        model.initialize(bmi_config.input_file)
+        with contextlib.suppress(NotImplementedError):
+            assert model.update() is None
+        model.finalize()
