@@ -1,7 +1,10 @@
 [project]
 name = "bmi_tester"
+version = "0.5.11.dev0"
 requires-python = ">=3.11"
 description = "Test Python BMI bindings"
+license = "MIT"
+license-files = ["LICENSE.md"]
 keywords = [
     "bmi",
     "csdms",
@@ -10,19 +13,15 @@ keywords = [
     "testing",
 ]
 authors = [
-    { email = "eric.hutton@colorado.edu" },
-    { name = "Eric Hutton" },
+    { name = "Eric Hutton", email = "huttone@colorado.edu" },
 ]
 maintainers = [
-    { email = "eric.hutton@colorado.edu" },
-    { name = "Eric Hutton" },
-    { email = "mark.piper@colorado.edu" },
-    { name = "Mark Piper" },
+    { name = "Eric Hutton", email = "huttone@colorado.edu"},
+    { name = "Mark Piper", email = "mark.piper@colorado.edu"},
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
@@ -43,20 +42,14 @@ dependencies = [
 ]
 dynamic = [
     "readme",
-    "version",
 ]
-
-[project.license]
-text = "MIT"
 
 [project.optional-dependencies]
 units = [
 	"gimli.units>=0.4.1"
 ]
 dev = [
-    "black",
-    "flake8",
-    "isort",
+    "nox",
 ]
 testing = [
     "coveralls",
@@ -95,20 +88,14 @@ build-backend = "setuptools.build_meta"
 file = "README.md"
 content-type = "text/markdown"
 
-[tool.setuptools.dynamic.version]
-attr = "bmi_tester._version.__version__"
-
 [tool.setuptools.packages.find]
 where = [
     "src",
 ]
 
 [tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
 combine_as_imports = true
-line_length = 88
+profile = "black"
 
 [tool.pytest.ini_options]
 minversion = "8.0.0"
@@ -121,15 +108,15 @@ norecursedirs = [
     "build",
     "dist",
 ]
-addopts = """
-    --ignore bmi_tester/bootstrap
-    --ignore bmi_tester/tests
-    --tb native
-    --strict-markers
-    --durations 16
-    --doctest-modules
-    -vvv
-"""
+addopts = [
+    "--ignore=bmi_tester/bootstrap",
+    "--ignore=bmi_tester/tests",
+    "--tb=native",
+    "--strict-markers",
+    "--durations=16",
+    "--doctest-modules",
+    "-vvv",
+]
 doctest_optionflags = [
     "NORMALIZE_WHITESPACE",
     "IGNORE_EXCEPTION_DETAIL",
@@ -139,3 +126,6 @@ doctest_optionflags = [
 [tool.zest-releaser]
 tag-format = "v{version}"
 python-file-with-version = "src/bmi_tester/_version.py"
+
+[tool.black]
+target-version = ["py311"]
