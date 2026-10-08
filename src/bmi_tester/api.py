@@ -3,16 +3,11 @@ from collections.abc import Iterable
 from collections.abc import Sequence
 
 try:
-    from gimli._udunits2 import UdunitsError
-    from gimli.errors import IncompatibleUnitsError
-    from gimli.errors import UnitNameError
     from gimli.units import units
 except ImportError:
     WITH_GIMLI_UNITS = False
-    SECONDS = None
 else:
     WITH_GIMLI_UNITS = True
-    SECONDS = units.Unit("s")
 
 import pytest
 
@@ -109,12 +104,7 @@ def check_unit_is_valid(unit):
             " Install it with: pip install 'bmi-tester[units]'"
         )
 
-    try:
-        units.Unit(unit)
-    except (UnitNameError, UdunitsError):
-        return False
-    else:
-        return True
+    return unit in units
 
 
 def check_unit_is_time(unit):
@@ -124,12 +114,7 @@ def check_unit_is_time(unit):
             " Install it with: pip install 'bmi-tester[units]'"
         )
 
-    try:
-        units.Unit(unit).to(SECONDS)
-    except (IncompatibleUnitsError, UdunitsError):
-        return False
-    else:
-        return True
+    return unit in units and units[unit].is_convertible_to(units["s"])
 
 
 def check_unit_is_dimensionless(unit):
@@ -139,4 +124,4 @@ def check_unit_is_dimensionless(unit):
             " Install it with: pip install 'bmi-tester[units]'"
         )
 
-    return units.Unit(unit).is_dimensionless
+    return unit in units and units[unit].is_dimensionless
