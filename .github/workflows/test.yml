@@ -40,21 +40,27 @@ jobs:
         run: |
           nox -s test-cli
 
-      - name: Coveralls
-        if: matrix.os == 'ubuntu-latest'
-        uses: AndreMiras/coveralls-python-action@develop
-        with:
-          parallel: true
-          flag-name: py${{ matrix.python-version }}-${{ matrix.os }}
-
-          debug: true
-
-  coveralls_finish:
-    needs: build-and-test
+  coverage:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Coveralls Finished
-        uses: AndreMiras/coveralls-python-action@develop
+      - uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
-          parallel-finished: true
-          debug: true
+          python-version: "3.15"
+          allow-prereleases: true
+
+      - name: Test
+        run: |
+          pip install nox
+          nox -s coverage
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v7.1.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: csdms/bmi-tester
+          files: ./coverage.xml
+          disable_search: true
+          fail_ci_if_error: true
