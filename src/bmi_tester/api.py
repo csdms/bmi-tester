@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from collections.abc import Sequence
 
 try:
-    from gimli.units import units
+    from gimli import units
 except ImportError:
     WITH_GIMLI_UNITS = False
 else:
@@ -114,7 +114,10 @@ def check_unit_is_time(unit):
             " Install it with: pip install 'bmi-tester[units]'"
         )
 
-    return unit in units and units[unit].is_convertible_to(units["s"])
+    return unit in units and (
+        units[unit].is_convertible_to(units["s"])
+        or units[unit].is_convertible_to(units["seconds since 1969-07-20 20:17:40 UTC"])
+    )
 
 
 def check_unit_is_dimensionless(unit):
