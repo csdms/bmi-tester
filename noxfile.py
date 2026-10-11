@@ -13,16 +13,31 @@ ROOT = pathlib.Path(__file__).parent
 @nox.session
 def test(session: nox.Session) -> None:
     """Run the tests."""
+    session.install("pytest")
     session.install(".[units,testing]")
 
-    args = ["--cov", PROJECT, "-vvv"] + session.posargs
+    session.run("pytest", "tests/")
 
+
+@nox.session
+def coverage(session: nox.Session) -> None:
+    """Run coverage."""
+    session.install("coverage", "pytest")
+    session.install("-e", ".[units]")
+
+    session.run(
+        "coverage",
+        "run",
+        "-m",
+        "pytest",
+        "tests",
+        "--doctest-modules",
+        env={"COVERAGE_CORE": "sysmon"},
+    )
+
+    session.run("coverage", "report", "--ignore-errors", "--show-missing")
     if "CI" in os.environ:
-        args.append(f"--cov-report=xml:{ROOT.absolute()!s}/coverage.xml")
-    session.run("pytest", *args)
-
-    if "CI" not in os.environ:
-        session.run("coverage", "report", "--ignore-errors", "--show-missing")
+        session.run("coverage", "xml", "-o", "coverage.xml")
 
 
 @nox.session(name="test-cli")
