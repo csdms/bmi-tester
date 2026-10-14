@@ -49,9 +49,13 @@ so that there won't be conflicts with your base *Python* installation.
 This can be done with *conda* as,
 
 ```bash
-conda create -n bmi-tester python=3
+conda create -n bmi-tester python=3.11
 conda activate bmi-tester
 ```
+(Note, this has been tested with Python 3.11, specified above explicitly
+for the purpose of using the `pymt_hydrotrend` package as an example (see below).
+Higher versions of Python can be selected, and changing the above flag to
+`python=3` will instead choose the latest available version.)
 
 ### Stable Release
 
