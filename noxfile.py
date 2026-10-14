@@ -74,7 +74,7 @@ def build(session: nox.Session) -> None:
     session.install("build")
     session.run("python", "--version")
     session.run("pip", "--version")
-    session.run("python", "-m", "build", "--outdir", "./build/wheelhouse")
+    session.run("python", "-m", "build", "--outdir", "./dist")
 
 
 @nox.session(name="build-docs")
@@ -124,32 +124,6 @@ def build_generated_docs(session: nox.Session) -> None:
             "docs/_generated/api",
             "src/bmi_tester",
         )
-
-
-@nox.session(name="publish-testpypi")
-def publish_testpypi(session):
-    """Publish wheelhouse/* to TestPyPI."""
-    session.run("twine", "check", "build/wheelhouse/*")
-    session.run(
-        "twine",
-        "upload",
-        "--skip-existing",
-        "--repository-url",
-        "https://test.pypi.org/legacy/",
-        "build/wheelhouse/*.tar.gz",
-    )
-
-
-@nox.session(name="publish-pypi")
-def publish_pypi(session):
-    """Publish wheelhouse/* to PyPI."""
-    session.run("twine", "check", "build/wheelhouse/*")
-    session.run(
-        "twine",
-        "upload",
-        "--skip-existing",
-        "build/wheelhouse/*.tar.gz",
-    )
 
 
 @nox.session(python=False)
