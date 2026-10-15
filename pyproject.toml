@@ -52,8 +52,8 @@ dev = [
     "nox",
 ]
 testing = [
-    "coveralls",
-    "pytest-cov",
+    "bmipy",
+    "coverage",
     "pytest",
 ]
 docs = [
@@ -109,8 +109,6 @@ norecursedirs = [
     "dist",
 ]
 addopts = [
-    "--ignore=bmi_tester/bootstrap",
-    "--ignore=bmi_tester/tests",
     "--tb=native",
     "--strict-markers",
     "--durations=16",
@@ -129,3 +127,9 @@ python-file-with-version = "src/bmi_tester/_version.py"
 
 [tool.black]
 target-version = ["py311"]
+
+[tool.coverage.run]
+relative_files = true
+source = [
+    "bmi_tester",
+]

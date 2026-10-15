@@ -13,7 +13,6 @@ ROOT = pathlib.Path(__file__).parent
 @nox.session
 def test(session: nox.Session) -> None:
     """Run the tests."""
-    session.install("pytest")
     session.install(".[units,testing]")
 
     session.run("pytest", "tests/")
@@ -22,8 +21,7 @@ def test(session: nox.Session) -> None:
 @nox.session
 def coverage(session: nox.Session) -> None:
     """Run coverage."""
-    session.install("coverage", "pytest")
-    session.install("-e", ".[units]")
+    session.install("-e", ".[units,testing]")
 
     session.run(
         "coverage",
@@ -43,7 +41,7 @@ def coverage(session: nox.Session) -> None:
 @nox.session(name="test-cli")
 def test_cli(session: nox.Session) -> None:
     """Run the tests."""
-    session.install(".[units]")
+    session.install(".[units,testing]")
 
     tmpdir = os.path.abspath(session.create_tmp())
 
@@ -55,7 +53,7 @@ def test_cli(session: nox.Session) -> None:
             "bmi-test",
             f"--root-dir={tmpdir}",
             "--config-file=config.toml",
-            "testing.bmi:BmiExample",
+            "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
             "-vvv",
             env={"PYTHONPATH": str(ROOT)},
         )

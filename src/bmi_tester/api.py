@@ -1,3 +1,4 @@
+import os
 import sys
 from collections.abc import Iterable
 from collections.abc import Sequence
@@ -10,6 +11,7 @@ else:
     WITH_GIMLI_UNITS = True
 
 import pytest
+from pytest import ExitCode
 
 from bmi_tester._pytest import BmiPlugin
 from bmi_tester._pytest import RunConfig
@@ -23,12 +25,13 @@ else:  # pragma: no cover (<PY312)
 def check_bmi(
     package: str,
     *,
-    tests_dir: str | Sequence[str] | None = None,
+    test_dirs: str | Sequence[str] | None = None,
     input_file: str = "",
     manifest: str | Sequence[str] | None = None,
     bmi_version: str = "2.0",
     extra_args: Iterable[str] | None = None,
     help_pytest: bool = False,
+    stop_on_stage_failure: bool = True,
 ) -> int:
     """Run pytest checks against a BMI implementation.
 
@@ -37,10 +40,9 @@ def check_bmi(
     package : str
         Model entry point in ``module:Class`` form, such as
         ``testing.bmi:BmiExample``.
-    tests_dir : str or sequence of str, optional
-        Test paths to pass to pytest. Defaults to the bundled bootstrap
-        checks for model initialization, updating, and finalization; the
-        remaining BMI test stages are not run automatically.
+    test_dirs : str or sequence of str, optional
+        Test paths to pass to pytest. Defaults to the complete set of bundled
+        checks.
     input_file : str, optional
         Configuration filename passed to the model's ``initialize`` method.
         Defaults to an empty string.
@@ -59,6 +61,8 @@ def check_bmi(
     help_pytest : bool, optional
         If True, append ``--help`` to the pytest arguments to display pytest
         help instead of running tests. Defaults to False.
+    stop_on_stage_failure : bool, optional
+        Stop execution if a stage fails.
 
     Returns
     -------
@@ -73,9 +77,18 @@ def check_bmi(
     environment variables. Model inputs must be accessible from the current
     working directory; parameter discovery initializes a model there.
     """
-    if tests_dir is None:
-        tests_dir = str(files(__name__) / "_bootstrap")
-    args = (tests_dir,) if isinstance(tests_dir, str) else tuple(tests_dir)
+    if test_dirs is None:
+        test_dirs = [
+            str(files(__name__) / stage)
+            for stage in (
+                "_bootstrap",
+                "_tests/stage_1",
+                "_tests/stage_2",
+                "_tests/stage_3",
+            )
+        ]
+    elif isinstance(test_dirs, str):
+        test_dirs = [test_dirs]
 
     if isinstance(manifest, str) and manifest:
         with open(manifest) as fp:
@@ -92,9 +105,23 @@ def check_bmi(
 
     extra_args = tuple(extra_args or ())
     if help_pytest:
-        extra_args += ("--help",)
-    args += extra_args
-    return pytest.main(list(args), plugins=[BmiPlugin(config)])
+        return pytest.main(["--help", *extra_args], plugins=[BmiPlugin(config)])
+
+    stage_status = {}
+    for stage_dir in map(os.path.abspath, test_dirs):
+        if stage_dir in stage_status:
+            continue
+
+        status = pytest.main([stage_dir, *extra_args], plugins=[BmiPlugin(config)])
+        stage_status[stage_dir] = status
+        if status != ExitCode.OK and stop_on_stage_failure:
+            break
+
+    failed_stages = [
+        stage for stage, status in stage_status.items() if status != ExitCode.OK
+    ]
+
+    return stage_status[failed_stages[0]] if failed_stages else ExitCode.OK
 
 
 def check_unit_is_valid(unit):

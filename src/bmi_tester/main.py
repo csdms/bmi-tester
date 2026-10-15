@@ -203,23 +203,15 @@ def run_the_tests(
         stages = list(PATH_TO_TEST_STAGES)
     test_dirs = [path_to_tests / PATH_TO_TEST_STAGES[stage] for stage in stages]
 
-    status = 0
-    stages_completed = set()
-    for stage_dir in map(str, test_dirs):
-        if stage_dir in stages_completed:
-            continue
-        status = check_bmi(
-            entry_point,
-            tests_dir=stage_dir,
-            input_file=config_file,
-            manifest=manifest,
-            bmi_version=bmi_version,
-            # extra_args=pytest_args + ("-vvv",),
-            help_pytest=pytest_help,
-        )
-        if status != ExitCode.OK:
-            break
-        stages_completed.add(stage_dir)
+    status = check_bmi(
+        entry_point,
+        test_dirs=[str(path) for path in test_dirs],
+        input_file=config_file,
+        manifest=manifest,
+        bmi_version=bmi_version,
+        help_pytest=pytest_help,
+        stop_on_stage_failure=True,
+    )
 
     return status
 
