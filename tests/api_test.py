@@ -20,12 +20,19 @@ def touch_file(fname):
         pass
 
 
-def test_bmi_check(tmpdir):
+@pytest.mark.parametrize(
+    "package",
+    (
+        "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
+        "testing.unstructured_bmi:UnstructuredBmi",
+    ),
+)
+def test_bmi_check(tmpdir, package):
     with tmpdir.as_cwd():
         touch_file("input.yaml")
         assert (
             check_bmi(
-                "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
+                package,
                 input_file="input.yaml",
                 extra_args=["-vvv"],
             )
@@ -33,12 +40,19 @@ def test_bmi_check(tmpdir):
         )
 
 
-def test_bmi_check_with_manifest_as_list(tmpdir):
+@pytest.mark.parametrize(
+    "package",
+    (
+        "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
+        "testing.unstructured_bmi:UnstructuredBmi",
+    ),
+)
+def test_bmi_check_with_manifest_as_list(tmpdir, package):
     with tmpdir.as_cwd():
         touch_file("input.yaml")
         assert (
             check_bmi(
-                "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
+                package,
                 extra_args=["-vvv"],
                 input_file="input.yaml",
                 manifest=["input.yaml"],
@@ -47,7 +61,14 @@ def test_bmi_check_with_manifest_as_list(tmpdir):
         )
 
 
-def test_bmi_check_with_manifest_as_string(tmpdir):
+@pytest.mark.parametrize(
+    "package",
+    (
+        "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
+        "testing.unstructured_bmi:UnstructuredBmi",
+    ),
+)
+def test_bmi_check_with_manifest_as_string(tmpdir, package):
     with tmpdir.as_cwd():
         with open("manifest.txt", "w") as fp:
             fp.write(os.linesep.join(["input.yaml", "data.dat"]))
@@ -55,7 +76,7 @@ def test_bmi_check_with_manifest_as_string(tmpdir):
         touch_file("data.dat")
         assert (
             check_bmi(
-                "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
+                package,
                 extra_args=["-vvv"],
                 input_file="input.yaml",
                 manifest="manifest.txt",

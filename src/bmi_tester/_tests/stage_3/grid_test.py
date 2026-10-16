@@ -107,7 +107,6 @@ def test_get_grid_edge_nodes(initialized_bmi, gid, bmi_version):
     assert np.all(edge_nodes < n_nodes)
 
 
-@pytest.mark.skip("nodes_per_face")
 def test_get_grid_nodes_per_face(initialized_bmi, gid, bmi_version):
     "Test number of nodes at each face for grid"
     skip_if_not_bmi_2(bmi_version)
@@ -127,7 +126,6 @@ def test_get_grid_nodes_per_face(initialized_bmi, gid, bmi_version):
     assert np.all(nodes_per_face <= n_nodes)
 
 
-@pytest.mark.skip("face_edges")
 def test_get_grid_face_edges(initialized_bmi, gid, bmi_version):
     "Test edges at face for grid"
     skip_if_not_bmi_2(bmi_version)
