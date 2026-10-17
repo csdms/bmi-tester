@@ -23,6 +23,7 @@ def touch_file(fname):
 @pytest.mark.parametrize(
     "package",
     (
+        "testing.rectilinear_bmi:RectilinearBmi",
         "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
         "testing.unstructured_bmi:UnstructuredBmi",
     ),
@@ -43,6 +44,7 @@ def test_bmi_check(tmpdir, package):
 @pytest.mark.parametrize(
     "package",
     (
+        "testing.rectilinear_bmi:RectilinearBmi",
         "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
         "testing.unstructured_bmi:UnstructuredBmi",
     ),
@@ -64,6 +66,7 @@ def test_bmi_check_with_manifest_as_list(tmpdir, package):
 @pytest.mark.parametrize(
     "package",
     (
+        "testing.rectilinear_bmi:RectilinearBmi",
         "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
         "testing.unstructured_bmi:UnstructuredBmi",
     ),
