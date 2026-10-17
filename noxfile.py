@@ -53,7 +53,7 @@ def test_cli(session: nox.Session) -> None:
             "bmi-test",
             f"--root-dir={tmpdir}",
             "--config-file=config.toml",
-            "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
+            "testing.uniform_rectilinear_bmi:UniformRectilinearExample",
             "-vvv",
             env={"PYTHONPATH": str(ROOT)},
         )
