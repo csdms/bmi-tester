@@ -23,9 +23,13 @@ def touch_file(fname):
 @pytest.mark.parametrize(
     "package",
     (
-        "testing.rectilinear_bmi:RectilinearBmi",
-        "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
-        "testing.unstructured_bmi:UnstructuredBmi",
+        "testing.rectilinear_bmi:RectilinearExample",
+        "testing.uniform_rectilinear_bmi:UniformRectilinearExample",
+        "testing.unstructured_bmi:PointsBmi",
+        "testing.unstructured_bmi:ScalarBmi",
+        "testing.unstructured_bmi:UnstructuredNodesBmi",
+        "testing.unstructured_bmi:UnstructuredNodesEdgesBmi",
+        "testing.unstructured_bmi:UnstructuredNodesEdgesFacesBmi",
     ),
 )
 def test_bmi_check(tmpdir, package):
@@ -36,6 +40,7 @@ def test_bmi_check(tmpdir, package):
                 package,
                 input_file="input.yaml",
                 extra_args=["-vvv"],
+                bmi_version="2.0",
             )
             == 0
         )
@@ -44,9 +49,13 @@ def test_bmi_check(tmpdir, package):
 @pytest.mark.parametrize(
     "package",
     (
-        "testing.rectilinear_bmi:RectilinearBmi",
-        "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
-        "testing.unstructured_bmi:UnstructuredBmi",
+        "testing.rectilinear_bmi:RectilinearExample",
+        "testing.uniform_rectilinear_bmi:UniformRectilinearExample",
+        "testing.unstructured_bmi:PointsBmi",
+        "testing.unstructured_bmi:ScalarBmi",
+        "testing.unstructured_bmi:UnstructuredNodesBmi",
+        "testing.unstructured_bmi:UnstructuredNodesEdgesBmi",
+        "testing.unstructured_bmi:UnstructuredNodesEdgesFacesBmi",
     ),
 )
 def test_bmi_check_with_manifest_as_list(tmpdir, package):
@@ -66,9 +75,13 @@ def test_bmi_check_with_manifest_as_list(tmpdir, package):
 @pytest.mark.parametrize(
     "package",
     (
-        "testing.rectilinear_bmi:RectilinearBmi",
-        "testing.uniform_rectilinear_bmi:UniformRectilinearBmi",
-        "testing.unstructured_bmi:UnstructuredBmi",
+        "testing.rectilinear_bmi:RectilinearExample",
+        "testing.uniform_rectilinear_bmi:UniformRectilinearExample",
+        "testing.unstructured_bmi:PointsBmi",
+        "testing.unstructured_bmi:ScalarBmi",
+        "testing.unstructured_bmi:UnstructuredNodesBmi",
+        "testing.unstructured_bmi:UnstructuredNodesEdgesBmi",
+        "testing.unstructured_bmi:UnstructuredNodesEdgesFacesBmi",
     ),
 )
 def test_bmi_check_with_manifest_as_string(tmpdir, package):
